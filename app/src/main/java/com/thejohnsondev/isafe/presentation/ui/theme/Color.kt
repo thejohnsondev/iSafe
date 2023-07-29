@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.ui.theme
+package com.thejohnsondev.isafe.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
