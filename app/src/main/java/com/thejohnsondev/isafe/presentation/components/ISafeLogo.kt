@@ -35,7 +35,7 @@ fun ISafeLogo(
         Text(modifier = modifier, text = buildAnnotatedString {
             withStyle(
                 style = SpanStyle(
-                    color = seed,
+                    color = MaterialTheme.colorScheme.primary,
                     fontSize = fontSize
                 ),
             ) {

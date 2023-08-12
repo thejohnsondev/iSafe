@@ -50,56 +50,50 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun enterName(name: String) {
-        launch {
-            _nameState.value = name
-        }
+    private fun enterName(name: String) = launch {
+        _nameState.value = name
     }
 
-    private fun validateEmail(email: String) {
-        launch {
-            _emailValidationState.value = useCases.validateEmail(email)
-        }
+    private fun validateEmail(email: String) = launch {
+        _emailValidationState.value = useCases.validateEmail(email)
+
     }
 
-    private fun validatePassword(password: String) {
-        launch {
-            _passwordValidationState.value = useCases.validatePassword(password)
-        }
+    private fun validatePassword(password: String) = launch {
+        _passwordValidationState.value = useCases.validatePassword(password)
     }
 
-    private fun signUp(email: String, password: String) {
-        launch {
-            _loadingState.value = LoadingState.Loading
-            useCases.signUp(email, password).collect {
-                when (it) {
-                    is AuthResponse.ResponseSuccess -> {
-                        handleSignUpSuccess(it.authResult)
-                    }
-                    is AuthResponse.ResponseFailure -> {
-                        _loadingState.value = LoadingState.Loaded
-                        handleError(it.exception)
-                    }
+    private fun signUp(email: String, password: String) = launch {
+        _loadingState.value = LoadingState.Loading
+        useCases.signUp(email, password).collect {
+            when (it) {
+                is AuthResponse.ResponseSuccess -> {
+                    _loadingState.value = LoadingState.Loaded
+                    handleSignUpSuccess(it.authResult)
+                }
+
+                is AuthResponse.ResponseFailure -> {
+                    _loadingState.value = LoadingState.Loaded
+                    handleError(it.exception)
                 }
             }
         }
     }
 
     private fun handleSignUpSuccess(authResult: AuthResult) = launch {
-        _loadingState.value = LoadingState.Loaded
         sendEvent(OneTimeEvent.SuccessNavigation)
     }
 
 
     private fun mergeSources(
-        isLoginSuccess: Boolean?,
+        isSignUpSuccess: Boolean?,
         authLoadingState: LoadingState,
         emailValidationState: EmailValidationState?,
         passwordValidationState: PasswordValidationState?,
         signUpReady: Boolean
     ): SignUpViewState {
         return SignUpViewState(
-            isSignUpSuccess = isLoginSuccess,
+            isSignUpSuccess = isSignUpSuccess,
             loadingState = authLoadingState,
             emailValidationState = emailValidationState,
             passwordValidationState = passwordValidationState,
