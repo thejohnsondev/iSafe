@@ -34,7 +34,7 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     fun handleError(error: Exception?) {
-        sendEvent(OneTimeEvent.InfoToast(getAuthErrorMessage(error?.message)))
+        sendEvent(OneTimeEvent.InfoSnackbar(getAuthErrorMessage(error?.message)))
     }
 
     fun ViewModel.launch(block: suspend CoroutineScope.() -> Unit): Job {

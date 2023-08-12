@@ -8,5 +8,6 @@ data class SignUpViewState(
     val isSignUpSuccess: Boolean? = null,
     val loadingState: LoadingState = LoadingState.Loaded,
     val emailValidationState: EmailValidationState? = null,
-    val passwordValidationState: PasswordValidationState? = null
+    val passwordValidationState: PasswordValidationState? = null,
+    val signUpReady: Boolean = false
 )

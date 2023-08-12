@@ -6,4 +6,13 @@
     <string name="password_error_no_capital">Password must contain at least one uppercase letter.</string>
     <string name="password_error_no_small">Password must contain at least one lowercase letter.</string>
     <string name="email_error_incorrect">Email is no valid</string>
+    <string name="sign_up">Sign up</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="log_in">Log in</string>
+    <string name="i">i</string>
+    <string name="safe">Safe</string>
+    <string name="buttons">Buttons</string>
 </resources>

@@ -10,6 +10,7 @@ import com.thejohnsondev.isafe.presentation.screens.check_auth_state.CheckAuthSt
 import com.thejohnsondev.isafe.presentation.screens.home.HomeScreen
 import com.thejohnsondev.isafe.presentation.screens.login.LoginScreen
 import com.thejohnsondev.isafe.presentation.screens.signup.SignUpScreen
+import com.thejohnsondev.isafe.presentation.screens.signup.SignUpViewModel
 
 @Composable
 fun Navigation() {
@@ -23,7 +24,8 @@ fun Navigation() {
             LoginScreen(navController = navController)
         }
         composable(Screens.SignUpScreen.name) {
-            SignUpScreen(navController = navController)
+            val viewModel = hiltViewModel<SignUpViewModel>()
+            SignUpScreen(navController = navController, viewModel = viewModel)
         }
         composable(Screens.HomeScreen.name) {
             HomeScreen(navController = navController)

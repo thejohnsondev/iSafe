@@ -7,6 +7,7 @@ import com.thejohnsondev.isafe.domain.models.LoadingState
 import com.thejohnsondev.isafe.domain.models.OneTimeEvent
 import com.thejohnsondev.isafe.domain.models.PasswordValidationState
 import com.thejohnsondev.isafe.domain.use_cases.combined.AuthUseCases
+import com.thejohnsondev.isafe.utils.EMPTY
 import com.thejohnsondev.isafe.utils.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -21,14 +22,22 @@ class SignUpViewModel @Inject constructor(
 
     private val _isSignUpSuccess = MutableStateFlow<Boolean?>(null)
     private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loaded)
+    private val _nameState = MutableStateFlow(EMPTY)
     private val _emailValidationState = MutableStateFlow<EmailValidationState?>(null)
     private val _passwordValidationState = MutableStateFlow<PasswordValidationState?>(null)
+    private val _signUpReadyState: Flow<Boolean> = combine(
+        _nameState,
+        _emailValidationState,
+        _passwordValidationState,
+        ::isSignUpReady
+    )
 
     val viewState: Flow<SignUpViewState> = combine(
         _isSignUpSuccess,
         _loadingState,
         _emailValidationState,
         _passwordValidationState,
+        _signUpReadyState,
         ::mergeSources
     )
 
@@ -37,6 +46,13 @@ class SignUpViewModel @Inject constructor(
             is SignUpAction.SignUpWithEmail -> signUp(action.email, action.password)
             is SignUpAction.ValidateEmail -> validateEmail(action.email)
             is SignUpAction.ValidatePassword -> validatePassword(action.password)
+            is SignUpAction.EnterName -> enterName(action.name)
+        }
+    }
+
+    private fun enterName(name: String) {
+        launch {
+            _nameState.value = name
         }
     }
 
@@ -60,7 +76,6 @@ class SignUpViewModel @Inject constructor(
                     is AuthResponse.ResponseSuccess -> {
                         handleSignUpSuccess(it.authResult)
                     }
-
                     is AuthResponse.ResponseFailure -> {
                         _loadingState.value = LoadingState.Loaded
                         handleError(it.exception)
@@ -80,14 +95,25 @@ class SignUpViewModel @Inject constructor(
         isLoginSuccess: Boolean?,
         authLoadingState: LoadingState,
         emailValidationState: EmailValidationState?,
-        passwordValidationState: PasswordValidationState?
+        passwordValidationState: PasswordValidationState?,
+        signUpReady: Boolean
     ): SignUpViewState {
         return SignUpViewState(
             isSignUpSuccess = isLoginSuccess,
             loadingState = authLoadingState,
             emailValidationState = emailValidationState,
-            passwordValidationState = passwordValidationState
+            passwordValidationState = passwordValidationState,
+            signUpReady = signUpReady
         )
     }
+
+    private fun isSignUpReady(
+        name: String,
+        emailValidationState: EmailValidationState?,
+        passwordValidationState: PasswordValidationState?
+    ): Boolean =
+        name.isNotBlank()
+                && emailValidationState is EmailValidationState.EmailCorrectState
+                && passwordValidationState is PasswordValidationState.PasswordCorrectState
 
 }
