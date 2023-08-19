@@ -7,8 +7,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.thejohnsondev.isafe.data.local_data_source.DataStore
 import com.thejohnsondev.isafe.data.local_data_source.DataStoreImpl
 import com.thejohnsondev.isafe.data.repositories.AuthRepositoryImpl
+import com.thejohnsondev.isafe.data.repositories.GenerateKeyRepositoryImpl
 import com.thejohnsondev.isafe.data.repositories.RemoteDbRepositoryImpl
 import com.thejohnsondev.isafe.domain.repositories.AuthRepository
+import com.thejohnsondev.isafe.domain.repositories.GenerateKeyRepository
 import com.thejohnsondev.isafe.domain.repositories.RemoteDbRepository
 import com.thejohnsondev.isafe.domain.use_cases.auth.EmailValidateUseCase
 import com.thejohnsondev.isafe.domain.use_cases.auth.EmailValidationUseCaseImpl
@@ -21,6 +23,8 @@ import com.thejohnsondev.isafe.domain.use_cases.auth.SignInUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.auth.SignUpUseCase
 import com.thejohnsondev.isafe.domain.use_cases.auth.SignUpUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.combined.AuthUseCases
+import com.thejohnsondev.isafe.domain.use_cases.key_gen.GenerateUserKeyUseCase
+import com.thejohnsondev.isafe.domain.use_cases.key_gen.GenerateUserKeyUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.CreateUserUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.CreateUserUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.GetUserDataUseCase
@@ -70,6 +74,13 @@ object AppModule {
     @Provides
     fun provideIsUserLoggedInUseCase(firebaseAuth: FirebaseAuth): IsUserLoggedInUseCase =
         IsUserLoggedInUseCaseImpl(firebaseAuth)
+
+    @Singleton
+    @Provides
+    fun provideGenerateKeyRepository(
+        coroutineScope: CoroutineScope,
+        applicationContext: Context
+    ): GenerateKeyRepository = GenerateKeyRepositoryImpl(coroutineScope, applicationContext)
 
     @Singleton
     @Provides
@@ -139,6 +150,12 @@ object AppModule {
         dataStore: DataStore,
         remoteDbRepository: RemoteDbRepository
     ): SaveUserSecretUseCase = SaveUserSecretUseCaseImpl(dataStore, remoteDbRepository)
+
+    @Singleton
+    @Provides
+    fun provideGenerateUserKeyUseCase(
+        generateKeyRepository: GenerateKeyRepository
+    ): GenerateUserKeyUseCase = GenerateUserKeyUseCaseImpl(generateKeyRepository)
 
     @Singleton
     @Provides

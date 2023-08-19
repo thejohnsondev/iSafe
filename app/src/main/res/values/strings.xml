@@ -16,4 +16,10 @@
     <string name="safe">Safe</string>
     <string name="buttons">Buttons</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="upload_image">Upload image</string>
+    <string name="key_generation">Key generation</string>
+    <string name="arrow_back">Arrow back</string>
+    <string name="click_to_upload_your_key_file">Click to upload your key-file</string>
+    <string name="uploaded_file_is_empty">Uploaded file is empty</string>
+    <string name="unexpected_error_when_generating_the_key">Unexpected error when generating the key</string>
 </resources>

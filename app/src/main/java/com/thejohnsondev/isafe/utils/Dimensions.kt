@@ -14,6 +14,7 @@ val Size56 = 56.dp
 val Size64 = 64.dp
 val Size72 = 72.dp
 val Size86 = 86.dp
+val Size150 = 150.dp
 
 val Percent40 = 0.4f
 val Percent70 = 0.7f

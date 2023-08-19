@@ -1,9 +1,15 @@
 package com.thejohnsondev.isafe.utils
 
+import android.content.Context
+import android.database.Cursor
+import android.net.Uri
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import com.google.gson.Gson
 import com.thejohnsondev.isafe.R
 import com.thejohnsondev.isafe.domain.models.EmailValidationState
 import com.thejohnsondev.isafe.domain.models.PasswordValidationState
+import java.io.File
 import java.util.regex.Pattern
 
 fun String.isPasswordValid(): PasswordValidationState {
@@ -52,4 +58,49 @@ fun Any?.toJson(): String {
 
 inline fun <reified T> String?.fromJson(): T {
     return Gson().fromJson(this, T::class.java)
+}
+
+@Suppress("DEPRECATION")
+fun Uri.asFile(context: Context): File? {
+    context.contentResolver
+        .query(this, arrayOf(MediaStore.Images.Media.DATA), null, null, null)
+        ?.use { cursor ->
+            cursor.moveToFirst()
+            val cursorData =
+                cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
+
+            return if (cursorData == null) {
+                returnCursorData(this, context)?.let { File(it) }
+            } else {
+                File(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)))
+            }
+        }
+    return null
+}
+
+@Suppress("DEPRECATION")
+private fun returnCursorData(uri: Uri?, context: Context): String? {
+    if (DocumentsContract.isDocumentUri(context, uri)) {
+        val wholeID = DocumentsContract.getDocumentId(uri)
+        val splits = wholeID.split(":".toRegex()).toTypedArray()
+        if (splits.size == 2) {
+            val id = splits[1]
+            val column = arrayOf(MediaStore.Images.Media.DATA)
+            val sel = MediaStore.Images.Media._ID + "=?"
+
+            val cursor: Cursor? = context.contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                column, sel, arrayOf(id), null
+            )
+
+            val columnIndex: Int? = cursor?.getColumnIndex(column[0])
+            if (cursor?.moveToFirst() == true) {
+                return columnIndex?.let { cursor.getString(it) }
+            }
+            cursor?.close()
+        }
+    } else {
+        return uri?.path
+    }
+    return null
 }

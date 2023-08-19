@@ -11,6 +11,8 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.thejohnsondev.isafe.presentation.screens.check_auth_state.CheckAuthStateScreen
 import com.thejohnsondev.isafe.presentation.screens.check_auth_state.CheckAuthStateViewModel
+import com.thejohnsondev.isafe.presentation.screens.create_encryption_key.CreateEncryptionKeyScreen
+import com.thejohnsondev.isafe.presentation.screens.create_encryption_key.CreateEncryptionKeyViewModel
 import com.thejohnsondev.isafe.presentation.screens.home.HomeScreen
 import com.thejohnsondev.isafe.presentation.screens.login.LoginScreen
 import com.thejohnsondev.isafe.presentation.screens.login.LoginViewModel
@@ -58,6 +60,10 @@ fun Navigation() {
         }
         composable(route = Screens.HomeScreen.name) {
             HomeScreen(navController = navController)
+        }
+        composable(route = Screens.CreateEncryptionKeyScreen.name) {
+            val viewModel = hiltViewModel<CreateEncryptionKeyViewModel>()
+            CreateEncryptionKeyScreen(navController = navController, viewModel = viewModel)
         }
     }
 }

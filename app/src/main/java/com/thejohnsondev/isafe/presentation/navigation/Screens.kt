@@ -5,4 +5,5 @@ enum class Screens {
     LoginScreen,
     SignUpScreen,
     HomeScreen,
+    CreateEncryptionKeyScreen
 }
