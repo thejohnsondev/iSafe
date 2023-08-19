@@ -1,11 +1,12 @@
 package com.thejohnsondev.isafe.presentation.screens.signup
 
-import com.google.firebase.auth.AuthResult
 import com.thejohnsondev.isafe.domain.models.AuthResponse
+import com.thejohnsondev.isafe.domain.models.DatabaseResponse
 import com.thejohnsondev.isafe.domain.models.EmailValidationState
 import com.thejohnsondev.isafe.domain.models.LoadingState
 import com.thejohnsondev.isafe.domain.models.OneTimeEvent
 import com.thejohnsondev.isafe.domain.models.PasswordValidationState
+import com.thejohnsondev.isafe.domain.models.UserModel
 import com.thejohnsondev.isafe.domain.use_cases.combined.AuthUseCases
 import com.thejohnsondev.isafe.utils.EMPTY
 import com.thejohnsondev.isafe.utils.base.BaseViewModel
@@ -43,7 +44,7 @@ class SignUpViewModel @Inject constructor(
 
     fun perform(action: SignUpAction) {
         when (action) {
-            is SignUpAction.SignUpWithEmail -> signUp(action.email, action.password)
+            is SignUpAction.SignUpWithEmail -> signUp(action.name, action.email, action.password)
             is SignUpAction.ValidateEmail -> validateEmail(action.email)
             is SignUpAction.ValidatePassword -> validatePassword(action.password)
             is SignUpAction.EnterName -> enterName(action.name)
@@ -63,13 +64,13 @@ class SignUpViewModel @Inject constructor(
         _passwordValidationState.value = useCases.validatePassword(password)
     }
 
-    private fun signUp(email: String, password: String) = launch {
+    private fun signUp(name: String, email: String, password: String) = launch {
         _loadingState.value = LoadingState.Loading
         useCases.signUp(email, password).collect {
             when (it) {
                 is AuthResponse.ResponseSuccess -> {
                     _loadingState.value = LoadingState.Loaded
-                    handleSignUpSuccess(it.authResult)
+                    createUserInRemoteDb(it.authResult.user?.uid.toString(), name)
                 }
 
                 is AuthResponse.ResponseFailure -> {
@@ -80,8 +81,27 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun handleSignUpSuccess(authResult: AuthResult) = launch {
+    private fun handleSignUpSuccess(userModel: UserModel) = launch {
+        saveUserData(userModel)
         sendEvent(OneTimeEvent.SuccessNavigation)
+    }
+
+    private fun createUserInRemoteDb(userUID: String, userName: String) = launch {
+        val newUserModel = UserModel(
+            id = userUID,
+            name = userName,
+            userSecret = null
+        )
+        useCases.createUser(newUserModel).collect {
+            when (it) {
+                is DatabaseResponse.ResponseSuccess -> handleSignUpSuccess(newUserModel)
+                is DatabaseResponse.ResponseFailure -> handleError(it.exception)
+            }
+        }
+    }
+
+    private suspend fun saveUserData(userModel: UserModel) = launch {
+        useCases.saveUserData(userModel)
     }
 
 

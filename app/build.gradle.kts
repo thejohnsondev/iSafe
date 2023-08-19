@@ -100,4 +100,8 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.6.0")
 
+    // Secure data store
+    implementation("androidx.security:security-crypto:1.0.0")
+    implementation("com.google.code.gson:gson:2.8.9")
+
 }

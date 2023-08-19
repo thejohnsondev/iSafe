@@ -5,6 +5,8 @@ import com.thejohnsondev.isafe.domain.models.EmailValidationState
 import com.thejohnsondev.isafe.domain.models.LoadingState
 import com.thejohnsondev.isafe.domain.models.OneTimeEvent
 import com.thejohnsondev.isafe.domain.models.PasswordValidationState
+import com.thejohnsondev.isafe.domain.models.UserDataResponse
+import com.thejohnsondev.isafe.domain.models.UserModel
 import com.thejohnsondev.isafe.domain.use_cases.combined.AuthUseCases
 import com.thejohnsondev.isafe.utils.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,10 +57,24 @@ class LoginViewModel @Inject constructor(
                 }
                 is AuthResponse.ResponseSuccess -> {
                     _loadingState.value = LoadingState.Loaded
-                    sendEvent(OneTimeEvent.SuccessNavigation)
+                    getUserData(it.authResult.user?.uid.orEmpty())
                 }
             }
         }
+    }
+
+    private fun getUserData(userId: String) = launch {
+        useCases.getUserData(userId).collect {
+            when (it) {
+                is UserDataResponse.ResponseFailure -> handleError(it.exception)
+                is UserDataResponse.ResponseSuccess -> saveUserData(it.userModel)
+            }
+        }
+    }
+
+    private fun saveUserData(userModel: UserModel) = launch {
+        useCases.saveUserData(userModel)
+        sendEvent(OneTimeEvent.SuccessNavigation)
     }
 
     private fun validateEmail(email: String) = launch {

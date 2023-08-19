@@ -148,7 +148,8 @@ fun SignUpContent(navController: NavHostController, viewModel: SignUpViewModel) 
                 screenState = screenState,
                 viewModel = viewModel,
                 emailState = emailState,
-                passwordState = passwordState
+                passwordState = passwordState,
+                nameState = nameState
             )
         }
     }
@@ -277,7 +278,8 @@ fun SignUpButtonSection(
     screenState: State<SignUpViewState>,
     viewModel: SignUpViewModel,
     emailState: MutableState<String>,
-    passwordState: MutableState<String>
+    passwordState: MutableState<String>,
+    nameState: MutableState<String>
 ) {
     Column(verticalArrangement = Arrangement.Bottom) {
         RoundedButton(
@@ -287,6 +289,7 @@ fun SignUpButtonSection(
             onClick = {
                 viewModel.perform(
                     SignUpAction.SignUpWithEmail(
+                        nameState.value,
                         emailState.value,
                         passwordState.value
                     )

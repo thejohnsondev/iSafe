@@ -1,5 +1,6 @@
 package com.thejohnsondev.isafe.utils
 
+import com.google.gson.Gson
 import com.thejohnsondev.isafe.R
 import com.thejohnsondev.isafe.domain.models.EmailValidationState
 import com.thejohnsondev.isafe.domain.models.PasswordValidationState
@@ -43,4 +44,12 @@ fun getFriendlyMessage(rawMessage: String?): String {
     return if (rawMessage?.any { it.isLowerCase() } != true) {
         getAuthErrorMessage(rawMessage)
     } else rawMessage
+}
+
+fun Any?.toJson(): String {
+    return Gson().toJson(this)
+}
+
+inline fun <reified T> String?.fromJson(): T {
+    return Gson().fromJson(this, T::class.java)
 }
