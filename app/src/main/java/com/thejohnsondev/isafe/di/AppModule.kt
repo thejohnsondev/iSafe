@@ -25,10 +25,14 @@ import com.thejohnsondev.isafe.domain.use_cases.user.CreateUserUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.CreateUserUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.GetUserDataUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.GetUserDataUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.user.GetUserSecretUseCase
+import com.thejohnsondev.isafe.domain.use_cases.user.GetUserSecretUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserDataUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserDataUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserKeyUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserKeyUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserSecretUseCase
+import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserSecretUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -122,6 +126,19 @@ object AppModule {
     fun provideGetUserDataUseCase(
         remoteDbRepository: RemoteDbRepository
     ): GetUserDataUseCase = GetUserDataUseCaseImpl(remoteDbRepository)
+
+    @Singleton
+    @Provides
+    fun provideGetUserSecretUseCase(
+        dataStore: DataStore
+    ): GetUserSecretUseCase = GetUserSecretUseCaseImpl(dataStore)
+
+    @Singleton
+    @Provides
+    fun provideSaveUserSecretUseCase(
+        dataStore: DataStore,
+        remoteDbRepository: RemoteDbRepository
+    ): SaveUserSecretUseCase = SaveUserSecretUseCaseImpl(dataStore, remoteDbRepository)
 
     @Singleton
     @Provides

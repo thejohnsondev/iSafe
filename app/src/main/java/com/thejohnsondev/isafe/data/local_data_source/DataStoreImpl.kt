@@ -13,7 +13,7 @@ import com.thejohnsondev.isafe.utils.toJson
 import javax.inject.Inject
 
 class DataStoreImpl @Inject constructor(
-    private val applicationContext: Context
+    applicationContext: Context
 ) : DataStore {
 
     private val sharedPrefFile = DATA_STORE_NAME
@@ -39,6 +39,11 @@ class DataStoreImpl @Inject constructor(
         putString(USER_DATA, userModel.toJson())
     }
 
+    override suspend fun saveUserSecret(userSecret: String) {
+        val currentSavedUserData: UserModel = getString(USER_DATA, EMPTY).fromJson()
+        putString(USER_DATA, currentSavedUserData.copy(userSecret = userSecret).toJson())
+    }
+
     override suspend fun saveUserKey(byteArray: ByteArray) {
         val encodedKey = Base64.encodeToString(byteArray, Base64.NO_WRAP)
         putString(USER_KEY, encodedKey)
@@ -46,6 +51,11 @@ class DataStoreImpl @Inject constructor(
 
     override suspend fun getUserData(): UserData {
         return getString(USER_DATA, EMPTY).fromJson()
+    }
+
+    override suspend fun getUserSecret(): String? {
+        val userData: UserModel = getString(USER_DATA, EMPTY).fromJson()
+        return userData.userSecret
     }
 
     override suspend fun getUserKey(): ByteArray {
