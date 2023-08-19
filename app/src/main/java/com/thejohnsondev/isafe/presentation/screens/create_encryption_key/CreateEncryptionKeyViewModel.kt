@@ -1,11 +1,13 @@
 package com.thejohnsondev.isafe.presentation.screens.create_encryption_key
 
 import android.net.Uri
+import com.thejohnsondev.isafe.domain.models.DatabaseResponse
 import com.thejohnsondev.isafe.domain.models.KeyGenerateResult
 import com.thejohnsondev.isafe.domain.models.KeyGenerationState
 import com.thejohnsondev.isafe.domain.models.LoadingState
 import com.thejohnsondev.isafe.domain.use_cases.combined.CreateKeyUseCases
 import com.thejohnsondev.isafe.utils.base.BaseViewModel
+import com.thejohnsondev.isafe.utils.encrypt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -46,17 +48,29 @@ class CreateEncryptionKeyViewModel @Inject constructor(
                     }
 
                     is KeyGenerateResult.Success -> {
-                        _loadingState.value = LoadingState.Loaded
                         handleKeyGenerationSuccess(it.key)
                     }
                 }
             }
     }
 
-    private fun handleKeyGenerationSuccess(key: ByteArray) {
+    private fun handleKeyGenerationSuccess(key: ByteArray) = launch {
+        val userId = useCases.getUserData().id ?: return@launch
+        useCases.saveUserKey(key)
+        useCases.saveUserSecret(userId, userId.encrypt(key))
+            .collect {
+                when (it) {
+                    is DatabaseResponse.ResponseFailure -> {
+                        _loadingState.value = LoadingState.Loaded
+                        handleError(it.exception)
+                    }
 
+                    DatabaseResponse.ResponseSuccess -> {
+                        _loadingState.value = LoadingState.Loaded
+                    }
+                }
+            }
     }
-
 
     private fun mergeSources(
         loadingState: LoadingState,
@@ -65,5 +79,4 @@ class CreateEncryptionKeyViewModel @Inject constructor(
         loadingState = loadingState,
         keyGenerationState = keyGenerationState
     )
-
 }

@@ -1,7 +1,6 @@
 package com.thejohnsondev.isafe.data.local_data_source
 
 import android.content.Context
-import android.service.autofill.UserData
 import android.util.Base64
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
@@ -49,7 +48,7 @@ class DataStoreImpl @Inject constructor(
         putString(USER_KEY, encodedKey)
     }
 
-    override suspend fun getUserData(): UserData {
+    override suspend fun getUserData(): UserModel {
         return getString(USER_DATA, EMPTY).fromJson()
     }
 

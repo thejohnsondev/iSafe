@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.domain.use_cases.user
+package com.thejohnsondev.isafe.domain.use_cases.key_gen
 
 import com.thejohnsondev.isafe.data.local_data_source.DataStore
 import javax.inject.Inject

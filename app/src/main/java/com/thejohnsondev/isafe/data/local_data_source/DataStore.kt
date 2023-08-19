@@ -8,7 +8,7 @@ interface DataStore {
     suspend fun saveUserSecret(userSecret: String)
     suspend fun saveUserKey(byteArray: ByteArray)
 
-    suspend fun getUserData(): UserData
+    suspend fun getUserData(): UserModel
     suspend fun getUserSecret(): String?
     suspend fun getUserKey(): ByteArray
 }

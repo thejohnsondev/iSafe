@@ -35,7 +35,9 @@ fun UploadFileButton(
         }) {
             if (isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.padding(Size24),
+                    modifier = Modifier
+                        .padding(Size24)
+                        .fillMaxSize(),
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             } else {

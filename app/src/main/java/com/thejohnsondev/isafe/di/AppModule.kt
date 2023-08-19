@@ -25,16 +25,18 @@ import com.thejohnsondev.isafe.domain.use_cases.auth.SignUpUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.combined.AuthUseCases
 import com.thejohnsondev.isafe.domain.use_cases.key_gen.GenerateUserKeyUseCase
 import com.thejohnsondev.isafe.domain.use_cases.key_gen.GenerateUserKeyUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.key_gen.SaveUserKeyUseCase
+import com.thejohnsondev.isafe.domain.use_cases.key_gen.SaveUserKeyUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.CreateUserUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.CreateUserUseCaseImpl
-import com.thejohnsondev.isafe.domain.use_cases.user.GetUserDataUseCase
-import com.thejohnsondev.isafe.domain.use_cases.user.GetUserDataUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.user.GetLocalUserDataUseCase
+import com.thejohnsondev.isafe.domain.use_cases.user.GetLocalUserDataUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.user.GetRemoteUserDataUseCase
+import com.thejohnsondev.isafe.domain.use_cases.user.GetRemoteUserDataUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.GetUserSecretUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.GetUserSecretUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserDataUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserDataUseCaseImpl
-import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserKeyUseCase
-import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserKeyUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserSecretUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserSecretUseCaseImpl
 import dagger.Module
@@ -136,7 +138,7 @@ object AppModule {
     @Provides
     fun provideGetUserDataUseCase(
         remoteDbRepository: RemoteDbRepository
-    ): GetUserDataUseCase = GetUserDataUseCaseImpl(remoteDbRepository)
+    ): GetRemoteUserDataUseCase = GetRemoteUserDataUseCaseImpl(remoteDbRepository)
 
     @Singleton
     @Provides
@@ -159,6 +161,12 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideGetLocalUserDataUseCase(
+        dataStore: DataStore
+    ): GetLocalUserDataUseCase = GetLocalUserDataUseCaseImpl(dataStore)
+
+    @Singleton
+    @Provides
     fun provideAuthUseCases(
         signInUseCase: SignInUseCase,
         signUseCases: SignUpUseCase,
@@ -166,7 +174,7 @@ object AppModule {
         passwordValidationUseCase: PasswordValidationUseCase,
         createUserUseCase: CreateUserUseCase,
         saveUserDataUseCase: SaveUserDataUseCase,
-        getUserDataUseCase: GetUserDataUseCase
+        getRemoteUserDataUseCase: GetRemoteUserDataUseCase
     ): AuthUseCases =
         AuthUseCases(
             signUseCases,
@@ -175,7 +183,7 @@ object AppModule {
             passwordValidationUseCase,
             createUserUseCase,
             saveUserDataUseCase,
-            getUserDataUseCase
+            getRemoteUserDataUseCase
         )
 
 }
