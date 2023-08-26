@@ -60,6 +60,7 @@ class EnterEncryptionKeyViewModel @Inject constructor(
             _loadingState.value = LoadingState.Loaded
             _isUploadedKeyFileCorrect.emit(isFileCorrect)
             if (isFileCorrect) {
+                useCases.saveUserKey(key)
                 sendEvent(OneTimeEvent.SuccessNavigation)
             }
         }

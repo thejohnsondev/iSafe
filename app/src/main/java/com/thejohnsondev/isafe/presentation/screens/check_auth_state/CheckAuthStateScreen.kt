@@ -11,12 +11,10 @@ fun CheckAuthStateScreen(
     navController: NavHostController,
     viewModel: CheckAuthStateViewModel
 ) {
-    val isUserLoggedIn = viewModel.isUserLoggedInState.collectAsState()
-    isUserLoggedIn.value ?: return
-    val nextScreen =
-        if (isUserLoggedIn.value == true) Screens.HomeScreen.name else Screens.SignUpScreen.name
+    val firstScreenRoute = viewModel.firstScreenRoute.collectAsState()
+    firstScreenRoute.value ?: return
     navController.navigate(
-        nextScreen,
+        firstScreenRoute.value!!,
         navOptions = NavOptions.Builder()
             .setPopUpTo(Screens.CheckAuthScreen.name, true)
             .build()

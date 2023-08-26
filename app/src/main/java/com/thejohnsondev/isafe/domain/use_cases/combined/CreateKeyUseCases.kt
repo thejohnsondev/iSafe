@@ -10,5 +10,5 @@ data class CreateKeyUseCases @Inject constructor(
     val saveUserSecret: SaveUserSecretUseCase,
     val saveUserKey: SaveUserKeyUseCase,
     val generateUserKey: GenerateUserKeyUseCase,
-    val getUserData: GetLocalUserDataUseCase
+    val getLocalUserData: GetLocalUserDataUseCase
 )

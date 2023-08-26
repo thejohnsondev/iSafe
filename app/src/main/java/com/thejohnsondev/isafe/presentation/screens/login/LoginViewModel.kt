@@ -73,7 +73,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun saveUserData(userModel: UserModel) = launch {
-        useCases.saveUserData(userModel)
+        useCases.saveUserData(userModel, true)
         sendEvent(OneTimeEvent.SuccessNavigation)
     }
 

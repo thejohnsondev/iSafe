@@ -56,7 +56,7 @@ class CreateEncryptionKeyViewModel @Inject constructor(
     }
 
     private fun handleKeyGenerationSuccess(key: ByteArray) = launch {
-        val userId = useCases.getUserData().id ?: return@launch
+        val userId = useCases.getLocalUserData().id ?: return@launch
         useCases.saveUserKey(key)
         useCases.saveUserSecret(userId, userId.encrypt(key))
             .collect {

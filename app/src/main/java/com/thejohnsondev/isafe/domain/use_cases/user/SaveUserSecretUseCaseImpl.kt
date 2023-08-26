@@ -7,11 +7,9 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SaveUserSecretUseCaseImpl @Inject constructor(
-    private val dataStore: DataStore,
     private val remoteDbRepository: RemoteDbRepository
 ): SaveUserSecretUseCase {
     override suspend fun invoke(userId: String, userSecret: String): Flow<DatabaseResponse> {
-        dataStore.saveUserSecret(userSecret)
         return remoteDbRepository.updateUserSecret(userId, userSecret)
     }
 }

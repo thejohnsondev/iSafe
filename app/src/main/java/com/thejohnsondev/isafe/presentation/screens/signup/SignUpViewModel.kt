@@ -101,7 +101,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     private suspend fun saveUserData(userModel: UserModel) = launch {
-        useCases.saveUserData(userModel)
+        useCases.saveUserData(userModel, false)
     }
 
 

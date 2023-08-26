@@ -5,12 +5,12 @@ import com.thejohnsondev.isafe.domain.models.UserModel
 
 interface DataStore {
     suspend fun saveUserData(userModel: UserModel)
-    suspend fun saveUserSecret(userSecret: String)
     suspend fun saveUserKey(byteArray: ByteArray)
+    suspend fun setIsFromLogin(isFromLogin: Boolean)
 
     suspend fun getUserData(): UserModel
-    suspend fun getUserSecret(): String?
     suspend fun getUserKey(): ByteArray
+    suspend fun getIsFromLogin(): Boolean
 
     suspend fun clearUserData()
 }

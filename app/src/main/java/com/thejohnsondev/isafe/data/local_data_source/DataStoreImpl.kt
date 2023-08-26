@@ -30,8 +30,16 @@ class DataStoreImpl @Inject constructor(
         sharedPreferences.edit().putString(key, value).apply()
     }
 
+    private fun DataStore.putBoolean(key: String, value: Boolean) {
+        sharedPreferences.edit().putBoolean(key, value).apply()
+    }
+
     private fun DataStore.getString(key: String, defaultValue: String): String {
         return sharedPreferences.getString(key, defaultValue) ?: defaultValue
+    }
+
+    private fun DataStore.getBoolean(key: String): Boolean {
+        return sharedPreferences.getBoolean(key, false)
     }
 
     private fun DataStore.remove(key: String) {
@@ -42,23 +50,17 @@ class DataStoreImpl @Inject constructor(
         putString(USER_DATA, userModel.toJson())
     }
 
-    override suspend fun saveUserSecret(userSecret: String) {
-        val currentSavedUserData: UserModel = getString(USER_DATA, EMPTY).fromJson()
-        putString(USER_DATA, currentSavedUserData.copy(userSecret = userSecret).toJson())
-    }
-
     override suspend fun saveUserKey(byteArray: ByteArray) {
         val encodedKey = Base64.encodeToString(byteArray, Base64.NO_WRAP)
         putString(USER_KEY, encodedKey)
     }
 
-    override suspend fun getUserData(): UserModel {
-        return getString(USER_DATA, EMPTY).fromJson()
+    override suspend fun setIsFromLogin(isFromLogin: Boolean) {
+        putBoolean(IS_FROM_LOGIN, isFromLogin)
     }
 
-    override suspend fun getUserSecret(): String? {
-        val userData: UserModel = getString(USER_DATA, EMPTY).fromJson()
-        return userData.userSecret
+    override suspend fun getUserData(): UserModel {
+        return getString(USER_DATA, EMPTY).fromJson()
     }
 
     override suspend fun getUserKey(): ByteArray {
@@ -66,13 +68,19 @@ class DataStoreImpl @Inject constructor(
         return Base64.decode(encodedKey, Base64.NO_WRAP)
     }
 
+    override suspend fun getIsFromLogin(): Boolean {
+        return getBoolean(IS_FROM_LOGIN)
+    }
+
     override suspend fun clearUserData() {
         remove(USER_KEY)
         remove(USER_DATA)
+        remove(IS_FROM_LOGIN)
     }
 
     companion object {
         private const val USER_KEY = "user_key"
         private const val USER_DATA = "user_data"
+        private const val IS_FROM_LOGIN = "is-from-login"
     }
 }
