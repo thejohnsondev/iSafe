@@ -11,4 +11,6 @@ interface DataStore {
     suspend fun getUserData(): UserModel
     suspend fun getUserSecret(): String?
     suspend fun getUserKey(): ByteArray
+
+    suspend fun clearUserData()
 }

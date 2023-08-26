@@ -1,20 +1,20 @@
 package com.thejohnsondev.isafe.domain.use_cases.auth
 
 import com.google.firebase.auth.FirebaseAuth
-import com.thejohnsondev.isafe.utils.awaitChannelFlow
-import com.thejohnsondev.isafe.utils.sendOrNothing
+import com.thejohnsondev.isafe.data.local_data_source.DataStore
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LogoutUseCaseImpl(
+class LogoutUseCaseImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val coroutineScope: CoroutineScope
-): LogoutUseCase {
-    override suspend fun invoke(): Flow<Boolean> = awaitChannelFlow {
+    private val coroutineScope: CoroutineScope,
+    private val dataStore: DataStore
+) : LogoutUseCase {
+    override suspend fun invoke() {
         coroutineScope.launch {
             firebaseAuth.signOut()
-            sendOrNothing(true)
+            dataStore.clearUserData()
         }
     }
 }

@@ -12,10 +12,14 @@ import com.thejohnsondev.isafe.data.repositories.RemoteDbRepositoryImpl
 import com.thejohnsondev.isafe.domain.repositories.AuthRepository
 import com.thejohnsondev.isafe.domain.repositories.GenerateKeyRepository
 import com.thejohnsondev.isafe.domain.repositories.RemoteDbRepository
+import com.thejohnsondev.isafe.domain.use_cases.auth.CheckUserKeyCorrectUseCase
+import com.thejohnsondev.isafe.domain.use_cases.auth.CheckUserKeyCorrectUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.auth.EmailValidateUseCase
 import com.thejohnsondev.isafe.domain.use_cases.auth.EmailValidationUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.auth.IsUserLoggedInUseCase
 import com.thejohnsondev.isafe.domain.use_cases.auth.IsUserLoggedInUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.auth.LogoutUseCase
+import com.thejohnsondev.isafe.domain.use_cases.auth.LogoutUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.auth.PasswordValidationUseCase
 import com.thejohnsondev.isafe.domain.use_cases.auth.PasswordValidationUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.auth.SignInUseCase
@@ -33,8 +37,8 @@ import com.thejohnsondev.isafe.domain.use_cases.user.GetLocalUserDataUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.GetLocalUserDataUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.GetRemoteUserDataUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.GetRemoteUserDataUseCaseImpl
-import com.thejohnsondev.isafe.domain.use_cases.user.GetUserSecretUseCase
-import com.thejohnsondev.isafe.domain.use_cases.user.GetUserSecretUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.user.GetLocalUserSecretUseCase
+import com.thejohnsondev.isafe.domain.use_cases.user.GetLocalUserSecretUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserDataUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserDataUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserSecretUseCase
@@ -74,8 +78,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideIsUserLoggedInUseCase(firebaseAuth: FirebaseAuth): IsUserLoggedInUseCase =
-        IsUserLoggedInUseCaseImpl(firebaseAuth)
+    fun provideIsUserLoggedInUseCase(firebaseAuth: FirebaseAuth, dataStore: DataStore): IsUserLoggedInUseCase =
+        IsUserLoggedInUseCaseImpl(firebaseAuth, dataStore)
 
     @Singleton
     @Provides
@@ -144,7 +148,31 @@ object AppModule {
     @Provides
     fun provideGetUserSecretUseCase(
         dataStore: DataStore
-    ): GetUserSecretUseCase = GetUserSecretUseCaseImpl(dataStore)
+    ): GetLocalUserSecretUseCase = GetLocalUserSecretUseCaseImpl(dataStore)
+
+    @Singleton
+    @Provides
+    fun provideLogoutUseCase(
+        firebaseAuth: FirebaseAuth,
+        coroutineScope: CoroutineScope,
+        dataStore: DataStore
+    ): LogoutUseCase = LogoutUseCaseImpl(
+        firebaseAuth,
+        coroutineScope,
+        dataStore
+    )
+
+    @Singleton
+    @Provides
+    fun provideCheckKeyCorrectUseCase(
+        localUserDataUseCase: GetLocalUserDataUseCase,
+        remoteUserDataUseCase: GetRemoteUserDataUseCase,
+        coroutineScope: CoroutineScope
+    ): CheckUserKeyCorrectUseCase = CheckUserKeyCorrectUseCaseImpl(
+        localUserDataUseCase,
+        remoteUserDataUseCase,
+        coroutineScope
+    )
 
     @Singleton
     @Provides

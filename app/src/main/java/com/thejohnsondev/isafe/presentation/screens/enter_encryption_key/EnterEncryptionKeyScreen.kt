@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.create_encryption_key
+package com.thejohnsondev.isafe.presentation.screens.enter_encryption_key
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -37,15 +37,15 @@ import com.thejohnsondev.isafe.utils.Size16
 import com.thejohnsondev.isafe.utils.Size86
 import com.thejohnsondev.isafe.utils.toast
 
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun CreateEncryptionKeyScreen(
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EnterEncryptionKeyScreen(
     navController: NavHostController,
-    viewModel: CreateEncryptionKeyViewModel
+    viewModel: EnterEncryptionKeyViewModel
 ) {
     val context = LocalContext.current
-    val screenState = viewModel.viewState.collectAsState(initial = CreateEncryptionKeyViewState())
+    val screenState = viewModel.viewState.collectAsState(initial = EnterEncryptionKeyViewState())
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -65,7 +65,6 @@ fun CreateEncryptionKeyScreen(
             }
         }
     }
-
     StatusBarColor()
     Scaffold(
         snackbarHost = {
@@ -81,7 +80,7 @@ fun CreateEncryptionKeyScreen(
         topBar = {
             CenterAlignedTopAppBar(title = {
                 Text(
-                    text = stringResource(R.string.key_generation),
+                    text = stringResource(R.string.enter_key_file),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -94,9 +93,8 @@ fun CreateEncryptionKeyScreen(
                         },
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = stringResource(R.string.arrow_back),
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
-
             }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.surface
             )
@@ -109,9 +107,15 @@ fun CreateEncryptionKeyScreen(
                 .background(MaterialTheme.colorScheme.background)
         ) {
             ISafeFileLoader(
-                isLoading = screenState.value.loadingState == LoadingState.Loading
+                isLoading = screenState.value.loadingState == LoadingState.Loading,
+                isError = screenState.value.isUploadedKeyFileCorrect == false,
+                descriptionText = if (screenState.value.isUploadedKeyFileCorrect == false) {
+                    stringResource(R.string.uploaded_file_wrong)
+                } else {
+                    stringResource(R.string.click_to_upload_your_key_file)
+                }
             ) {
-                viewModel.perform(CreateEncryptionKeyAction.GenerateKey(it))
+                viewModel.perform(EnterEncryptionKeyAction.GenerateKey(it))
             }
         }
     }

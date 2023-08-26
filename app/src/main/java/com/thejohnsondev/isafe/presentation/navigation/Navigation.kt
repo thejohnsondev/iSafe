@@ -13,7 +13,10 @@ import com.thejohnsondev.isafe.presentation.screens.check_auth_state.CheckAuthSt
 import com.thejohnsondev.isafe.presentation.screens.check_auth_state.CheckAuthStateViewModel
 import com.thejohnsondev.isafe.presentation.screens.create_encryption_key.CreateEncryptionKeyScreen
 import com.thejohnsondev.isafe.presentation.screens.create_encryption_key.CreateEncryptionKeyViewModel
+import com.thejohnsondev.isafe.presentation.screens.enter_encryption_key.EnterEncryptionKeyScreen
+import com.thejohnsondev.isafe.presentation.screens.enter_encryption_key.EnterEncryptionKeyViewModel
 import com.thejohnsondev.isafe.presentation.screens.home.HomeScreen
+import com.thejohnsondev.isafe.presentation.screens.home.HomeViewModel
 import com.thejohnsondev.isafe.presentation.screens.login.LoginScreen
 import com.thejohnsondev.isafe.presentation.screens.login.LoginViewModel
 import com.thejohnsondev.isafe.presentation.screens.signup.SignUpScreen
@@ -36,13 +39,15 @@ fun Navigation() {
             val viewModel = hiltViewModel<CheckAuthStateViewModel>()
             CheckAuthStateScreen(navController = navController, viewModel = viewModel)
         }
-        composable(route = Screens.LoginScreen.name,
+        composable(
+            route = Screens.LoginScreen.name,
             enterTransition = {
                 fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
             },
             exitTransition = {
                 fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
-            }) {
+            }
+        ) {
             val viewModel = hiltViewModel<LoginViewModel>()
             LoginScreen(navController = navController, viewModel = viewModel)
         }
@@ -58,12 +63,41 @@ fun Navigation() {
             val viewModel = hiltViewModel<SignUpViewModel>()
             SignUpScreen(navController = navController, viewModel = viewModel)
         }
-        composable(route = Screens.HomeScreen.name) {
-            HomeScreen(navController = navController)
+        composable(
+            route = Screens.HomeScreen.name,
+            enterTransition = {
+                fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+            }
+        ) {
+            val viewModel = hiltViewModel<HomeViewModel>()
+            HomeScreen(navController = navController, viewModel = viewModel)
         }
-        composable(route = Screens.CreateEncryptionKeyScreen.name) {
+        composable(
+            route = Screens.CreateEncryptionKeyScreen.name,
+            enterTransition = {
+                fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+            }
+        ) {
             val viewModel = hiltViewModel<CreateEncryptionKeyViewModel>()
             CreateEncryptionKeyScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(
+            route = Screens.EnterEncryptionKeyScreen.name,
+            enterTransition = {
+                fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+            }
+        ) {
+            val viewModel = hiltViewModel<EnterEncryptionKeyViewModel>()
+            EnterEncryptionKeyScreen(navController = navController, viewModel = viewModel)
         }
     }
 }

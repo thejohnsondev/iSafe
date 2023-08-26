@@ -34,6 +34,10 @@ class DataStoreImpl @Inject constructor(
         return sharedPreferences.getString(key, defaultValue) ?: defaultValue
     }
 
+    private fun DataStore.remove(key: String) {
+        sharedPreferences.edit().remove(key).apply()
+    }
+
     override suspend fun saveUserData(userModel: UserModel) {
         putString(USER_DATA, userModel.toJson())
     }
@@ -60,6 +64,11 @@ class DataStoreImpl @Inject constructor(
     override suspend fun getUserKey(): ByteArray {
         val encodedKey = getString(USER_KEY, EMPTY)
         return Base64.decode(encodedKey, Base64.NO_WRAP)
+    }
+
+    override suspend fun clearUserData() {
+        remove(USER_KEY)
+        remove(USER_DATA)
     }
 
     companion object {

@@ -90,9 +90,6 @@ fun SignUpContent(navController: NavHostController, viewModel: SignUpViewModel) 
     val snackbarHostState = remember {
         SnackbarHostState()
     }
-    if (screenState.value.isSignUpSuccess == true) {
-        navController.navigate(Screens.HomeScreen.name)
-    }
 
     LaunchedEffect(true) {
         viewModel.getEventFlow().collect {
@@ -103,7 +100,10 @@ fun SignUpContent(navController: NavHostController, viewModel: SignUpViewModel) 
                     duration = SnackbarDuration.Short
                 )
 
-                is OneTimeEvent.SuccessNavigation -> navController.navigate(Screens.HomeScreen.name)
+                is OneTimeEvent.SuccessNavigation -> {
+                    navController.navigate(Screens.CreateEncryptionKeyScreen.name)
+                }
+
             }
         }
     }

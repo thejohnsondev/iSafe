@@ -86,9 +86,6 @@ fun LoginContent(navController: NavHostController, viewModel: LoginViewModel) {
     val snackbarHostState = remember {
         SnackbarHostState()
     }
-    if (screenState.value.isLoginSuccess == true) {
-        navController.navigate(Screens.HomeScreen.name)
-    }
 
     LaunchedEffect(true) {
         viewModel.getEventFlow().collect {
@@ -98,7 +95,9 @@ fun LoginContent(navController: NavHostController, viewModel: LoginViewModel) {
                     it.message,
                     duration = SnackbarDuration.Short
                 )
-                is OneTimeEvent.SuccessNavigation -> navController.navigate(Screens.HomeScreen.name)
+                is OneTimeEvent.SuccessNavigation -> {
+                    navController.navigate(Screens.EnterEncryptionKeyScreen.name)
+                }
             }
         }
     }
