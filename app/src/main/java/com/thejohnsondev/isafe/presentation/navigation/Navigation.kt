@@ -9,18 +9,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.thejohnsondev.isafe.presentation.screens.check_auth_state.CheckAuthStateScreen
-import com.thejohnsondev.isafe.presentation.screens.check_auth_state.CheckAuthStateViewModel
-import com.thejohnsondev.isafe.presentation.screens.create_encryption_key.CreateEncryptionKeyScreen
-import com.thejohnsondev.isafe.presentation.screens.create_encryption_key.CreateEncryptionKeyViewModel
-import com.thejohnsondev.isafe.presentation.screens.enter_encryption_key.EnterEncryptionKeyScreen
-import com.thejohnsondev.isafe.presentation.screens.enter_encryption_key.EnterEncryptionKeyViewModel
-import com.thejohnsondev.isafe.presentation.screens.home.HomeScreen
-import com.thejohnsondev.isafe.presentation.screens.home.HomeViewModel
-import com.thejohnsondev.isafe.presentation.screens.login.LoginScreen
-import com.thejohnsondev.isafe.presentation.screens.login.LoginViewModel
-import com.thejohnsondev.isafe.presentation.screens.signup.SignUpScreen
-import com.thejohnsondev.isafe.presentation.screens.signup.SignUpViewModel
+import com.thejohnsondev.isafe.presentation.screens.auth.check_auth_state.CheckAuthStateScreen
+import com.thejohnsondev.isafe.presentation.screens.auth.check_auth_state.CheckAuthStateViewModel
+import com.thejohnsondev.isafe.presentation.screens.auth.create_encryption_key.CreateEncryptionKeyScreen
+import com.thejohnsondev.isafe.presentation.screens.auth.create_encryption_key.CreateEncryptionKeyViewModel
+import com.thejohnsondev.isafe.presentation.screens.auth.enter_encryption_key.EnterEncryptionKeyScreen
+import com.thejohnsondev.isafe.presentation.screens.auth.enter_encryption_key.EnterEncryptionKeyViewModel
+import com.thejohnsondev.isafe.presentation.screens.auth.login.LoginScreen
+import com.thejohnsondev.isafe.presentation.screens.auth.login.LoginViewModel
+import com.thejohnsondev.isafe.presentation.screens.auth.signup.SignUpScreen
+import com.thejohnsondev.isafe.presentation.screens.auth.signup.SignUpViewModel
+import com.thejohnsondev.isafe.presentation.screens.feat.home.HomeScreen
+import com.thejohnsondev.isafe.presentation.screens.feat.home.HomeViewModel
 import com.thejohnsondev.isafe.utils.TWEEN_ANIM_DEFAULT_DURATION
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -73,7 +73,7 @@ fun Navigation() {
             }
         ) {
             val viewModel = hiltViewModel<HomeViewModel>()
-            HomeScreen(navController = navController, viewModel = viewModel)
+            HomeScreen(viewModel = viewModel)
         }
         composable(
             route = Screens.CreateEncryptionKeyScreen.name,

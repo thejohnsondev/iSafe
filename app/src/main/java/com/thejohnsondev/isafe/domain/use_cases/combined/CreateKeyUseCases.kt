@@ -1,5 +1,6 @@
 package com.thejohnsondev.isafe.domain.use_cases.combined
 
+import com.thejohnsondev.isafe.domain.use_cases.auth.LogoutUseCase
 import com.thejohnsondev.isafe.domain.use_cases.key_gen.GenerateUserKeyUseCase
 import com.thejohnsondev.isafe.domain.use_cases.key_gen.SaveUserKeyUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.GetLocalUserDataUseCase
@@ -10,5 +11,6 @@ data class CreateKeyUseCases @Inject constructor(
     val saveUserSecret: SaveUserSecretUseCase,
     val saveUserKey: SaveUserKeyUseCase,
     val generateUserKey: GenerateUserKeyUseCase,
-    val getLocalUserData: GetLocalUserDataUseCase
+    val getLocalUserData: GetLocalUserDataUseCase,
+    val logout: LogoutUseCase
 )

@@ -25,4 +25,8 @@
     <string name="uploaded_file_is_empty">Uploaded file is empty</string>
     <string name="uploaded_file_wrong">The uploaded file does not match with the initial one. Please, pick the original file-key</string>
     <string name="unexpected_error_when_generating_the_key">Unexpected error when generating the key</string>
+    <string name="notes">Notes</string>
+    <string name="passwords">Passwords</string>
+    <string name="settings">Settings</string>
+
 </resources>

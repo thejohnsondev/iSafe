@@ -98,7 +98,7 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.6.0")
+    implementation("androidx.navigation:navigation-compose")
 
     // Secure data store
     implementation("androidx.security:security-crypto:1.0.0")
