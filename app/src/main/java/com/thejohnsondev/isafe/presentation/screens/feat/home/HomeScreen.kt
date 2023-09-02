@@ -5,15 +5,20 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.isafe.presentation.navigation.ISafeBottomNavigation
 import com.thejohnsondev.isafe.presentation.navigation.Screens
 import com.thejohnsondev.isafe.presentation.screens.feat.notes.NotesScreen
@@ -27,55 +32,67 @@ import com.thejohnsondev.isafe.utils.TWEEN_ANIM_DEFAULT_DURATION
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel) {
+fun HomeScreen(rootNavController: NavController, homeViewModel: HomeViewModel) {
     val navController = rememberAnimatedNavController()
-    Scaffold(
-        bottomBar = {
-            ISafeBottomNavigation(navController = navController)
-        }
-    ) {
-        AnimatedNavHost(
-            navController = navController,
-            startDestination = Screens.NotesScreen.name,
-            modifier = Modifier.padding(it)
+    StatusBarColor()
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+        Scaffold(
+            bottomBar = {
+                ISafeBottomNavigation(navController = navController)
+            }
         ) {
-            composable(
-                route = Screens.NotesScreen.name,
-                enterTransition = {
-                    fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
-                },
-                exitTransition = {
-                    fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
-                }
+            AnimatedNavHost(
+                navController = navController,
+                startDestination = Screens.NotesScreen.name,
+                modifier = Modifier.padding(it)
             ) {
-                val viewModel = hiltViewModel<NotesViewModel>()
-                NotesScreen(navController = navController, viewModel = viewModel)
-            }
-            composable(
-                route = Screens.PasswordsScreen.name,
-                enterTransition = {
-                    fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
-                },
-                exitTransition = {
-                    fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                composable(
+                    route = Screens.NotesScreen.name,
+                    enterTransition = {
+                        fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    },
+                    exitTransition = {
+                        fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    }
+                ) {
+                    val viewModel = hiltViewModel<NotesViewModel>()
+                    NotesScreen(navController = navController, viewModel = viewModel)
                 }
-            ) {
-                val viewModel = hiltViewModel<PasswordsViewModel>()
-                PasswordsScreen(navController = navController, viewModel = viewModel)
-            }
-            composable(
-                route = Screens.Settings.name,
-                enterTransition = {
-                    fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
-                },
-                exitTransition = {
-                    fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                composable(
+                    route = Screens.PasswordsScreen.name,
+                    enterTransition = {
+                        fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    },
+                    exitTransition = {
+                        fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    }
+                ) {
+                    val viewModel = hiltViewModel<PasswordsViewModel>()
+                    PasswordsScreen(navController = navController, viewModel = viewModel)
                 }
-            ) {
-                val viewModel = hiltViewModel<SettingsViewModel>()
-                SettingsScreen(navController = navController, viewModel = viewModel)
+                composable(
+                    route = Screens.Settings.name,
+                    enterTransition = {
+                        fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    },
+                    exitTransition = {
+                        fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    }
+                ) {
+                    val viewModel = hiltViewModel<SettingsViewModel>()
+                    SettingsScreen(
+                        rootNavController = rootNavController,
+                        navController = navController,
+                        viewModel = viewModel
+                    )
+                }
             }
         }
-
     }
+}
+
+@Composable
+fun StatusBarColor() {
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(MaterialTheme.colorScheme.background)
 }

@@ -73,7 +73,7 @@ fun Navigation() {
             }
         ) {
             val viewModel = hiltViewModel<HomeViewModel>()
-            HomeScreen(viewModel = viewModel)
+            HomeScreen(rootNavController = navController, homeViewModel = viewModel)
         }
         composable(
             route = Screens.CreateEncryptionKeyScreen.name,

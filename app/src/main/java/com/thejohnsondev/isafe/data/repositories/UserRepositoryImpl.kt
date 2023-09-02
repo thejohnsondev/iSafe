@@ -7,10 +7,11 @@ import com.google.firebase.database.ValueEventListener
 import com.thejohnsondev.isafe.domain.models.DatabaseResponse
 import com.thejohnsondev.isafe.domain.models.UserDataResponse
 import com.thejohnsondev.isafe.domain.models.UserModel
-import com.thejohnsondev.isafe.domain.repositories.RemoteDbRepository
-import com.thejohnsondev.isafe.utils.PARAM_USER_ID
+import com.thejohnsondev.isafe.domain.repositories.UserRepository
+import com.thejohnsondev.isafe.utils.PARAM_ID
 import com.thejohnsondev.isafe.utils.PARAM_USER_NAME
 import com.thejohnsondev.isafe.utils.PARAM_USER_SECRET
+import com.thejohnsondev.isafe.utils.USERS_DATA_DB_REF
 import com.thejohnsondev.isafe.utils.USERS_DB_REF
 import com.thejohnsondev.isafe.utils.awaitChannelFlow
 import com.thejohnsondev.isafe.utils.sendOrNothing
@@ -19,13 +20,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class RemoteDbRepositoryImpl @Inject constructor(
+class UserRepositoryImpl @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase,
-    private val coroutineScope: CoroutineScope
-) : RemoteDbRepository {
+    private val coroutineScope: CoroutineScope,
+) : UserRepository {
+
+
     override fun createUser(userModel: UserModel): Flow<DatabaseResponse> = awaitChannelFlow {
         firebaseDatabase.getReference(USERS_DB_REF)
             .child(userModel.id.orEmpty())
+            .child(USERS_DATA_DB_REF)
             .setValue(userModel)
             .addOnSuccessListener {
                 coroutineScope.launch {
@@ -40,7 +44,10 @@ class RemoteDbRepositoryImpl @Inject constructor(
 
     override fun updateUserSecret(userId: String, userSecret: String): Flow<DatabaseResponse> =
         awaitChannelFlow {
-            val userRef = firebaseDatabase.getReference(USERS_DB_REF).child(userId)
+            val userRef = firebaseDatabase.getReference(USERS_DB_REF)
+                .child(userId)
+                .child(USERS_DATA_DB_REF)
+
             val valuesMap = mapOf(
                 PARAM_USER_SECRET to userSecret
             )
@@ -59,11 +66,12 @@ class RemoteDbRepositoryImpl @Inject constructor(
     override fun getUserData(userId: String): Flow<UserDataResponse> = awaitChannelFlow {
         firebaseDatabase.getReference(USERS_DB_REF)
             .child(userId)
+            .child(USERS_DATA_DB_REF)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val userMap = snapshot.value as HashMap<String, String?>
                     val userModel = UserModel(
-                        id = userMap[PARAM_USER_ID],
+                        id = userMap[PARAM_ID],
                         name = userMap[PARAM_USER_NAME],
                         userSecret = userMap[PARAM_USER_SECRET]
                     )
@@ -80,4 +88,5 @@ class RemoteDbRepositoryImpl @Inject constructor(
 
             })
     }
+
 }

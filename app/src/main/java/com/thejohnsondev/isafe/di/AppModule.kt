@@ -8,10 +8,12 @@ import com.thejohnsondev.isafe.data.local_data_source.DataStore
 import com.thejohnsondev.isafe.data.local_data_source.DataStoreImpl
 import com.thejohnsondev.isafe.data.repositories.AuthRepositoryImpl
 import com.thejohnsondev.isafe.data.repositories.GenerateKeyRepositoryImpl
-import com.thejohnsondev.isafe.data.repositories.RemoteDbRepositoryImpl
+import com.thejohnsondev.isafe.data.repositories.NotesRepositoryImpl
+import com.thejohnsondev.isafe.data.repositories.UserRepositoryImpl
 import com.thejohnsondev.isafe.domain.repositories.AuthRepository
 import com.thejohnsondev.isafe.domain.repositories.GenerateKeyRepository
-import com.thejohnsondev.isafe.domain.repositories.RemoteDbRepository
+import com.thejohnsondev.isafe.domain.repositories.NotesRepository
+import com.thejohnsondev.isafe.domain.repositories.UserRepository
 import com.thejohnsondev.isafe.domain.use_cases.auth.CheckUserKeyCorrectUseCase
 import com.thejohnsondev.isafe.domain.use_cases.auth.CheckUserKeyCorrectUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.auth.EmailValidateUseCase
@@ -31,6 +33,14 @@ import com.thejohnsondev.isafe.domain.use_cases.key_gen.GenerateUserKeyUseCase
 import com.thejohnsondev.isafe.domain.use_cases.key_gen.GenerateUserKeyUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.key_gen.SaveUserKeyUseCase
 import com.thejohnsondev.isafe.domain.use_cases.key_gen.SaveUserKeyUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.notes.CreateNoteUseCase
+import com.thejohnsondev.isafe.domain.use_cases.notes.CreateNoteUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.notes.DeleteNoteUseCase
+import com.thejohnsondev.isafe.domain.use_cases.notes.DeleteNoteUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.notes.GetAllNotesUseCase
+import com.thejohnsondev.isafe.domain.use_cases.notes.GetAllNotesUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.notes.UpdateNoteUseCase
+import com.thejohnsondev.isafe.domain.use_cases.notes.UpdateNoteUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.CreateUserUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.CreateUserUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.GetLocalUserDataUseCase
@@ -76,7 +86,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideIsUserLoggedInUseCase(firebaseAuth: FirebaseAuth, dataStore: DataStore): GetFirstScreenRoute =
+    fun provideIsUserLoggedInUseCase(
+        firebaseAuth: FirebaseAuth,
+        dataStore: DataStore
+    ): GetFirstScreenRoute =
         GetFirstScreenRouteImpl(firebaseAuth, dataStore)
 
     @Singleton
@@ -95,9 +108,9 @@ object AppModule {
     @Provides
     fun provideRemoteDbRepository(
         firebaseDatabase: FirebaseDatabase,
-        coroutineScope: CoroutineScope
-    ): RemoteDbRepository =
-        RemoteDbRepositoryImpl(firebaseDatabase, coroutineScope)
+        coroutineScope: CoroutineScope,
+    ): UserRepository =
+        UserRepositoryImpl(firebaseDatabase, coroutineScope)
 
     @Singleton
     @Provides
@@ -121,8 +134,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideCreateUserUseCase(
-        remoteDbRepository: RemoteDbRepository
-    ): CreateUserUseCase = CreateUserUseCaseImpl(remoteDbRepository)
+        userRepository: UserRepository
+    ): CreateUserUseCase = CreateUserUseCaseImpl(userRepository)
 
     @Singleton
     @Provides
@@ -139,8 +152,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideGetUserDataUseCase(
-        remoteDbRepository: RemoteDbRepository
-    ): GetRemoteUserDataUseCase = GetRemoteUserDataUseCaseImpl(remoteDbRepository)
+        userRepository: UserRepository
+    ): GetRemoteUserDataUseCase = GetRemoteUserDataUseCaseImpl(userRepository)
 
     @Singleton
     @Provides
@@ -169,8 +182,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideSaveUserSecretUseCase(
-        remoteDbRepository: RemoteDbRepository
-    ): SaveUserSecretUseCase = SaveUserSecretUseCaseImpl(remoteDbRepository)
+        userRepository: UserRepository
+    ): SaveUserSecretUseCase = SaveUserSecretUseCaseImpl(userRepository)
 
     @Singleton
     @Provides
@@ -204,5 +217,38 @@ object AppModule {
             saveUserDataUseCase,
             getRemoteUserDataUseCase
         )
+
+
+    @Singleton
+    @Provides
+    fun provideNotesRepository(
+        firebaseDatabase: FirebaseDatabase,
+        coroutineScope: CoroutineScope,
+        dataStore: DataStore
+    ): NotesRepository = NotesRepositoryImpl(
+        firebaseDatabase,
+        coroutineScope,
+        dataStore
+    )
+
+    @Singleton
+    @Provides
+    fun provideCreateNoteUseCase(notesRepository: NotesRepository): CreateNoteUseCase =
+        CreateNoteUseCaseImpl(notesRepository)
+
+    @Singleton
+    @Provides
+    fun provideDeleteNoteUseCase(notesRepository: NotesRepository): DeleteNoteUseCase =
+        DeleteNoteUseCaseImpl(notesRepository)
+
+    @Singleton
+    @Provides
+    fun provideGetAllNotesUseCase(notesRepository: NotesRepository): GetAllNotesUseCase =
+        GetAllNotesUseCaseImpl(notesRepository)
+
+    @Singleton
+    @Provides
+    fun provideUpdateNoteUseCase(notesRepository: NotesRepository): UpdateNoteUseCase =
+        UpdateNoteUseCaseImpl(notesRepository)
 
 }

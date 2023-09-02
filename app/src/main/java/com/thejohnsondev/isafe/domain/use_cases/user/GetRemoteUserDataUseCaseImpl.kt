@@ -1,14 +1,14 @@
 package com.thejohnsondev.isafe.domain.use_cases.user
 
 import com.thejohnsondev.isafe.domain.models.UserDataResponse
-import com.thejohnsondev.isafe.domain.repositories.RemoteDbRepository
+import com.thejohnsondev.isafe.domain.repositories.UserRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetRemoteUserDataUseCaseImpl @Inject constructor(
-    private val remoteDbRepository: RemoteDbRepository
+    private val userRepository: UserRepository
 ): GetRemoteUserDataUseCase {
     override suspend fun invoke(userId: String): Flow<UserDataResponse> {
-        return remoteDbRepository.getUserData(userId)
+        return userRepository.getUserData(userId)
     }
 }
