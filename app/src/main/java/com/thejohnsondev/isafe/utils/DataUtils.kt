@@ -10,7 +10,11 @@ import com.thejohnsondev.isafe.R
 import com.thejohnsondev.isafe.domain.models.EmailValidationState
 import com.thejohnsondev.isafe.domain.models.PasswordValidationState
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.regex.Pattern
+
+const val NOTE_TIME_FORMAT = "dd MMM yyyy, hh:mm"
 
 fun String.isPasswordValid(): PasswordValidationState {
     val length = this.length
@@ -103,4 +107,8 @@ private fun returnCursorData(uri: Uri?, context: Context): String? {
         return uri?.path
     }
     return null
+}
+
+fun Long.getTimeFormatted(format: String): String {
+    return SimpleDateFormat(format, Locale.US).format(this)
 }

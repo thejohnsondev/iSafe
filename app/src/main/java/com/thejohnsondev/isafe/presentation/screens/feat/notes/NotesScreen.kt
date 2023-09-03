@@ -4,8 +4,13 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,6 +35,7 @@ import com.thejohnsondev.isafe.domain.models.LoadingState
 import com.thejohnsondev.isafe.domain.models.NoteModel
 import com.thejohnsondev.isafe.domain.models.OneTimeEvent
 import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
+import com.thejohnsondev.isafe.presentation.components.NoteItem
 import com.thejohnsondev.isafe.presentation.navigation.Screens
 import com.thejohnsondev.isafe.utils.Size16
 import com.thejohnsondev.isafe.utils.Size32
@@ -111,6 +117,21 @@ fun NotesContent(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
+            Spacer(modifier = Modifier.height(Size16))
+            NotesList(notesList = screenState.notesList)
+        }
+    }
+}
+
+@Composable
+fun NotesList(
+    notesList: List<NoteModel>
+) {
+    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        items(notesList) { note ->
+            NoteItem(note = note) { clickedNote ->
+                // handle click
+            }
         }
     }
 }
