@@ -9,5 +9,6 @@ enum class Screens {
     EnterEncryptionKeyScreen,
     NotesScreen,
     PasswordsScreen,
-    Settings
+    Settings,
+    AddNote
 }

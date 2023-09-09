@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.feat.notes
+package com.thejohnsondev.isafe.presentation.screens.feat.notes.list
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -10,8 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -24,6 +31,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +64,12 @@ fun NotesScreen(
     val state = viewModel.state.collectAsState(NotesState())
     val snackbarHostState = remember {
         SnackbarHostState()
+    }
+    val listState = rememberLazyListState()
+    val expandedFab by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex == 0
+        }
     }
     StatusBarColor()
     LaunchedEffect(true) {
@@ -95,11 +110,31 @@ fun NotesScreen(
                 },
             )
         },
-
-        ) { paddingValues ->
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = {
+                    navController.navigate(Screens.AddNote.name)
+                },
+                expanded = expandedFab,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.add)
+                    )
+                },
+                text = {
+                    Text(text = stringResource(R.string.add_note))
+                },
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        },
+        floatingActionButtonPosition = FabPosition.End,
+    ) { paddingValues ->
         NotesContent(
             modifier = Modifier.padding(paddingValues),
-            screenState = state.value
+            screenState = state.value,
+            state = listState
         ) { note ->
 
         }
@@ -113,6 +148,7 @@ fun NotesScreen(
 fun NotesContent(
     modifier: Modifier = Modifier,
     screenState: NotesState,
+    state: LazyListState,
     onNoteClick: (NoteModel) -> Unit
 ) {
 
@@ -129,16 +165,17 @@ fun NotesContent(
             verticalArrangement = Arrangement.Top
         ) {
             Spacer(modifier = Modifier.height(Size16))
-            NotesList(notesList = screenState.notesList)
+            NotesList(notesList = screenState.notesList, state = state)
         }
     }
 }
 
 @Composable
 fun NotesList(
-    notesList: List<NoteModel>
+    notesList: List<NoteModel>,
+    state: LazyListState
 ) {
-    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+    LazyColumn(state = state, modifier = Modifier.fillMaxWidth()) {
         items(notesList) { note ->
             NoteItem(note = note) { clickedNote ->
                 // handle click
@@ -162,7 +199,10 @@ fun NotesScreenPreview() {
             loadingState = LoadingState.Loaded,
             notesList = emptyList()
         ),
-        onNoteClick = {}
+        state = rememberLazyListState(),
+        onNoteClick = {
+
+        }
     )
 }
 

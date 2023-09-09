@@ -1,6 +1,7 @@
 package com.thejohnsondev.isafe.utils
 
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 val Size2 = 2.dp
 val Size4 = 4.dp
@@ -15,6 +16,10 @@ val Size64 = 64.dp
 val Size72 = 72.dp
 val Size86 = 86.dp
 val Size150 = 150.dp
+
+val Text18 = 18.sp
+val Text20 = 20.sp
+val Text22 = 22.sp
 
 val Percent40 = 0.4f
 val Percent70 = 0.7f

@@ -21,8 +21,10 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.isafe.presentation.navigation.ISafeBottomNavigation
 import com.thejohnsondev.isafe.presentation.navigation.Screens
-import com.thejohnsondev.isafe.presentation.screens.feat.notes.NotesScreen
-import com.thejohnsondev.isafe.presentation.screens.feat.notes.NotesViewModel
+import com.thejohnsondev.isafe.presentation.screens.feat.notes.add_note.AddNoteScreen
+import com.thejohnsondev.isafe.presentation.screens.feat.notes.add_note.AddNoteViewModel
+import com.thejohnsondev.isafe.presentation.screens.feat.notes.list.NotesScreen
+import com.thejohnsondev.isafe.presentation.screens.feat.notes.list.NotesViewModel
 import com.thejohnsondev.isafe.presentation.screens.feat.passwords.PasswordsScreen
 import com.thejohnsondev.isafe.presentation.screens.feat.passwords.PasswordsViewModel
 import com.thejohnsondev.isafe.presentation.screens.feat.settings.SettingsScreen
@@ -82,6 +84,21 @@ fun HomeScreen(rootNavController: NavController, homeViewModel: HomeViewModel) {
                     val viewModel = hiltViewModel<SettingsViewModel>()
                     SettingsScreen(
                         rootNavController = rootNavController,
+                        navController = navController,
+                        viewModel = viewModel
+                    )
+                }
+                composable(
+                    route = Screens.AddNote.name,
+                    enterTransition = {
+                        fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    },
+                    exitTransition = {
+                        fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    }
+                ) {
+                    val viewModel = hiltViewModel<AddNoteViewModel>()
+                    AddNoteScreen(
                         navController = navController,
                         viewModel = viewModel
                     )
