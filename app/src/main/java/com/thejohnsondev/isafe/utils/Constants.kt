@@ -4,7 +4,7 @@ const val PASS_MIN_SIZE = 8
 
 // Default
 const val DEFAULT_USER_ID = "default_user_id"
-const val DEFAULT_ID = 0
+const val DEFAULT_ID = "0"
 const val DEFAULT_TIME = 0L
 const val DEFAULT_USER_NAME = "User"
 const val DATA_STORE_NAME = "data_store"

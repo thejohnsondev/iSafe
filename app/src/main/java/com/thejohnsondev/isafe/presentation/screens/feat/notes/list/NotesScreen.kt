@@ -73,6 +73,7 @@ fun NotesScreen(
     }
     StatusBarColor()
     LaunchedEffect(true) {
+        viewModel.perform(NotesAction.FetchNotes)
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)

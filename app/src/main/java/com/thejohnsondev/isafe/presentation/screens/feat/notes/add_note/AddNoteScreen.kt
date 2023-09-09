@@ -177,7 +177,7 @@ fun AddNoteContent(
                 textColor = MaterialTheme.colorScheme.onSurface,
                 fontSize = Text18,
                 focusRequester = descriptionFocusRequester,
-                imeAction = ImeAction.Done,
+                imeAction = ImeAction.Default,
                 onKeyboardAction = {
                     keyboardController?.hide()
                 }

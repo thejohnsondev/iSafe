@@ -10,16 +10,15 @@ import com.thejohnsondev.isafe.domain.models.NoteModel
 import com.thejohnsondev.isafe.domain.models.UserNotesResponse
 import com.thejohnsondev.isafe.domain.repositories.NotesRepository
 import com.thejohnsondev.isafe.utils.DEFAULT_ID
-import com.thejohnsondev.isafe.utils.DEFAULT_TIME
 import com.thejohnsondev.isafe.utils.NOTES_DB_REF
 import com.thejohnsondev.isafe.utils.PARAM_CATEGORY
 import com.thejohnsondev.isafe.utils.PARAM_DESCRIPTION
 import com.thejohnsondev.isafe.utils.PARAM_ID
-import com.thejohnsondev.isafe.utils.PARAM_TIMESTAMP
 import com.thejohnsondev.isafe.utils.PARAM_TITLE
 import com.thejohnsondev.isafe.utils.USERS_DB_REF
 import com.thejohnsondev.isafe.utils.awaitChannelFlow
 import com.thejohnsondev.isafe.utils.decrypt
+import com.thejohnsondev.isafe.utils.encrypt
 import com.thejohnsondev.isafe.utils.sendOrNothing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -42,19 +41,23 @@ class NotesRepositoryImpl(
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     coroutineScope.launch {
-                        val noteMap = snapshot.value as HashMap<String, HashMap<String, String?>>
+                        val noteMap = snapshot.value as HashMap<String, HashMap<String, String?>?>?
                         val notesList = mutableListOf<NoteModel>()
-                        noteMap.values.forEach {
-                            notesList.add(
-                                NoteModel(
-                                    id = it[PARAM_ID]?.toIntOrNull() ?: DEFAULT_ID,
-                                    title = it[PARAM_TITLE]?.decrypt(getKey()).orEmpty(),
-                                    description = it[PARAM_DESCRIPTION]?.decrypt(getKey())
-                                        .orEmpty(),
-                                    timeStamp = it[PARAM_TIMESTAMP]?.toLong() ?: DEFAULT_TIME,
-                                    category = it[PARAM_CATEGORY]?.decrypt(getKey()).orEmpty()
+                        if (noteMap == null) {
+                            sendOrNothing(UserNotesResponse.ResponseSuccess(notesList))
+                            close()
+                        }
+                        noteMap?.values?.forEach {
+                            it?.let {
+                                notesList.add(
+                                    NoteModel(
+                                        id = it[PARAM_ID] ?: DEFAULT_ID,
+                                        title = it[PARAM_TITLE]?.decrypt(getKey()).orEmpty(),
+                                        description = it[PARAM_DESCRIPTION]?.decrypt(getKey()).orEmpty(),
+                                        category = it[PARAM_CATEGORY]?.decrypt(getKey()).orEmpty()
+                                    )
                                 )
-                            )
+                            }
                         }
                         sendOrNothing(UserNotesResponse.ResponseSuccess(notesList))
                     }
@@ -74,11 +77,17 @@ class NotesRepositoryImpl(
                 sendOrNothing(DatabaseResponse.ResponseFailure(Exception("Your note is empty")))
                 close()
             }
+            val encryptedNote = NoteModel(
+                id = note.id,
+                title = note.title.encrypt(getKey()),
+                description = note.description.encrypt(getKey()),
+                category = note.category.encrypt(getKey())
+            )
             firebaseDatabase.getReference(USERS_DB_REF)
                 .child(userId)
                 .child(NOTES_DB_REF)
-                .child(note.id.toString())
-                .setValue(note)
+                .child(encryptedNote.id)
+                .setValue(encryptedNote)
                 .addOnSuccessListener {
                     coroutineScope.launch {
                         sendOrNothing(DatabaseResponse.ResponseSuccess)
@@ -96,13 +105,12 @@ class NotesRepositoryImpl(
             val noteRef = firebaseDatabase.getReference(USERS_DB_REF)
                 .child(userId)
                 .child(NOTES_DB_REF)
-                .child(note.id.toString())
+                .child(note.id)
 
             val newNoteValues = mapOf(
-                PARAM_ID to note.id.toString(),
+                PARAM_ID to note.id,
                 PARAM_TITLE to note.title,
                 PARAM_DESCRIPTION to note.description,
-                PARAM_TIMESTAMP to note.timeStamp,
                 PARAM_CATEGORY to note.category
             )
             noteRef.updateChildren(newNoteValues)

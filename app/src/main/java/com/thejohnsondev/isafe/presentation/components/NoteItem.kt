@@ -75,7 +75,7 @@ fun NoteItem(
                     modifier = Modifier.padding(Size16),
                     text = stringResource(
                         id = R.string.last_edit,
-                        note.timeStamp.getTimeFormatted(NOTE_TIME_FORMAT)
+                        note.id.toLong().getTimeFormatted(NOTE_TIME_FORMAT)
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSecondary
@@ -91,10 +91,9 @@ fun NoteItem(
 fun NoteItemPreview() {
     NoteItem(
         note = NoteModel(
-            1,
+            "1",
             "Note 1 title",
             "Note 1 description (long), Note 1 description (long) Note 1 description (long) Note 1 description (long) Note 1 description (long), Note 1 description (long), Note 1 description (long) Note 1 description (long) Note 1 description (long) Note 1 description (long)",
-            1693753835244L,
             "Note"
         )
     )

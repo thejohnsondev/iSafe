@@ -46,10 +46,9 @@ class AddNoteViewModel @Inject constructor(
 
     private fun saveNote() = launchLoading {
         val note = NoteModel(
-            id = System.currentTimeMillis().toInt(),
+            id = System.currentTimeMillis().toString(),
             title = _titleState.value,
             description = _descriptionState.value,
-            timeStamp = System.currentTimeMillis(),
             category = ""
         )
         useCases.createNote(dataStore.getUserData().id.orEmpty(), note)
