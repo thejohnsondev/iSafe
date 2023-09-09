@@ -20,6 +20,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,10 +28,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.thejohnsondev.isafe.R
 import com.thejohnsondev.isafe.domain.models.LoadingState
 import com.thejohnsondev.isafe.domain.models.NoteModel
 import com.thejohnsondev.isafe.domain.models.OneTimeEvent
@@ -38,7 +41,6 @@ import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
 import com.thejohnsondev.isafe.presentation.components.NoteItem
 import com.thejohnsondev.isafe.presentation.navigation.Screens
 import com.thejohnsondev.isafe.utils.Size16
-import com.thejohnsondev.isafe.utils.Size32
 import com.thejohnsondev.isafe.utils.Size86
 import com.thejohnsondev.isafe.utils.toast
 
@@ -54,7 +56,7 @@ fun NotesScreen(
     val snackbarHostState = remember {
         SnackbarHostState()
     }
-
+    StatusBarColor()
     LaunchedEffect(true) {
         viewModel.getEventFlow().collect {
             when (it) {
@@ -81,9 +83,24 @@ fun NotesScreen(
                     Text(text = data.visuals.message)
                 }
             }
-        }
-    ) {
-        NotesContent(screenState = state.value) { note ->
+        },
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.your_notes),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
+            )
+        },
+
+        ) { paddingValues ->
+        NotesContent(
+            modifier = Modifier.padding(paddingValues),
+            screenState = state.value
+        ) { note ->
 
         }
     }
@@ -94,12 +111,13 @@ fun NotesScreen(
 
 @Composable
 fun NotesContent(
+    modifier: Modifier = Modifier,
     screenState: NotesState,
     onNoteClick: (NoteModel) -> Unit
 ) {
-    StatusBarColor()
+
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         if (screenState.loadingState is LoadingState.Loading) {
@@ -110,13 +128,6 @@ fun NotesContent(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
         ) {
-            Text(
-                modifier = Modifier.padding(start = Size16, top = Size32),
-                text = "Your notes",
-                style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
             Spacer(modifier = Modifier.height(Size16))
             NotesList(notesList = screenState.notesList)
         }

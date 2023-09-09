@@ -29,5 +29,6 @@
     <string name="passwords">Passwords</string>
     <string name="settings">Settings</string>
     <string name="last_edit">Last edit: %s</string>
+    <string name="your_notes">Your notes</string>
 
 </resources>

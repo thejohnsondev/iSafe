@@ -33,7 +33,7 @@ fun NoteItem(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(Size16),
+            .padding(start = Size16, bottom = Size16, end = Size16),
         shape = EqualRounded.medium,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
