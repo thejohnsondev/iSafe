@@ -12,9 +12,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -36,11 +40,24 @@ import com.thejohnsondev.isafe.utils.TWEEN_ANIM_DEFAULT_DURATION
 @Composable
 fun HomeScreen(rootNavController: NavController, homeViewModel: HomeViewModel) {
     val navController = rememberAnimatedNavController()
+    val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    when (navBackStackEntry?.destination?.route) {
+        Screens.AddNote.name -> {
+            bottomBarState.value = false
+        }
+        else -> {
+            bottomBarState.value = true
+        }
+    }
+
     StatusBarColor()
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Scaffold(
             bottomBar = {
-                ISafeBottomNavigation(navController = navController)
+                ISafeBottomNavigation(navController = navController, bottomBarState = bottomBarState)
             }
         ) {
             AnimatedNavHost(
