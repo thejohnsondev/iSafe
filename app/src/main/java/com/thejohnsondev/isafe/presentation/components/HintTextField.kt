@@ -2,6 +2,7 @@ package com.thejohnsondev.isafe.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -12,6 +13,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.TextUnit
 import com.thejohnsondev.isafe.utils.Text20
@@ -25,6 +27,8 @@ fun HintTextField(
     focusRequester: FocusRequester = FocusRequester(),
     textColor: Color = MaterialTheme.colorScheme.onSurface,
     fontSize: TextUnit = Text20,
+    imeAction: ImeAction = ImeAction.Default,
+    onKeyboardAction: () -> Unit = {}
 ) {
     Box {
         BasicTextField(
@@ -40,8 +44,12 @@ fun HintTextField(
             ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text
-            )
+                keyboardType = KeyboardType.Text,
+                imeAction = imeAction
+            ),
+            keyboardActions = KeyboardActions {
+                onKeyboardAction()
+            }
         )
         if (value.isEmpty()) {
             Text(

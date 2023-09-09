@@ -22,7 +22,6 @@ class CreateEncryptionKeyViewModel @Inject constructor(
     private val useCases: CreateKeyUseCases
 ) : BaseViewModel() {
 
-    private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loaded)
     private val _keyGenerationState = MutableStateFlow(KeyGenerationState.NOT_GENERATED)
 
     val viewState: Flow<CreateEncryptionKeyViewState> = combine(
@@ -42,14 +41,12 @@ class CreateEncryptionKeyViewModel @Inject constructor(
         useCases.logout()
     }
 
-    private fun generateKey(fileUri: Uri?) = launch {
-        _loadingState.value = LoadingState.Loading
+    private fun generateKey(fileUri: Uri?) = launchLoading {
         useCases.generateUserKey(fileUri)
             .flowOn(Dispatchers.Default)
             .collect {
                 when (it) {
                     is KeyGenerateResult.Failure -> {
-                        _loadingState.value = LoadingState.Loaded
                         handleError(it.exception)
                     }
 
@@ -67,12 +64,10 @@ class CreateEncryptionKeyViewModel @Inject constructor(
             .collect {
                 when (it) {
                     is DatabaseResponse.ResponseFailure -> {
-                        _loadingState.value = LoadingState.Loaded
                         handleError(it.exception)
                     }
 
                     DatabaseResponse.ResponseSuccess -> {
-                        _loadingState.value = LoadingState.Loaded
                         sendEvent(OneTimeEvent.SuccessNavigation)
                     }
                 }

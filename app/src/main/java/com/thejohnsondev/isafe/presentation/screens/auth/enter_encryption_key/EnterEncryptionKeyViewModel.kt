@@ -20,7 +20,6 @@ class EnterEncryptionKeyViewModel @Inject constructor(
     private val useCases: EnterEncryptionKeyUseCases
 ) : BaseViewModel() {
 
-    private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loaded)
     private val _keyGenerationState = MutableStateFlow(KeyGenerationState.NOT_GENERATED)
     private val _isUploadedKeyFileCorrect = MutableStateFlow<Boolean?>(null)
 
@@ -42,14 +41,12 @@ class EnterEncryptionKeyViewModel @Inject constructor(
         useCases.logout()
     }
 
-    private fun generateKey(fileUri: Uri?) = launch {
-        _loadingState.value = LoadingState.Loading
+    private fun generateKey(fileUri: Uri?) = launchLoading {
         useCases.generateUserKey(fileUri)
             .flowOn(Dispatchers.Default)
             .collect {
                 when (it) {
                     is KeyGenerateResult.Failure -> {
-                        _loadingState.value = LoadingState.Loaded
                         handleError(it.exception)
                     }
 
@@ -62,8 +59,8 @@ class EnterEncryptionKeyViewModel @Inject constructor(
 
     private fun checkIsKeyCorrect(key: ByteArray) = launch {
         useCases.checkUserKeyCorrect(key).collect { isFileCorrect ->
-            _loadingState.value = LoadingState.Loaded
             _isUploadedKeyFileCorrect.emit(isFileCorrect)
+            loaded()
             if (isFileCorrect) {
                 useCases.saveUserKey(key)
                 sendEvent(OneTimeEvent.SuccessNavigation)

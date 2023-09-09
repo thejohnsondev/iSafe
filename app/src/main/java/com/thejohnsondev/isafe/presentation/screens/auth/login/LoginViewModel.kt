@@ -21,7 +21,6 @@ class LoginViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _isLoginSuccess = MutableStateFlow<Boolean?>(null)
-    private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loaded)
     private val _emailValidationState = MutableStateFlow<EmailValidationState?>(null)
     private val _passwordValidationState = MutableStateFlow<PasswordValidationState?>(null)
     private val _loginReadyState: Flow<Boolean> = combine(
@@ -47,16 +46,13 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun loginWithEmail(email: String, password: String) = launch {
-        _loadingState.value = LoadingState.Loading
+    private fun loginWithEmail(email: String, password: String) = launchLoading {
         useCases.signIn(email, password).collect {
             when (it) {
                 is AuthResponse.ResponseFailure -> {
-                    _loadingState.value = LoadingState.Loaded
                     handleError(it.exception)
                 }
                 is AuthResponse.ResponseSuccess -> {
-                    _loadingState.value = LoadingState.Loaded
                     getUserData(it.authResult.user?.uid.orEmpty())
                 }
             }

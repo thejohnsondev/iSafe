@@ -22,7 +22,6 @@ class SignUpViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _isSignUpSuccess = MutableStateFlow<Boolean?>(null)
-    private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loaded)
     private val _nameState = MutableStateFlow(EMPTY)
     private val _emailValidationState = MutableStateFlow<EmailValidationState?>(null)
     private val _passwordValidationState = MutableStateFlow<PasswordValidationState?>(null)
@@ -64,17 +63,14 @@ class SignUpViewModel @Inject constructor(
         _passwordValidationState.value = useCases.validatePassword(password)
     }
 
-    private fun signUp(name: String, email: String, password: String) = launch {
-        _loadingState.value = LoadingState.Loading
+    private fun signUp(name: String, email: String, password: String) = launchLoading {
         useCases.signUp(email, password).collect {
             when (it) {
                 is AuthResponse.ResponseSuccess -> {
-                    _loadingState.value = LoadingState.Loaded
                     createUserInRemoteDb(it.authResult.user?.uid.toString(), name)
                 }
 
                 is AuthResponse.ResponseFailure -> {
-                    _loadingState.value = LoadingState.Loaded
                     handleError(it.exception)
                 }
             }

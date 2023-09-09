@@ -49,7 +49,8 @@ class NotesRepositoryImpl(
                                 NoteModel(
                                     id = it[PARAM_ID]?.toIntOrNull() ?: DEFAULT_ID,
                                     title = it[PARAM_TITLE]?.decrypt(getKey()).orEmpty(),
-                                    description = it[PARAM_DESCRIPTION]?.decrypt(getKey()).orEmpty(),
+                                    description = it[PARAM_DESCRIPTION]?.decrypt(getKey())
+                                        .orEmpty(),
                                     timeStamp = it[PARAM_TIMESTAMP]?.toLong() ?: DEFAULT_TIME,
                                     category = it[PARAM_CATEGORY]?.decrypt(getKey()).orEmpty()
                                 )
@@ -69,6 +70,10 @@ class NotesRepositoryImpl(
 
     override fun createNote(userId: String, note: NoteModel): Flow<DatabaseResponse> =
         awaitChannelFlow {
+            if (note.title.isEmpty() && note.description.isEmpty()) {
+                sendOrNothing(DatabaseResponse.ResponseFailure(Exception("Your note is empty")))
+                close()
+            }
             firebaseDatabase.getReference(USERS_DB_REF)
                 .child(userId)
                 .child(NOTES_DB_REF)

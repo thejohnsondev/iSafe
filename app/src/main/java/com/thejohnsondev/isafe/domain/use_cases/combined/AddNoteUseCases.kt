@@ -1,8 +1,8 @@
 package com.thejohnsondev.isafe.domain.use_cases.combined
 
-import com.thejohnsondev.isafe.data.local_data_source.DataStore
+import com.thejohnsondev.isafe.domain.use_cases.notes.CreateNoteUseCase
 import javax.inject.Inject
 
 data class AddNoteUseCases @Inject constructor(
-    val dataStore: DataStore
+    val createNote: CreateNoteUseCase
 )

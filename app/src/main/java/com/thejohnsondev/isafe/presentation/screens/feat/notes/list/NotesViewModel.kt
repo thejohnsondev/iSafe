@@ -16,7 +16,6 @@ class NotesViewModel @Inject constructor(
     private val useCases: NotesUseCases
 ) : BaseViewModel() {
 
-    private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loaded)
     private val _notesList = MutableStateFlow<List<NoteModel>>(emptyList())
 
     val state = combine(
@@ -29,13 +28,12 @@ class NotesViewModel @Inject constructor(
         fetchNotes()
     }
 
-    private fun fetchNotes() = launch {
-        _loadingState.emit(LoadingState.Loading)
+    private fun fetchNotes() = launchLoading {
         delay(500)
         _notesList.emit(
             testNotesList
         )
-        _loadingState.emit(LoadingState.Loaded)
+        loaded()
     }
 
     private fun mergeSources(
