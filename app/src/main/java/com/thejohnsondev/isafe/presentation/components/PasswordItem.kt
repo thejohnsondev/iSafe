@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Password
@@ -157,7 +158,7 @@ fun PasswordItem(
                         onCopyClick(item.password)
                     }) {
                     Icon(
-                        imageVector = Icons.Default.Password,
+                        imageVector = Icons.Default.ContentCopy,
                         contentDescription = stringResource(
                             R.string.copy
                         ),

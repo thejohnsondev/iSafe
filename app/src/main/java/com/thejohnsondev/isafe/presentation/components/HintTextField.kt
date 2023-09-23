@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.TextUnit
 import com.thejohnsondev.isafe.utils.Text20
 
@@ -24,10 +26,13 @@ fun HintTextField(
     value: String = "",
     onValueChanged: (String) -> Unit,
     hint: String = "",
+    maxLines: Int? = null,
     focusRequester: FocusRequester = FocusRequester(),
     textColor: Color = MaterialTheme.colorScheme.onSurface,
     fontSize: TextUnit = Text20,
     imeAction: ImeAction = ImeAction.Default,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    passwordVisible: Boolean = true,
     onKeyboardAction: () -> Unit = {}
 ) {
     Box {
@@ -44,12 +49,14 @@ fun HintTextField(
             ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
+                keyboardType = keyboardType,
                 imeAction = imeAction
             ),
             keyboardActions = KeyboardActions {
                 onKeyboardAction()
-            }
+            },
+            maxLines = maxLines ?: Int.MAX_VALUE,
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         )
         if (value.isEmpty()) {
             Text(

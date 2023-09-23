@@ -29,6 +29,8 @@ import com.thejohnsondev.isafe.presentation.screens.notes.add_note.AddNoteScreen
 import com.thejohnsondev.isafe.presentation.screens.notes.add_note.AddNoteViewModel
 import com.thejohnsondev.isafe.presentation.screens.notes.list.NotesScreen
 import com.thejohnsondev.isafe.presentation.screens.notes.list.NotesViewModel
+import com.thejohnsondev.isafe.presentation.screens.passwords.add_edit_password.AddEditPasswordScreen
+import com.thejohnsondev.isafe.presentation.screens.passwords.add_edit_password.AddEditPasswordViewModel
 import com.thejohnsondev.isafe.presentation.screens.passwords.list.VaultScreen
 import com.thejohnsondev.isafe.presentation.screens.passwords.list.VaultViewModel
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsScreen
@@ -45,7 +47,8 @@ fun HomeScreen(rootNavController: NavController, homeViewModel: HomeViewModel) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     when (navBackStackEntry?.destination?.route) {
-        Screens.AddNote.name -> {
+        Screens.AddNote.name,
+        Screens.AddEditPassword.name -> {
             bottomBarState.value = false
         }
         else -> {
@@ -116,6 +119,21 @@ fun HomeScreen(rootNavController: NavController, homeViewModel: HomeViewModel) {
                 ) {
                     val viewModel = hiltViewModel<AddNoteViewModel>()
                     AddNoteScreen(
+                        navController = navController,
+                        viewModel = viewModel
+                    )
+                }
+                composable(
+                    route = Screens.AddEditPassword.name,
+                    enterTransition = {
+                        fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    },
+                    exitTransition = {
+                        fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    }
+                ) {
+                    val viewModel = hiltViewModel<AddEditPasswordViewModel>()
+                    AddEditPasswordScreen(
                         navController = navController,
                         viewModel = viewModel
                     )

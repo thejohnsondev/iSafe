@@ -43,5 +43,8 @@
     <string name="copy">Copy</string>
     <string name="visibility">Visibility</string>
     <string name="edit">Edit</string>
+    <string name="organization">Organization</string>
+    <string name="add_field">Add field</string>
+    <string name="value">Value</string>
 
 </resources>

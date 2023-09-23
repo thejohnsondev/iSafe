@@ -46,6 +46,7 @@ import com.thejohnsondev.isafe.domain.models.PasswordModel
 import com.thejohnsondev.isafe.presentation.components.FilterGroup
 import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
 import com.thejohnsondev.isafe.presentation.components.PasswordItem
+import com.thejohnsondev.isafe.presentation.navigation.Screens
 import com.thejohnsondev.isafe.utils.FILTER_ALL
 import com.thejohnsondev.isafe.utils.FILTER_BANK_ACCOUNTS
 import com.thejohnsondev.isafe.utils.FILTER_PASSWORDS
@@ -111,7 +112,7 @@ fun VaultScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-
+                    navController.navigate(Screens.AddEditPassword.name)
                 },
                 expanded = expandedFab,
                 icon = {

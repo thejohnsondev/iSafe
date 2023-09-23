@@ -1,7 +1,7 @@
 package com.thejohnsondev.isafe.domain.models
 
 data class AdditionalField(
-    val timestamp: String,
+    val timeStamp: String,
     val title: String,
     val value: String,
 )
