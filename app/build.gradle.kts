@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.thejohnsondev.isafe"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.thejohnsondev.isafe"
         minSdk = 29
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -103,5 +103,11 @@ dependencies {
     // Secure data store
     implementation("androidx.security:security-crypto:1.0.0")
     implementation("com.google.code.gson:gson:2.8.9")
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    // Extended icons
+    implementation("androidx.compose.material:material-icons-extended:1.4.3")
 
 }

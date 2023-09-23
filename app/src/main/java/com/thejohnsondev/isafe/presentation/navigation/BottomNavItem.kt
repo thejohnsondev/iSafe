@@ -15,9 +15,9 @@ sealed class BottomNavItem(
 
     object Passwords :
         BottomNavItem(
-            route = Screens.PasswordsScreen.name,
-            titleRes = R.string.passwords,
-            imgResId = R.drawable.ic_passwords
+            route = Screens.VaultScreen.name,
+            titleRes = R.string.vault,
+            imgResId = R.drawable.ic_security
         )
 
     object Settings :

@@ -19,8 +19,8 @@ import com.thejohnsondev.isafe.presentation.screens.auth.login.LoginScreen
 import com.thejohnsondev.isafe.presentation.screens.auth.login.LoginViewModel
 import com.thejohnsondev.isafe.presentation.screens.auth.signup.SignUpScreen
 import com.thejohnsondev.isafe.presentation.screens.auth.signup.SignUpViewModel
-import com.thejohnsondev.isafe.presentation.screens.feat.home.HomeScreen
-import com.thejohnsondev.isafe.presentation.screens.feat.home.HomeViewModel
+import com.thejohnsondev.isafe.presentation.screens.home.HomeScreen
+import com.thejohnsondev.isafe.presentation.screens.home.HomeViewModel
 import com.thejohnsondev.isafe.utils.TWEEN_ANIM_DEFAULT_DURATION
 
 @OptIn(ExperimentalAnimationApi::class)

@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.feat.notes.add_note
+package com.thejohnsondev.isafe.presentation.screens.notes.add_note
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

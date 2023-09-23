@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.feat.home
+package com.thejohnsondev.isafe.presentation.screens.home
 
 import com.thejohnsondev.isafe.domain.use_cases.combined.HomeUseCases
 import com.thejohnsondev.isafe.utils.base.BaseViewModel

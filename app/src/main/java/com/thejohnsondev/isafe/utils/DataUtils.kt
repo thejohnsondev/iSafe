@@ -112,3 +112,7 @@ private fun returnCursorData(uri: Uri?, context: Context): String? {
 fun Long.getTimeFormatted(format: String): String {
     return SimpleDateFormat(format, Locale.US).format(this)
 }
+
+fun String.hidden(): String {
+    return replace(Regex("[\\s\\S]"), "*")
+}

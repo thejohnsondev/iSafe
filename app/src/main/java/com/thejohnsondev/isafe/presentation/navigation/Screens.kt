@@ -8,7 +8,7 @@ enum class Screens {
     CreateEncryptionKeyScreen,
     EnterEncryptionKeyScreen,
     NotesScreen,
-    PasswordsScreen,
+    VaultScreen,
     Settings,
     AddNote
 }

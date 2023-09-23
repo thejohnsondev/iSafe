@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.feat.home
+package com.thejohnsondev.isafe.presentation.screens.home
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -25,14 +25,14 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.isafe.presentation.navigation.ISafeBottomNavigation
 import com.thejohnsondev.isafe.presentation.navigation.Screens
-import com.thejohnsondev.isafe.presentation.screens.feat.notes.add_note.AddNoteScreen
-import com.thejohnsondev.isafe.presentation.screens.feat.notes.add_note.AddNoteViewModel
-import com.thejohnsondev.isafe.presentation.screens.feat.notes.list.NotesScreen
-import com.thejohnsondev.isafe.presentation.screens.feat.notes.list.NotesViewModel
-import com.thejohnsondev.isafe.presentation.screens.feat.passwords.PasswordsScreen
-import com.thejohnsondev.isafe.presentation.screens.feat.passwords.PasswordsViewModel
-import com.thejohnsondev.isafe.presentation.screens.feat.settings.SettingsScreen
-import com.thejohnsondev.isafe.presentation.screens.feat.settings.SettingsViewModel
+import com.thejohnsondev.isafe.presentation.screens.notes.add_note.AddNoteScreen
+import com.thejohnsondev.isafe.presentation.screens.notes.add_note.AddNoteViewModel
+import com.thejohnsondev.isafe.presentation.screens.notes.list.NotesScreen
+import com.thejohnsondev.isafe.presentation.screens.notes.list.NotesViewModel
+import com.thejohnsondev.isafe.presentation.screens.passwords.list.VaultScreen
+import com.thejohnsondev.isafe.presentation.screens.passwords.list.VaultViewModel
+import com.thejohnsondev.isafe.presentation.screens.settings.SettingsScreen
+import com.thejohnsondev.isafe.presentation.screens.settings.SettingsViewModel
 import com.thejohnsondev.isafe.utils.TWEEN_ANIM_DEFAULT_DURATION
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -62,9 +62,21 @@ fun HomeScreen(rootNavController: NavController, homeViewModel: HomeViewModel) {
         ) {
             AnimatedNavHost(
                 navController = navController,
-                startDestination = Screens.NotesScreen.name,
+                startDestination = Screens.VaultScreen.name,
                 modifier = Modifier.padding(it)
             ) {
+                composable(
+                    route = Screens.VaultScreen.name,
+                    enterTransition = {
+                        fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    },
+                    exitTransition = {
+                        fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+                    }
+                ) {
+                    val viewModel = hiltViewModel<VaultViewModel>()
+                    VaultScreen(navController = navController, viewModel = viewModel)
+                }
                 composable(
                     route = Screens.NotesScreen.name,
                     enterTransition = {
@@ -76,18 +88,6 @@ fun HomeScreen(rootNavController: NavController, homeViewModel: HomeViewModel) {
                 ) {
                     val viewModel = hiltViewModel<NotesViewModel>()
                     NotesScreen(navController = navController, viewModel = viewModel)
-                }
-                composable(
-                    route = Screens.PasswordsScreen.name,
-                    enterTransition = {
-                        fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
-                    },
-                    exitTransition = {
-                        fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
-                    }
-                ) {
-                    val viewModel = hiltViewModel<PasswordsViewModel>()
-                    PasswordsScreen(navController = navController, viewModel = viewModel)
                 }
                 composable(
                     route = Screens.Settings.name,

@@ -1,11 +1,8 @@
-package com.thejohnsondev.isafe.presentation.screens.feat.notes.list
+package com.thejohnsondev.isafe.presentation.screens.passwords.list
 
-import android.annotation.SuppressLint
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,29 +36,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.isafe.R
+import com.thejohnsondev.isafe.domain.models.BankAccountModel
 import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.NoteModel
 import com.thejohnsondev.isafe.domain.models.OneTimeEvent
+import com.thejohnsondev.isafe.domain.models.PasswordModel
+import com.thejohnsondev.isafe.presentation.components.FilterGroup
 import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
-import com.thejohnsondev.isafe.presentation.components.NoteItem
-import com.thejohnsondev.isafe.presentation.navigation.Screens
+import com.thejohnsondev.isafe.presentation.components.PasswordItem
+import com.thejohnsondev.isafe.utils.FILTER_ALL
+import com.thejohnsondev.isafe.utils.FILTER_BANK_ACCOUNTS
+import com.thejohnsondev.isafe.utils.FILTER_PASSWORDS
 import com.thejohnsondev.isafe.utils.Size16
 import com.thejohnsondev.isafe.utils.Size86
 import com.thejohnsondev.isafe.utils.toast
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NotesScreen(
+fun VaultScreen(
     navController: NavHostController,
-    viewModel: NotesViewModel,
+    viewModel: VaultViewModel,
 ) {
     val context = LocalContext.current
-    val state = viewModel.state.collectAsState(NotesState())
+    val state = viewModel.state.collectAsState(VaultState())
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -73,7 +72,7 @@ fun NotesScreen(
     }
     StatusBarColor()
     LaunchedEffect(true) {
-        viewModel.perform(NotesAction.FetchNotes)
+        viewModel.perform(VaultAction.FetchVault)
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)
@@ -82,9 +81,7 @@ fun NotesScreen(
                     duration = SnackbarDuration.Short
                 )
 
-                is OneTimeEvent.SuccessNavigation -> {
-                    navController.navigate(Screens.CreateEncryptionKeyScreen.name)
-                }
+                is OneTimeEvent.SuccessNavigation -> {}
 
             }
         }
@@ -104,7 +101,7 @@ fun NotesScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.your_notes),
+                        text = stringResource(R.string.your_vault),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                     )
@@ -114,7 +111,7 @@ fun NotesScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    navController.navigate(Screens.AddNote.name)
+
                 },
                 expanded = expandedFab,
                 icon = {
@@ -124,40 +121,40 @@ fun NotesScreen(
                     )
                 },
                 text = {
-                    Text(text = stringResource(R.string.add_note))
+                    Text(text = stringResource(R.string.add))
                 },
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             )
         },
         floatingActionButtonPosition = FabPosition.End,
-    ) { paddingValues ->
-        NotesContent(
-            modifier = Modifier.padding(paddingValues),
-            screenState = state.value,
-            state = listState
-        ) { note ->
+    ) {
+        VaultContent(
+            modifier = Modifier.padding(it),
+            state = state.value,
+            lazyListState = listState,
+            onPasswordClick = {
 
-        }
+            },
+            onBankAccountClick = {
+
+            })
     }
-
-
 }
 
-
 @Composable
-fun NotesContent(
+fun VaultContent(
     modifier: Modifier = Modifier,
-    screenState: NotesState,
-    state: LazyListState,
-    onNoteClick: (NoteModel) -> Unit
+    state: VaultState,
+    lazyListState: LazyListState,
+    onPasswordClick: (PasswordModel) -> Unit,
+    onBankAccountClick: (BankAccountModel) -> Unit
 ) {
-
     Surface(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         color = MaterialTheme.colorScheme.background
     ) {
-        if (screenState.loadingState is LoadingState.Loading) {
+        if (state.loadingState is LoadingState.Loading) {
             FullScreenLoading()
             return@Surface
         }
@@ -165,24 +162,93 @@ fun NotesContent(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
         ) {
-            Spacer(modifier = Modifier.height(Size16))
-            NotesList(notesList = screenState.notesList, state = state)
+            ItemsList(
+                passwordsList = state.passwordsList,
+                bankAccountsList = state.bankAccountsList,
+                lazyListState = lazyListState
+            )
         }
+
     }
 }
 
 @Composable
-fun NotesList(
-    notesList: List<NoteModel>,
-    state: LazyListState
+fun Filters(
+    onAllClick: () -> Unit,
+    onPasswordsClick: () -> Unit,
+    onBankAccountsClick: () -> Unit
 ) {
-    LazyColumn(state = state, modifier = Modifier.fillMaxWidth()) {
-        items(notesList) { note ->
-            NoteItem(note = note) { clickedNote ->
-                // handle click
+    val filterAll = stringResource(id = FILTER_ALL)
+    val filterPasswords = stringResource(id = FILTER_PASSWORDS)
+    val filterBankAccounts = stringResource(id = FILTER_BANK_ACCOUNTS)
+    val filters = listOf(
+        filterAll,
+        filterPasswords,
+        filterBankAccounts
+    )
+    FilterGroup(filters = filters, onFilterClick = {
+        when (it) {
+            filterAll -> onAllClick()
+            filterPasswords -> onPasswordsClick()
+            filterBankAccounts -> onBankAccountsClick()
+        }
+    }, defaultSelected = filterAll)
+}
+
+@Composable
+fun ItemsList(
+    passwordsList: List<PasswordModel>,
+    bankAccountsList: List<BankAccountModel>,
+    lazyListState: LazyListState
+) {
+    LazyColumn(state = lazyListState, modifier = Modifier.fillMaxWidth()) {
+        item {
+            Filters(
+                onAllClick = {
+
+                }, onPasswordsClick = {
+
+                }, onBankAccountsClick = {
+
+                }
+            )
+        }
+        if (passwordsList.isNotEmpty()) {
+            item {
+                Text(
+                    text = "Passwords",
+                    modifier = Modifier.padding(Size16),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            items(passwordsList) {
+                PasswordItem(
+                    item = it,
+                    onClick = {},
+                    onCopyClick = {},
+                    onDeleteClick = {},
+                    onEditClick = {})
             }
         }
+        if (bankAccountsList.isNotEmpty()) {
+            item {
+                Spacer(modifier = Modifier.height(Size16))
+                Text(
+                    text = "Bank accounts",
+                    modifier = Modifier.padding(Size16),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            items(bankAccountsList) {
+
+            }
+        }
+
+
     }
+
 }
 
 @Composable
@@ -190,20 +256,3 @@ fun StatusBarColor() {
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(MaterialTheme.colorScheme.background)
 }
-
-
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun NotesScreenPreview() {
-    NotesContent(
-        screenState = NotesState(
-            loadingState = LoadingState.Loaded,
-            notesList = emptyList()
-        ),
-        state = rememberLazyListState(),
-        onNoteClick = {
-
-        }
-    )
-}
-

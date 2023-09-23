@@ -27,14 +27,21 @@
     <string name="unexpected_error_when_generating_the_key">Unexpected error when generating the key</string>
     <string name="notes">Notes</string>
     <string name="passwords">Passwords</string>
+    <string name="vault">Vault</string>
     <string name="settings">Settings</string>
     <string name="last_edit">Last edit: %s</string>
     <string name="your_notes">Your notes</string>
+    <string name="your_vault">Your vault</string>
     <string name="add">Add</string>
     <string name="add_note">Add note</string>
     <string name="title">Title</string>
     <string name="note">Note</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
+    <string name="all">All\n</string>
+    <string name="bank_accounts">Bank Accounts\n</string>
+    <string name="copy">Copy</string>
+    <string name="visibility">Visibility</string>
+    <string name="edit">Edit</string>
 
 </resources>

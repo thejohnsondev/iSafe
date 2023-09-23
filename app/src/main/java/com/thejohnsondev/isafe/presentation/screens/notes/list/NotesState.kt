@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.feat.notes.list
+package com.thejohnsondev.isafe.presentation.screens.notes.list
 
 import com.thejohnsondev.isafe.domain.models.LoadingState
 import com.thejohnsondev.isafe.domain.models.NoteModel

@@ -1,5 +1,7 @@
 package com.thejohnsondev.isafe.utils
 
+import com.thejohnsondev.isafe.R
+
 const val PASS_MIN_SIZE = 8
 
 // Default
@@ -9,7 +11,9 @@ const val DEFAULT_TIME = 0L
 const val DEFAULT_USER_NAME = "User"
 const val DATA_STORE_NAME = "data_store"
 
-
+val FILTER_ALL = R.string.all
+val FILTER_PASSWORDS = R.string.passwords
+val FILTER_BANK_ACCOUNTS = R.string.bank_accounts
 
 // Refs
 const val USERS_DB_REF = "users"
@@ -30,3 +34,4 @@ const val PARAM_CATEGORY = "category"
 // Other
 const val EMPTY = ""
 const val TWEEN_ANIM_DEFAULT_DURATION = 300
+const val EXPAND_ANIM_DURATION = 500

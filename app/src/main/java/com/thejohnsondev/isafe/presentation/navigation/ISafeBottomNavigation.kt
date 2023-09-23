@@ -18,8 +18,8 @@ import androidx.navigation.NavHostController
 @Composable
 fun ISafeBottomNavigation(navController: NavHostController, bottomBarState: MutableState<Boolean>) {
     val items = listOf(
-        BottomNavItem.Notes,
         BottomNavItem.Passwords,
+        BottomNavItem.Notes,
         BottomNavItem.Settings
     )
     AnimatedVisibility(

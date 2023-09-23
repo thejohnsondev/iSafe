@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.feat.settings
+package com.thejohnsondev.isafe.presentation.screens.settings
 
 import com.thejohnsondev.isafe.domain.use_cases.combined.SettingsUseCases
 import com.thejohnsondev.isafe.utils.base.BaseViewModel
