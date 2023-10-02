@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -39,6 +40,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.content.ContextCompat.getSystemService
@@ -58,6 +60,7 @@ import com.thejohnsondev.isafe.utils.FILTER_ALL
 import com.thejohnsondev.isafe.utils.FILTER_BANK_ACCOUNTS
 import com.thejohnsondev.isafe.utils.FILTER_PASSWORDS
 import com.thejohnsondev.isafe.utils.Size16
+import com.thejohnsondev.isafe.utils.Size48
 import com.thejohnsondev.isafe.utils.Size86
 import com.thejohnsondev.isafe.utils.copySensitiveData
 import com.thejohnsondev.isafe.utils.toast
@@ -119,6 +122,13 @@ fun VaultScreen(
                             fontWeight = FontWeight.Bold,
                         )
                     },
+                    navigationIcon = {
+                        Icon(
+                            modifier = Modifier.size(Size48),
+                            painter = painterResource(id = R.drawable.i_safe_foreground),
+                            contentDescription = ""
+                        )
+                    }
                 )
             }
         },
