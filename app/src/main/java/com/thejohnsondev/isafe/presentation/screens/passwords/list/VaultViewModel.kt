@@ -19,13 +19,17 @@ class VaultViewModel @Inject constructor(
     private val dataStore: DataStore
 ) : BaseViewModel() {
 
+    private val _allPasswordsList = MutableStateFlow<List<PasswordModel>>(emptyList())
+    private val _allBankAccountsList = MutableStateFlow<List<BankAccountModel>>(emptyList())
     private val _passwordsList = MutableStateFlow<List<PasswordModel>>(emptyList())
     private val _bankAccountsList = MutableStateFlow<List<BankAccountModel>>(emptyList())
+    private val _isSearching = MutableStateFlow(false)
 
     val state = combine(
         _loadingState,
         _passwordsList,
         _bankAccountsList,
+        _isSearching,
         ::mergeSources
     )
 
@@ -33,7 +37,45 @@ class VaultViewModel @Inject constructor(
         when (action) {
             is VaultAction.FetchVault -> fetchVault()
             is VaultAction.DeletePassword -> deletePassword(action.password)
+            is VaultAction.Search -> search(action.query)
+            VaultAction.StopSearching -> stopSearching()
         }
+    }
+
+    private fun stopSearching() = launch {
+        _isSearching.emit(false)
+        _passwordsList.emit(_allPasswordsList.value)
+        _bankAccountsList.emit(_allBankAccountsList.value)
+    }
+
+    private fun search(query: String) = launch {
+        _isSearching.emit(true)
+        searchPasswords(query)
+        searchBankAccounts(query)
+    }
+
+    private suspend fun searchPasswords(query: String) {
+        if (query.isBlank()) {
+            _passwordsList.emit(_allPasswordsList.value)
+            _isSearching.emit(false)
+            return
+        }
+        val filteredPasswordList = _allPasswordsList.value.filter {
+            it.title.contains(query) or it.organization.contains(query)
+        }
+        _passwordsList.emit(filteredPasswordList)
+    }
+
+    private suspend fun searchBankAccounts(query: String) {
+        if (query.isBlank()) {
+            _bankAccountsList.emit(_allBankAccountsList.value)
+            _isSearching.emit(false)
+            return
+        }
+        val filteredBankAccountsList = _allBankAccountsList.value.filter {
+            it.userName.contains(query) or it.cardNumber.contains(query)
+        }
+        _bankAccountsList.emit(filteredBankAccountsList)
     }
 
     private fun deletePassword(passwordModel: PasswordModel) = launch {
@@ -49,6 +91,7 @@ class VaultViewModel @Inject constructor(
         val passwordsList = _passwordsList.value.toMutableList()
         passwordsList.removeIf { it.timestamp == passwordModel.timestamp }
         _passwordsList.emit(passwordsList)
+        _allPasswordsList.emit(passwordsList)
     }
 
     private fun fetchVault() = launchLoading {
@@ -61,22 +104,28 @@ class VaultViewModel @Inject constructor(
         _bankAccountsList.emit(
             emptyList()
         )
+        _allBankAccountsList.emit(
+            emptyList()
+        )
         loaded()
     }
 
     private fun handlePasswordsList(list: List<PasswordModel>) = launch {
         loaded()
         _passwordsList.emit(list)
+        _allPasswordsList.emit(list)
     }
 
     private fun mergeSources(
         loadingState: LoadingState,
         passwordsList: List<PasswordModel>,
-        bankAccountsList: List<BankAccountModel>
+        bankAccountsList: List<BankAccountModel>,
+        isSearching: Boolean
     ): VaultState = VaultState(
         loadingState,
         passwordsList,
-        bankAccountsList
+        bankAccountsList,
+        isSearching
     )
 
 }

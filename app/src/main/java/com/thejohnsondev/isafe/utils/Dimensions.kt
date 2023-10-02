@@ -25,3 +25,5 @@ val Text22 = 22.sp
 
 val Percent40 = 0.4f
 val Percent70 = 0.7f
+val Percent10 = 0.1f
+val Percent90 = 0.9f

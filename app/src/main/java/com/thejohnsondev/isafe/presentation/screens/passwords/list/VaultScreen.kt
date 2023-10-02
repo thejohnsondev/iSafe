@@ -1,12 +1,14 @@
 package com.thejohnsondev.isafe.presentation.screens.passwords.list
 
 import android.content.ClipboardManager
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -33,8 +35,10 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.content.ContextCompat.getSystemService
@@ -48,6 +52,7 @@ import com.thejohnsondev.isafe.domain.models.PasswordModel
 import com.thejohnsondev.isafe.presentation.components.FilterGroup
 import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
 import com.thejohnsondev.isafe.presentation.components.PasswordItem
+import com.thejohnsondev.isafe.presentation.components.SearchBar
 import com.thejohnsondev.isafe.presentation.navigation.Screens
 import com.thejohnsondev.isafe.utils.FILTER_ALL
 import com.thejohnsondev.isafe.utils.FILTER_BANK_ACCOUNTS
@@ -57,14 +62,16 @@ import com.thejohnsondev.isafe.utils.Size86
 import com.thejohnsondev.isafe.utils.copySensitiveData
 import com.thejohnsondev.isafe.utils.toast
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun VaultScreen(
     navController: NavHostController,
     viewModel: VaultViewModel,
 ) {
     val context = LocalContext.current
-    val clipboardManager: ClipboardManager = getSystemService(context, ClipboardManager::class.java) as ClipboardManager
+    val clipboardManager: ClipboardManager =
+        getSystemService(context, ClipboardManager::class.java) as ClipboardManager
+    val keyboardController = LocalSoftwareKeyboardController.current
     val state = viewModel.state.collectAsState(VaultState())
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -103,15 +110,17 @@ fun VaultScreen(
             }
         },
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.your_vault),
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
-            )
+            AnimatedVisibility(visible = !state.value.isSearching) {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(R.string.your_vault),
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    },
+                )
+            }
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
@@ -150,6 +159,13 @@ fun VaultScreen(
             },
             onEditPasswordClick = {
 
+            },
+            onSearchQueryEntered = { query ->
+                viewModel.perform(VaultAction.Search(query))
+            },
+            onStopSearching = {
+                keyboardController?.hide()
+                viewModel.perform(VaultAction.StopSearching)
             })
     }
 }
@@ -163,7 +179,9 @@ fun VaultContent(
     onPasswordClick: (PasswordModel) -> Unit,
     onBankAccountClick: (BankAccountModel) -> Unit,
     onDeletePasswordClick: (PasswordModel) -> Unit,
-    onEditPasswordClick: (PasswordModel) -> Unit
+    onEditPasswordClick: (PasswordModel) -> Unit,
+    onSearchQueryEntered: (String) -> Unit,
+    onStopSearching: () -> Unit
 ) {
     Surface(
         modifier = modifier,
@@ -180,10 +198,13 @@ fun VaultContent(
             ItemsList(
                 passwordsList = state.passwordsList,
                 bankAccountsList = state.bankAccountsList,
+                isSearching = state.isSearching,
                 lazyListState = lazyListState,
                 clipboardManager = clipboardManager,
                 onDeletePasswordClick = onDeletePasswordClick,
-                onEditPasswordClick = onEditPasswordClick
+                onEditPasswordClick = onEditPasswordClick,
+                onSearchQueryEntered = onSearchQueryEntered,
+                onStopSearching = onStopSearching
             )
         }
 
@@ -220,19 +241,37 @@ fun ItemsList(
     lazyListState: LazyListState,
     clipboardManager: ClipboardManager,
     onDeletePasswordClick: (PasswordModel) -> Unit,
-    onEditPasswordClick: (PasswordModel) -> Unit
+    onEditPasswordClick: (PasswordModel) -> Unit,
+    onSearchQueryEntered: (String) -> Unit,
+    onStopSearching: () -> Unit,
+    isSearching: Boolean
 ) {
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxWidth()) {
         item {
-            Filters(
-                onAllClick = {
+            SearchBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(Size16),
+                onQueryEntered = { query ->
+                    onSearchQueryEntered(query)
+                },
+                onQueryClear = {
+                    onStopSearching()
+                })
+        }
+        item {
+            AnimatedVisibility(visible = !isSearching) {
+                Filters(
+                    onAllClick = {
 
-                }, onPasswordsClick = {
+                    }, onPasswordsClick = {
 
-                }, onBankAccountsClick = {
+                    }, onBankAccountsClick = {
 
-                }
-            )
+                    }
+                )
+            }
         }
         if (passwordsList.isNotEmpty()) {
             item {

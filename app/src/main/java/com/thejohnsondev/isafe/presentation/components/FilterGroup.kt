@@ -63,7 +63,7 @@ fun Chip(
         if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer
 
     Box(modifier = Modifier
-        .padding(horizontal = Size8, vertical = Size16)
+        .padding(horizontal = Size8, vertical = Size8)
         .height(Size48)
         .clip(CircleShape)
         .background(background)

@@ -7,5 +7,6 @@ import com.thejohnsondev.isafe.domain.models.PasswordModel
 data class VaultState(
     val loadingState: LoadingState = LoadingState.Loaded,
     val passwordsList: List<PasswordModel> = emptyList(),
-    val bankAccountsList: List<BankAccountModel> = emptyList()
+    val bankAccountsList: List<BankAccountModel> = emptyList(),
+    val isSearching: Boolean = false
 )
