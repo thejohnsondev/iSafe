@@ -178,6 +178,7 @@ fun PasswordItem(
                     onCopyClick(it)
                 },
                 onDeleteClick = {
+                    expanded = false
                     onDeleteClick(it)
                 },
                 onEditClick = {
