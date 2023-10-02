@@ -1,5 +1,6 @@
 package com.thejohnsondev.isafe.presentation.screens.passwords.list
 
+import android.content.ClipboardManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.isafe.R
@@ -52,6 +54,7 @@ import com.thejohnsondev.isafe.utils.FILTER_BANK_ACCOUNTS
 import com.thejohnsondev.isafe.utils.FILTER_PASSWORDS
 import com.thejohnsondev.isafe.utils.Size16
 import com.thejohnsondev.isafe.utils.Size86
+import com.thejohnsondev.isafe.utils.copySensitiveData
 import com.thejohnsondev.isafe.utils.toast
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +64,7 @@ fun VaultScreen(
     viewModel: VaultViewModel,
 ) {
     val context = LocalContext.current
+    val clipboardManager: ClipboardManager = getSystemService(context, ClipboardManager::class.java) as ClipboardManager
     val state = viewModel.state.collectAsState(VaultState())
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -134,6 +138,7 @@ fun VaultScreen(
             modifier = Modifier.padding(it),
             state = state.value,
             lazyListState = listState,
+            clipboardManager = clipboardManager,
             onPasswordClick = {
 
             },
@@ -148,6 +153,7 @@ fun VaultContent(
     modifier: Modifier = Modifier,
     state: VaultState,
     lazyListState: LazyListState,
+    clipboardManager: ClipboardManager,
     onPasswordClick: (PasswordModel) -> Unit,
     onBankAccountClick: (BankAccountModel) -> Unit
 ) {
@@ -166,7 +172,8 @@ fun VaultContent(
             ItemsList(
                 passwordsList = state.passwordsList,
                 bankAccountsList = state.bankAccountsList,
-                lazyListState = lazyListState
+                lazyListState = lazyListState,
+                clipboardManager = clipboardManager
             )
         }
 
@@ -200,7 +207,8 @@ fun Filters(
 fun ItemsList(
     passwordsList: List<PasswordModel>,
     bankAccountsList: List<BankAccountModel>,
-    lazyListState: LazyListState
+    lazyListState: LazyListState,
+    clipboardManager: ClipboardManager
 ) {
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxWidth()) {
         item {
@@ -227,7 +235,9 @@ fun ItemsList(
                 PasswordItem(
                     item = it,
                     onClick = {},
-                    onCopyClick = {},
+                    onCopyClick = { password ->
+                        clipboardManager.copySensitiveData(password)
+                    },
                     onDeleteClick = {},
                     onEditClick = {})
             }

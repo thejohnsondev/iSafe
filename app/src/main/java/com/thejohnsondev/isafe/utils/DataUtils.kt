@@ -1,8 +1,11 @@
 package com.thejohnsondev.isafe.utils
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.PersistableBundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import com.google.gson.Gson
@@ -115,4 +118,12 @@ fun Long.getTimeFormatted(format: String): String {
 
 fun String.hidden(): String {
     return replace(Regex("[\\s\\S]"), "*")
+}
+
+fun ClipboardManager.copySensitiveData(string: String) {
+    setPrimaryClip(ClipData.newPlainText(string, string).apply {
+        description.extras = PersistableBundle().apply {
+            putBoolean("android.content.extra.IS_SENSITIVE", true)
+        }
+    })
 }
