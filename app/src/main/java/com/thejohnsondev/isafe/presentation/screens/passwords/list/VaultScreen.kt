@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -51,6 +52,7 @@ import com.thejohnsondev.isafe.domain.models.BankAccountModel
 import com.thejohnsondev.isafe.domain.models.LoadingState
 import com.thejohnsondev.isafe.domain.models.OneTimeEvent
 import com.thejohnsondev.isafe.domain.models.PasswordModel
+import com.thejohnsondev.isafe.presentation.components.EmptyListPlaceHolder
 import com.thejohnsondev.isafe.presentation.components.FilterGroup
 import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
 import com.thejohnsondev.isafe.presentation.components.PasswordItem
@@ -60,6 +62,7 @@ import com.thejohnsondev.isafe.utils.FILTER_ALL
 import com.thejohnsondev.isafe.utils.FILTER_BANK_ACCOUNTS
 import com.thejohnsondev.isafe.utils.FILTER_PASSWORDS
 import com.thejohnsondev.isafe.utils.Size16
+import com.thejohnsondev.isafe.utils.Size32
 import com.thejohnsondev.isafe.utils.Size48
 import com.thejohnsondev.isafe.utils.Size86
 import com.thejohnsondev.isafe.utils.copySensitiveData
@@ -283,10 +286,19 @@ fun ItemsList(
                 )
             }
         }
+        if (passwordsList.isEmpty() && bankAccountsList.isEmpty()) {
+            item {
+                EmptyListPlaceHolder(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(Size32)
+                )
+            }
+        }
         if (passwordsList.isNotEmpty()) {
             item {
                 Text(
-                    text = "Passwords",
+                    text = stringResource(id = R.string.passwords),
                     modifier = Modifier.padding(Size16),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onBackground
@@ -311,7 +323,7 @@ fun ItemsList(
             item {
                 Spacer(modifier = Modifier.height(Size16))
                 Text(
-                    text = "Bank accounts",
+                    text = stringResource(id = R.string.bank_accounts),
                     modifier = Modifier.padding(Size16),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onBackground

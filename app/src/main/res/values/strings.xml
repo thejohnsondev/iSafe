@@ -47,5 +47,6 @@
     <string name="add_field">Add field</string>
     <string name="value">Value</string>
     <string name="search">Search</string>
+    <string name="nothing_found">Nothing found</string>
 
 </resources>
