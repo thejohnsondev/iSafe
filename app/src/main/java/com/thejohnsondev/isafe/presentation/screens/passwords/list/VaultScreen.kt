@@ -144,6 +144,12 @@ fun VaultScreen(
             },
             onBankAccountClick = {
 
+            },
+            onDeletePasswordClick = { password ->
+                viewModel.perform(VaultAction.DeletePassword(password))
+            },
+            onEditPasswordClick = {
+
             })
     }
 }
@@ -155,7 +161,9 @@ fun VaultContent(
     lazyListState: LazyListState,
     clipboardManager: ClipboardManager,
     onPasswordClick: (PasswordModel) -> Unit,
-    onBankAccountClick: (BankAccountModel) -> Unit
+    onBankAccountClick: (BankAccountModel) -> Unit,
+    onDeletePasswordClick: (PasswordModel) -> Unit,
+    onEditPasswordClick: (PasswordModel) -> Unit
 ) {
     Surface(
         modifier = modifier,
@@ -173,7 +181,9 @@ fun VaultContent(
                 passwordsList = state.passwordsList,
                 bankAccountsList = state.bankAccountsList,
                 lazyListState = lazyListState,
-                clipboardManager = clipboardManager
+                clipboardManager = clipboardManager,
+                onDeletePasswordClick = onDeletePasswordClick,
+                onEditPasswordClick = onEditPasswordClick
             )
         }
 
@@ -184,7 +194,7 @@ fun VaultContent(
 fun Filters(
     onAllClick: () -> Unit,
     onPasswordsClick: () -> Unit,
-    onBankAccountsClick: () -> Unit
+    onBankAccountsClick: () -> Unit,
 ) {
     val filterAll = stringResource(id = FILTER_ALL)
     val filterPasswords = stringResource(id = FILTER_PASSWORDS)
@@ -208,7 +218,9 @@ fun ItemsList(
     passwordsList: List<PasswordModel>,
     bankAccountsList: List<BankAccountModel>,
     lazyListState: LazyListState,
-    clipboardManager: ClipboardManager
+    clipboardManager: ClipboardManager,
+    onDeletePasswordClick: (PasswordModel) -> Unit,
+    onEditPasswordClick: (PasswordModel) -> Unit
 ) {
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxWidth()) {
         item {
@@ -238,8 +250,12 @@ fun ItemsList(
                     onCopyClick = { password ->
                         clipboardManager.copySensitiveData(password)
                     },
-                    onDeleteClick = {},
-                    onEditClick = {})
+                    onDeleteClick = { password ->
+                        onDeletePasswordClick(password)
+                    },
+                    onEditClick = { password ->
+                        onEditPasswordClick(password)
+                    })
             }
         }
         if (bankAccountsList.isNotEmpty()) {

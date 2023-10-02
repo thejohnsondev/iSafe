@@ -75,7 +75,7 @@ class PasswordsRepositoryImpl @Inject constructor(
                                     PasswordModel(
                                         timestamp = (it as HashMap<String, String>?)?.get(
                                             PARAM_TIMESTAMP
-                                        )?.decrypt(getKey()).orEmpty(),
+                                        ).orEmpty(),
                                         organization = (it as HashMap<String, String>?)?.get(
                                             PARAM_ORGANIZATION
                                         )?.decrypt(getKey()).orEmpty(),
