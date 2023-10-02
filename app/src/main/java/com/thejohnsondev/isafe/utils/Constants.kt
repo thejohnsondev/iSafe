@@ -19,6 +19,7 @@ val FILTER_BANK_ACCOUNTS = R.string.bank_accounts
 const val USERS_DB_REF = "users"
 const val USERS_DATA_DB_REF = "data"
 const val NOTES_DB_REF = "notes"
+const val PASSWORDS_DB_REF = "passwords"
 
 
 // Params
@@ -29,6 +30,11 @@ const val PARAM_TITLE = "title"
 const val PARAM_DESCRIPTION = "description"
 const val PARAM_TIMESTAMP = "timeStamp"
 const val PARAM_CATEGORY = "category"
+const val PARAM_ORGANIZATION = "organization"
+const val PARAM_ORGANIZATION_LOGO = "organizationLogo"
+const val PARAM_PASSWORD = "password"
+const val PARAM_ADDITIONAL_FIELDS = "additionalFields"
+const val PARAM_VALUE = "value"
 
 
 // Other

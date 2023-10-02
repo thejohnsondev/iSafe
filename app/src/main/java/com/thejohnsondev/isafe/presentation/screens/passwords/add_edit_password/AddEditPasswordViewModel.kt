@@ -1,8 +1,12 @@
 package com.thejohnsondev.isafe.presentation.screens.passwords.add_edit_password
 
+import com.thejohnsondev.isafe.data.local_data_source.DataStore
 import com.thejohnsondev.isafe.domain.models.AdditionalField
+import com.thejohnsondev.isafe.domain.models.DatabaseResponse
 import com.thejohnsondev.isafe.domain.models.LoadingState
+import com.thejohnsondev.isafe.domain.models.OneTimeEvent
 import com.thejohnsondev.isafe.domain.models.PasswordModel
+import com.thejohnsondev.isafe.domain.use_cases.combined.AddEditPasswordUseCases
 import com.thejohnsondev.isafe.utils.EMPTY
 import com.thejohnsondev.isafe.utils.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditPasswordViewModel @Inject constructor(
-
+    private val useCases: AddEditPasswordUseCases,
+    private val dataStore: DataStore
 ) : BaseViewModel() {
 
     private val _organization = MutableStateFlow(EMPTY)
@@ -109,7 +114,7 @@ class AddEditPasswordViewModel @Inject constructor(
         _additionalFields.emit(newList)
     }
 
-    private fun savePassword() {
+    private fun savePassword() = launchLoading {
         val passwordModel = PasswordModel(
             timestamp = System.currentTimeMillis().toString(),
             _organization.value,
@@ -118,6 +123,17 @@ class AddEditPasswordViewModel @Inject constructor(
             _password.value,
             _additionalFields.value
         )
+        useCases.createPassword(dataStore.getUserData().id.orEmpty(), passwordModel).collect {
+            when (it) {
+                is DatabaseResponse.ResponseFailure -> handleError(it.exception)
+                is DatabaseResponse.ResponseSuccess -> handlePasswordCreated()
+            }
+        }
+    }
+
+    private fun handlePasswordCreated() = launch {
+        sendEvent(OneTimeEvent.InfoToast("Password added"))
+        sendEvent(OneTimeEvent.SuccessNavigation)
     }
 
 

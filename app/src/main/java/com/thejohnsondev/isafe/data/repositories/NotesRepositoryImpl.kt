@@ -109,9 +109,9 @@ class NotesRepositoryImpl(
 
             val newNoteValues = mapOf(
                 PARAM_ID to note.id,
-                PARAM_TITLE to note.title,
-                PARAM_DESCRIPTION to note.description,
-                PARAM_CATEGORY to note.category
+                PARAM_TITLE to note.title.encrypt(getKey()),
+                PARAM_DESCRIPTION to note.description.encrypt(getKey()),
+                PARAM_CATEGORY to note.category.encrypt(getKey())
             )
             noteRef.updateChildren(newNoteValues)
                 .addOnSuccessListener {

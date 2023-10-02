@@ -9,10 +9,12 @@ import com.thejohnsondev.isafe.data.local_data_source.DataStoreImpl
 import com.thejohnsondev.isafe.data.repositories.AuthRepositoryImpl
 import com.thejohnsondev.isafe.data.repositories.GenerateKeyRepositoryImpl
 import com.thejohnsondev.isafe.data.repositories.NotesRepositoryImpl
+import com.thejohnsondev.isafe.data.repositories.PasswordsRepositoryImpl
 import com.thejohnsondev.isafe.data.repositories.UserRepositoryImpl
 import com.thejohnsondev.isafe.domain.repositories.AuthRepository
 import com.thejohnsondev.isafe.domain.repositories.GenerateKeyRepository
 import com.thejohnsondev.isafe.domain.repositories.NotesRepository
+import com.thejohnsondev.isafe.domain.repositories.PasswordsRepository
 import com.thejohnsondev.isafe.domain.repositories.UserRepository
 import com.thejohnsondev.isafe.domain.use_cases.auth.CheckUserKeyCorrectUseCase
 import com.thejohnsondev.isafe.domain.use_cases.auth.CheckUserKeyCorrectUseCaseImpl
@@ -51,6 +53,14 @@ import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserDataUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserDataUseCaseImpl
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserSecretUseCase
 import com.thejohnsondev.isafe.domain.use_cases.user.SaveUserSecretUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.vault.CreatePasswordUseCase
+import com.thejohnsondev.isafe.domain.use_cases.vault.CreatePasswordUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.vault.DeletePasswordUseCase
+import com.thejohnsondev.isafe.domain.use_cases.vault.DeletePasswordUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.vault.GetAllPasswordsUseCase
+import com.thejohnsondev.isafe.domain.use_cases.vault.GetAllPasswordsUseCaseImpl
+import com.thejohnsondev.isafe.domain.use_cases.vault.UpdatePasswordUseCase
+import com.thejohnsondev.isafe.domain.use_cases.vault.UpdatePasswordUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -250,5 +260,41 @@ object AppModule {
     @Provides
     fun provideUpdateNoteUseCase(notesRepository: NotesRepository): UpdateNoteUseCase =
         UpdateNoteUseCaseImpl(notesRepository)
+
+
+    @Singleton
+    @Provides
+    fun providePasswordsRepository(
+        firebaseDatabase: FirebaseDatabase,
+        coroutineScope: CoroutineScope,
+        dataStore: DataStore
+    ): PasswordsRepository = PasswordsRepositoryImpl(firebaseDatabase, coroutineScope, dataStore)
+
+    @Singleton
+    @Provides
+    fun provideCreatePasswordUseCase(
+        passwordsRepository: PasswordsRepository
+    ): CreatePasswordUseCase = CreatePasswordUseCaseImpl(passwordsRepository)
+
+    @Singleton
+    @Provides
+    fun provideDeletePasswordUseCase(
+        passwordsRepository: PasswordsRepository
+    ): DeletePasswordUseCase = DeletePasswordUseCaseImpl(passwordsRepository)
+
+
+    @Singleton
+    @Provides
+    fun provideGetAllPasswordsUseCase(
+        passwordsRepository: PasswordsRepository
+    ): GetAllPasswordsUseCase = GetAllPasswordsUseCaseImpl(passwordsRepository)
+
+
+    @Singleton
+    @Provides
+    fun provideUpdatePasswordUseCase(
+        passwordsRepository: PasswordsRepository
+    ): UpdatePasswordUseCase = UpdatePasswordUseCaseImpl(passwordsRepository)
+
 
 }
