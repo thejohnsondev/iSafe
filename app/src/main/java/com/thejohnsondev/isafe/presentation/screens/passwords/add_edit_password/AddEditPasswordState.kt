@@ -8,5 +8,7 @@ data class AddEditPasswordState(
     val organization: String = "",
     val title: String = "",
     val password: String = "",
-    val additionalFields: List<AdditionalField> = emptyList()
+    val additionalFields: List<AdditionalField> = emptyList(),
+    val timeStamp: String = "",
+    val isEdit: Boolean = false
 )

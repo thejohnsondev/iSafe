@@ -23,6 +23,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.thejohnsondev.isafe.domain.models.PasswordModel
 import com.thejohnsondev.isafe.presentation.navigation.ISafeBottomNavigation
 import com.thejohnsondev.isafe.presentation.navigation.Screens
 import com.thejohnsondev.isafe.presentation.screens.notes.add_note.AddNoteScreen
@@ -36,6 +37,7 @@ import com.thejohnsondev.isafe.presentation.screens.passwords.list.VaultViewMode
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsScreen
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsViewModel
 import com.thejohnsondev.isafe.utils.TWEEN_ANIM_DEFAULT_DURATION
+import com.thejohnsondev.isafe.utils.fromJson
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
@@ -124,18 +126,20 @@ fun HomeScreen(rootNavController: NavController, homeViewModel: HomeViewModel) {
                     )
                 }
                 composable(
-                    route = Screens.AddEditPassword.name,
+                    route = "${Screens.AddEditPassword.name}/{password}",
                     enterTransition = {
                         fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
                     },
                     exitTransition = {
                         fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
                     }
-                ) {
+                ) { navBackStackEntry ->
+                    val passwordModel = navBackStackEntry.arguments?.getString("password").fromJson<PasswordModel?>()
                     val viewModel = hiltViewModel<AddEditPasswordViewModel>()
                     AddEditPasswordScreen(
                         navController = navController,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        passwordModel = passwordModel
                     )
                 }
             }

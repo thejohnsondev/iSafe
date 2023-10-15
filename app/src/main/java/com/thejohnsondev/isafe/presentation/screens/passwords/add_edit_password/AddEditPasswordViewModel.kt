@@ -9,9 +9,9 @@ import com.thejohnsondev.isafe.domain.models.PasswordModel
 import com.thejohnsondev.isafe.domain.use_cases.combined.AddEditPasswordUseCases
 import com.thejohnsondev.isafe.utils.EMPTY
 import com.thejohnsondev.isafe.utils.base.BaseViewModel
+import com.thejohnsondev.isafe.utils.combine
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +23,9 @@ class AddEditPasswordViewModel @Inject constructor(
     private val _organization = MutableStateFlow(EMPTY)
     private val _title = MutableStateFlow(EMPTY)
     private val _password = MutableStateFlow(EMPTY)
+    private val _timeStamp = MutableStateFlow(EMPTY)
     private val _additionalFields = MutableStateFlow<List<AdditionalField>>(emptyList())
+    private val _isEdit = MutableStateFlow(false)
 
     val state = combine(
         _loadingState,
@@ -31,6 +33,7 @@ class AddEditPasswordViewModel @Inject constructor(
         _title,
         _password,
         _additionalFields,
+        _isEdit,
         ::mergeSources
     )
 
@@ -51,7 +54,17 @@ class AddEditPasswordViewModel @Inject constructor(
             is AddEditPasswordAction.EnterPassword -> enterPassword(action.password)
             is AddEditPasswordAction.EnterTitle -> enterTitle(action.title)
             is AddEditPasswordAction.SavePassword -> savePassword()
+            is AddEditPasswordAction.SetPasswordModelForEdit -> setPasswordModelForEdit(action.passwordModel)
         }
+    }
+
+    private fun setPasswordModelForEdit(passwordModel: PasswordModel) = launch {
+        _organization.emit(passwordModel.organization)
+        _title.emit(passwordModel.title)
+        _password.emit(passwordModel.password)
+        _additionalFields.emit(passwordModel.additionalFields)
+        _timeStamp.emit(passwordModel.timestamp)
+        _isEdit.emit(true)
     }
 
     private fun enterOrganization(organization: String) = launch {
@@ -115,24 +128,35 @@ class AddEditPasswordViewModel @Inject constructor(
     }
 
     private fun savePassword() = launchLoading {
+        val timeStamp = if (_isEdit.value) _timeStamp.value else System.currentTimeMillis().toString()
         val passwordModel = PasswordModel(
-            timestamp = System.currentTimeMillis().toString(),
+            timestamp = timeStamp,
             _organization.value,
             null,
             _title.value,
             _password.value,
             _additionalFields.value
         )
-        useCases.createPassword(dataStore.getUserData().id.orEmpty(), passwordModel).collect {
-            when (it) {
-                is DatabaseResponse.ResponseFailure -> handleError(it.exception)
-                is DatabaseResponse.ResponseSuccess -> handlePasswordCreated()
+        if (_isEdit.value) {
+            useCases.updatePassword(dataStore.getUserData().id.orEmpty(), passwordModel).collect {
+                when (it) {
+                    is DatabaseResponse.ResponseFailure -> handleError(it.exception)
+                    is DatabaseResponse.ResponseSuccess -> handlePasswordSaved()
+                }
+            }
+        } else {
+            useCases.createPassword(dataStore.getUserData().id.orEmpty(), passwordModel).collect {
+                when (it) {
+                    is DatabaseResponse.ResponseFailure -> handleError(it.exception)
+                    is DatabaseResponse.ResponseSuccess -> handlePasswordSaved()
+                }
             }
         }
     }
 
-    private fun handlePasswordCreated() = launch {
-        sendEvent(OneTimeEvent.InfoToast("Password added"))
+    private fun handlePasswordSaved() = launch {
+        val infoText = if (_isEdit.value) "Password edited" else "Password added"
+        sendEvent(OneTimeEvent.InfoToast(infoText))
         sendEvent(OneTimeEvent.SuccessNavigation)
     }
 
@@ -142,13 +166,15 @@ class AddEditPasswordViewModel @Inject constructor(
         organization: String,
         title: String,
         password: String,
-        additionalFields: List<AdditionalField>
+        additionalFields: List<AdditionalField>,
+        isEdit: Boolean
     ): AddEditPasswordState = AddEditPasswordState(
         loadingState = loadingState,
         organization = organization,
         title = title,
         password = password,
-        additionalFields = additionalFields
+        additionalFields = additionalFields,
+        isEdit = isEdit
     )
 
 }

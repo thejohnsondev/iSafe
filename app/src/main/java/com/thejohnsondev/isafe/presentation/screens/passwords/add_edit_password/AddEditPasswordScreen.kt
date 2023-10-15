@@ -56,6 +56,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.isafe.R
 import com.thejohnsondev.isafe.domain.models.LoadingState
 import com.thejohnsondev.isafe.domain.models.OneTimeEvent
+import com.thejohnsondev.isafe.domain.models.PasswordModel
 import com.thejohnsondev.isafe.presentation.components.AddEditTopAppBar
 import com.thejohnsondev.isafe.presentation.components.AdditionalField
 import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
@@ -76,7 +77,9 @@ import com.thejohnsondev.isafe.utils.toast
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditPasswordScreen(
-    navController: NavController, viewModel: AddEditPasswordViewModel
+    navController: NavController,
+    viewModel: AddEditPasswordViewModel,
+    passwordModel: PasswordModel? = null
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState(AddEditPasswordState())
@@ -92,6 +95,9 @@ fun AddEditPasswordScreen(
     }
     val passwordFocusRequester = remember {
         FocusRequester()
+    }
+    if (passwordModel != null) {
+        viewModel.perform(AddEditPasswordAction.SetPasswordModelForEdit(passwordModel))
     }
     StatusBarColor()
     LaunchedEffect(true) {

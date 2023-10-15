@@ -66,6 +66,7 @@ import com.thejohnsondev.isafe.utils.Size32
 import com.thejohnsondev.isafe.utils.Size48
 import com.thejohnsondev.isafe.utils.Size86
 import com.thejohnsondev.isafe.utils.copySensitiveData
+import com.thejohnsondev.isafe.utils.toJson
 import com.thejohnsondev.isafe.utils.toast
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -170,8 +171,9 @@ fun VaultScreen(
             onDeletePasswordClick = { password ->
                 viewModel.perform(VaultAction.DeletePassword(password))
             },
-            onEditPasswordClick = {
-
+            onEditPasswordClick = { password ->
+                navController.navigate(
+                    "${Screens.AddEditPassword.name}/${password.toJson()}")
             },
             onSearchQueryEntered = { query ->
                 viewModel.perform(VaultAction.Search(query))
