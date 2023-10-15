@@ -286,8 +286,10 @@ fun ItemsList(
                 )
             }
         }
-        if (passwordsList.isEmpty() && bankAccountsList.isEmpty()) {
-            item {
+        item {
+            AnimatedVisibility(
+                visible = passwordsList.isEmpty() && bankAccountsList.isEmpty(),
+            ) {
                 EmptyListPlaceHolder(
                     modifier = Modifier
                         .fillMaxSize()
