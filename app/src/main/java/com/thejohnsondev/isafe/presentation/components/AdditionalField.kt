@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Divider
@@ -33,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.thejohnsondev.isafe.R
 import com.thejohnsondev.isafe.presentation.ui.theme.EqualRounded
 import com.thejohnsondev.isafe.utils.Size12
+import com.thejohnsondev.isafe.utils.Size40
 import com.thejohnsondev.isafe.utils.Size8
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -42,7 +44,8 @@ fun AdditionalField(
     title: String,
     value: String,
     onTitleChanged: (String) -> Unit,
-    onValueChanged: (String) -> Unit
+    onValueChanged: (String) -> Unit,
+    onDeleteClick: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val titleFocusRequester = remember {
@@ -61,63 +64,96 @@ fun AdditionalField(
             .clickable {
                 isHidden = !isHidden
             },
-        shape = EqualRounded.small,
-        color = MaterialTheme.colorScheme.surfaceVariant
     ) {
-        Column {
-            HintTextField(
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
                 modifier = Modifier
-                    .padding(Size12)
-                    .fillMaxWidth()
-                    .focusRequester(titleFocusRequester),
-                value = title,
-                onValueChanged = {
-                    onTitleChanged(it)
-                },
-                imeAction = ImeAction.Next,
-                onKeyboardAction = {
-                    valueFocusRequester.requestFocus()
-                },
-                hint = stringResource(id = R.string.title)
-            )
-            Divider()
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxWidth(0.85f)
+                    .clickable {
+                        isHidden = !isHidden
+                    },
+                shape = EqualRounded.small,
+                color = MaterialTheme.colorScheme.surfaceVariant
             ) {
-                Column(
-                    horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Top
-                ) {
+                Column {
                     HintTextField(
                         modifier = Modifier
                             .padding(Size12)
-                            .fillMaxWidth(0.9f)
-                            .focusRequester(valueFocusRequester),
-                        value = value,
+                            .fillMaxWidth()
+                            .focusRequester(titleFocusRequester),
+                        value = title,
                         onValueChanged = {
-                            onValueChanged(it)
+                            onTitleChanged(it)
                         },
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Password,
-                        passwordVisible = !isHidden,
-                        hint = stringResource(R.string.value),
+                        imeAction = ImeAction.Next,
                         onKeyboardAction = {
-                            keyboardController?.hide()
+                            valueFocusRequester.requestFocus()
+                        },
+                        hint = stringResource(id = R.string.title)
+                    )
+                    Divider()
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            HintTextField(
+                                modifier = Modifier
+                                    .padding(Size12)
+                                    .fillMaxWidth(0.9f)
+                                    .focusRequester(valueFocusRequester),
+                                value = value,
+                                onValueChanged = {
+                                    onValueChanged(it)
+                                },
+                                imeAction = ImeAction.Done,
+                                keyboardType = KeyboardType.Password,
+                                passwordVisible = !isHidden,
+                                hint = stringResource(R.string.value),
+                                onKeyboardAction = {
+                                    keyboardController?.hide()
+                                }
+                            )
                         }
-                    )
-                }
-                IconButton(
-                    onClick = {
-                        isHidden = !isHidden
+                        IconButton(
+                            onClick = {
+                                isHidden = !isHidden
+                            }
+                        ) {
+                            Icon(
+                                modifier = Modifier.padding(end = Size8),
+                                imageVector = eyeImage,
+                                contentDescription = stringResource(R.string.visibility),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
-                ) {
-                    Icon(
-                        modifier = Modifier.padding(end = Size8),
-                        imageVector = eyeImage,
-                        contentDescription = stringResource(R.string.visibility),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
+
+            }
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .clickable {
+                        onDeleteClick()
+                    },
+                shape = EqualRounded.small,
+                color = MaterialTheme.colorScheme.errorContainer
+            ) {
+                Icon(
+                    modifier = Modifier.padding(horizontal = Size8, vertical = Size40),
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = stringResource(R.string.visibility),
+                    tint = MaterialTheme.colorScheme.onErrorContainer
+                )
             }
         }
     }
@@ -129,5 +165,10 @@ fun AdditionalField(
 @Preview
 @Composable
 fun Preview() {
-    AdditionalField(title = "Title", value = "Value", onTitleChanged = {}, onValueChanged = {})
+    AdditionalField(
+        title = "Title",
+        value = "Value",
+        onTitleChanged = {},
+        onValueChanged = {},
+        onDeleteClick = {})
 }

@@ -307,6 +307,12 @@ fun AddEditPasswordContent(
                                 additionalField.timeStamp, it
                             )
                         )
+                    }, onDeleteClick = {
+                        viewModel.perform(
+                            AddEditPasswordAction.RemoveAdditionalField(
+                                additionalField.timeStamp
+                            )
+                        )
                     })
             }
             Button(

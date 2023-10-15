@@ -55,7 +55,14 @@ class AddEditPasswordViewModel @Inject constructor(
             is AddEditPasswordAction.EnterTitle -> enterTitle(action.title)
             is AddEditPasswordAction.SavePassword -> savePassword()
             is AddEditPasswordAction.SetPasswordModelForEdit -> setPasswordModelForEdit(action.passwordModel)
+            is AddEditPasswordAction.RemoveAdditionalField -> removeAdditionalField(action.timeStamp)
         }
+    }
+
+    private fun removeAdditionalField(fieldTimeStamp: String) = launch {
+        val currentList = _additionalFields.value.toMutableList()
+        currentList.removeIf { it.timeStamp == fieldTimeStamp }
+        _additionalFields.emit(currentList)
     }
 
     private fun setPasswordModelForEdit(passwordModel: PasswordModel) = launch {
