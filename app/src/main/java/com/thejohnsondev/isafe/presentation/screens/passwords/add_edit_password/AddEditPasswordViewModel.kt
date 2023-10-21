@@ -37,25 +37,25 @@ class AddEditPasswordViewModel @Inject constructor(
         ::mergeSources
     )
 
-    fun perform(action: AddEditPasswordAction) {
+    fun perform(action: Action) {
         when (action) {
-            is AddEditPasswordAction.AddAdditionalField -> addAdditionalField(action.timeStamp)
-            is AddEditPasswordAction.EnterAdditionalFieldTitle -> enterAdditionalFieldTitle(
+            is Action.AddAdditionalField -> addAdditionalField(action.timeStamp)
+            is Action.EnterAdditionalFieldTitle -> enterAdditionalFieldTitle(
                 action.timeStamp,
                 action.title
             )
 
-            is AddEditPasswordAction.EnterAdditionalFieldValue -> enterAdditionalFieldValue(
+            is Action.EnterAdditionalFieldValue -> enterAdditionalFieldValue(
                 action.timeStamp,
                 action.value
             )
 
-            is AddEditPasswordAction.EnterOrganization -> enterOrganization(action.organization)
-            is AddEditPasswordAction.EnterPassword -> enterPassword(action.password)
-            is AddEditPasswordAction.EnterTitle -> enterTitle(action.title)
-            is AddEditPasswordAction.SavePassword -> savePassword()
-            is AddEditPasswordAction.SetPasswordModelForEdit -> setPasswordModelForEdit(action.passwordModel)
-            is AddEditPasswordAction.RemoveAdditionalField -> removeAdditionalField(action.timeStamp)
+            is Action.EnterOrganization -> enterOrganization(action.organization)
+            is Action.EnterPassword -> enterPassword(action.password)
+            is Action.EnterTitle -> enterTitle(action.title)
+            is Action.SavePassword -> savePassword()
+            is Action.SetPasswordModelForEdit -> setPasswordModelForEdit(action.passwordModel)
+            is Action.RemoveAdditionalField -> removeAdditionalField(action.timeStamp)
         }
     }
 
@@ -135,7 +135,8 @@ class AddEditPasswordViewModel @Inject constructor(
     }
 
     private fun savePassword() = launchLoading {
-        val timeStamp = if (_isEdit.value) _timeStamp.value else System.currentTimeMillis().toString()
+        val timeStamp =
+            if (_isEdit.value) _timeStamp.value else System.currentTimeMillis().toString()
         val passwordModel = PasswordModel(
             timestamp = timeStamp,
             _organization.value,
@@ -175,13 +176,35 @@ class AddEditPasswordViewModel @Inject constructor(
         password: String,
         additionalFields: List<AdditionalField>,
         isEdit: Boolean
-    ): AddEditPasswordState = AddEditPasswordState(
+    ): State = State(
         loadingState = loadingState,
         organization = organization,
         title = title,
         password = password,
         additionalFields = additionalFields,
         isEdit = isEdit
+    )
+
+    sealed class Action {
+        class EnterOrganization(val organization: String) : Action()
+        class EnterTitle(val title: String) : Action()
+        class EnterPassword(val password: String) : Action()
+        class AddAdditionalField(val timeStamp: String) : Action()
+        class EnterAdditionalFieldTitle(val timeStamp: String, val title: String) : Action()
+        class EnterAdditionalFieldValue(val timeStamp: String, val value: String) : Action()
+        class RemoveAdditionalField(val timeStamp: String) : Action()
+        object SavePassword : Action()
+        class SetPasswordModelForEdit(val passwordModel: PasswordModel) : Action()
+    }
+
+    data class State(
+        val loadingState: LoadingState = LoadingState.Loaded,
+        val organization: String = EMPTY,
+        val title: String = EMPTY,
+        val password: String = EMPTY,
+        val additionalFields: List<AdditionalField> = emptyList(),
+        val timeStamp: String = EMPTY,
+        val isEdit: Boolean = false
     )
 
 }

@@ -5,19 +5,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
 import com.thejohnsondev.isafe.utils.EMPTY
 import com.thejohnsondev.isafe.utils.Size16
 import com.thejohnsondev.isafe.utils.Size8
@@ -37,8 +45,11 @@ fun TextField(
     errorText: String? = null,
     isError: Boolean = false
 ) {
+    var isPasswordVisible by remember {
+        mutableStateOf(false)
+    }
     val visualTransformation =
-        if (keyboardType != KeyboardType.Password) VisualTransformation.None else PasswordVisualTransformation()
+        if (!isPasswordVisible && keyboardType == KeyboardType.Password) PasswordVisualTransformation() else VisualTransformation.None
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -66,7 +77,18 @@ fun TextField(
             singleLine = singleLine,
             keyboardActions = onKeyboardAction,
             isError = isError && errorText != null,
-            visualTransformation = visualTransformation
+            visualTransformation = visualTransformation,
+            trailingIcon = {
+                if (keyboardType == KeyboardType.Password) {
+                    val image = if (isPasswordVisible)
+                        Icons.Default.Visibility
+                    else Icons.Default.VisibilityOff
+                    val description = if (isPasswordVisible) "Hide password" else "Show password"
+                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                        Icon(imageVector = image, description)
+                    }
+                }
+            }
         )
         if (isError && errorText != null) {
             Text(

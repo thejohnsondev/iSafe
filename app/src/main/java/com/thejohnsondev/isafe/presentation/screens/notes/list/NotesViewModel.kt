@@ -25,9 +25,9 @@ class NotesViewModel @Inject constructor(
         ::mergeSources
     )
 
-    fun perform(action: NotesAction) {
+    fun perform(action: Action) {
         when (action) {
-            is NotesAction.FetchNotes -> fetchNotes()
+            is Action.FetchNotes -> fetchNotes()
         }
     }
 
@@ -51,9 +51,18 @@ class NotesViewModel @Inject constructor(
     private fun mergeSources(
         loadingState: LoadingState,
         notesList: List<NoteModel>
-    ): NotesState = NotesState(
+    ): State = State(
         loadingState = loadingState,
         notesList = notesList
+    )
+
+    sealed class Action {
+        object FetchNotes: Action()
+    }
+
+    data class State(
+        val loadingState: LoadingState = LoadingState.Loaded,
+        val notesList: List<NoteModel> = emptyList()
     )
 
 }

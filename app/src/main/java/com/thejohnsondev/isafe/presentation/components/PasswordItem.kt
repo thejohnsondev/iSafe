@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -52,18 +51,19 @@ import com.thejohnsondev.isafe.presentation.ui.theme.EqualRounded
 import com.thejohnsondev.isafe.utils.EXPAND_ANIM_DURATION
 import com.thejohnsondev.isafe.utils.Size12
 import com.thejohnsondev.isafe.utils.Size16
-import com.thejohnsondev.isafe.utils.Size24
 import com.thejohnsondev.isafe.utils.Size4
 import com.thejohnsondev.isafe.utils.Size42
 import com.thejohnsondev.isafe.utils.Size8
 import com.thejohnsondev.isafe.utils.hidden
 
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun PasswordItem(
     modifier: Modifier = Modifier,
     item: PasswordModel,
     onClick: (PasswordModel) -> Unit,
+    onCopySensitiveClick: (String) -> Unit,
     onCopyClick: (String) -> Unit,
     onDeleteClick: (PasswordModel) -> Unit,
     onEditClick: (PasswordModel) -> Unit
@@ -104,10 +104,13 @@ fun PasswordItem(
         )
     ) {
         Column(
-            modifier = Modifier.clickable {
-                onClick(item)
-                expanded = !expanded
-            }, horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Top
+            modifier = Modifier.combinedClickable(
+                onClick = {
+                    onClick(item)
+                    expanded = !expanded
+                }, onLongClick = {
+                    onCopyClick(item.title)
+                }), horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Top
         ) {
             Row(
                 modifier = Modifier
@@ -155,7 +158,7 @@ fun PasswordItem(
                 IconButton(
                     modifier = Modifier.size(Size42),
                     onClick = {
-                        onCopyClick(item.password)
+                        onCopySensitiveClick(item.password)
                     }) {
                     Icon(
                         imageVector = Icons.Default.ContentCopy,
@@ -175,7 +178,7 @@ fun PasswordItem(
             ExpandedContent(
                 passwordModel = item,
                 onCopyClick = {
-                    onCopyClick(it)
+                    onCopySensitiveClick(it)
                 },
                 onDeleteClick = {
                     expanded = false
@@ -280,7 +283,8 @@ fun ExpandedContent(
                 Text(
                     modifier = Modifier
                         .padding(vertical = Size4),
-                    text = stringResource(R.string.edit), color = MaterialTheme.colorScheme.onSecondaryContainer
+                    text = stringResource(R.string.edit),
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
             Button(
@@ -306,7 +310,8 @@ fun ExpandedContent(
                 Text(
                     modifier = Modifier
                         .padding(vertical = Size4),
-                    text = stringResource(id = R.string.delete), color = MaterialTheme.colorScheme.onErrorContainer
+                    text = stringResource(id = R.string.delete),
+                    color = MaterialTheme.colorScheme.onErrorContainer
                 )
             }
         }
@@ -373,15 +378,12 @@ fun PasswordItemPreview() {
         organization = "Google",
         title = "emal@gmail.com",
         password = "Pass123$"
-    ), onClick = {
-
-    }, onCopyClick = {
-
-    }, onDeleteClick = {
-
-    }, onEditClick = {
-
-    })
+    ),
+        onClick = {},
+        onCopySensitiveClick = {},
+        onCopyClick = {},
+        onDeleteClick = {},
+        onEditClick = {})
 }
 
 @Preview

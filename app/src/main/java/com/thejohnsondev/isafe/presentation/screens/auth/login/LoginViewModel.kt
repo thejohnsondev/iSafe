@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(
         ::isLoginReady
     )
 
-    val viewState: Flow<LoginViewState> = combine(
+    val viewState: Flow<State> = combine(
         _isLoginSuccess,
         _loadingState,
         _emailValidationState,
@@ -38,11 +38,11 @@ class LoginViewModel @Inject constructor(
         ::mergeSources
     )
 
-    fun perform(action: LoginAction) {
+    fun perform(action: Action) {
         when (action) {
-            is LoginAction.LoginWithEmail -> loginWithEmail(action.email, action.password)
-            is LoginAction.ValidateEmail -> validateEmail(action.email)
-            is LoginAction.ValidatePassword -> validatePassword(action.password)
+            is Action.LoginWithEmail -> loginWithEmail(action.email, action.password)
+            is Action.ValidateEmail -> validateEmail(action.email)
+            is Action.ValidatePassword -> validatePassword(action.password)
         }
     }
 
@@ -52,6 +52,7 @@ class LoginViewModel @Inject constructor(
                 is AuthResponse.ResponseFailure -> {
                     handleError(it.exception)
                 }
+
                 is AuthResponse.ResponseSuccess -> {
                     getUserData(it.authResult.user?.uid.orEmpty())
                 }
@@ -89,15 +90,14 @@ class LoginViewModel @Inject constructor(
         emailValidationState: EmailValidationState?,
         passwordValidationState: PasswordValidationState?,
         loginReady: Boolean
-    ): LoginViewState {
-        return LoginViewState(
-            isLoginSuccess = isLoginSuccess,
-            loadingState = authLoadingState,
-            emailValidationState = emailValidationState,
-            passwordValidationState = passwordValidationState,
-            loginReady = loginReady
-        )
-    }
+    ): State = State(
+        isLoginSuccess = isLoginSuccess,
+        loadingState = authLoadingState,
+        emailValidationState = emailValidationState,
+        passwordValidationState = passwordValidationState,
+        loginReady = loginReady
+    )
+
 
     private fun isLoginReady(
         emailValidationState: EmailValidationState?,
@@ -106,4 +106,17 @@ class LoginViewModel @Inject constructor(
             && passwordValidationState is PasswordValidationState.PasswordCorrectState
 
 
+    sealed class Action {
+        class LoginWithEmail(val email: String, val password: String) : Action()
+        class ValidateEmail(val email: String) : Action()
+        class ValidatePassword(val password: String) : Action()
+    }
+
+    data class State(
+        val isLoginSuccess: Boolean? = null,
+        val loadingState: LoadingState = LoadingState.Loaded,
+        val emailValidationState: EmailValidationState? = null,
+        val passwordValidationState: PasswordValidationState? = null,
+        val loginReady: Boolean = false
+    )
 }

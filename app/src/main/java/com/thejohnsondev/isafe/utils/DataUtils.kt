@@ -127,3 +127,8 @@ fun ClipboardManager.copySensitiveData(string: String) {
         }
     })
 }
+
+
+fun ClipboardManager.copyData(string: String) {
+    setPrimaryClip(ClipData.newPlainText(string, string))
+}

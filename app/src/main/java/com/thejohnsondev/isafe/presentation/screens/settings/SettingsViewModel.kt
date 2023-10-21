@@ -10,14 +10,18 @@ class SettingsViewModel @Inject constructor(
     private val useCases: SettingsUseCases
 ) : BaseViewModel() {
 
-    fun perform(action: SettingsAction) {
+    fun perform(action: Action) {
         when (action) {
-            is SettingsAction.Logout -> logout()
+            is Action.Logout -> logout()
         }
     }
 
     private fun logout() = launch {
         useCases.logout()
+    }
+
+    sealed class Action {
+        object Logout : Action()
     }
 
 }

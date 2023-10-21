@@ -26,7 +26,7 @@ fun SettingsScreen(
         ) {
             Text(text = "Settings")
             Button(onClick = {
-                viewModel.perform(SettingsAction.Logout)
+                viewModel.perform(SettingsViewModel.Action.Logout)
                 rootNavController.navigate(Screens.SignUpScreen.name)
             }) {
                 Text(text = "Logout")

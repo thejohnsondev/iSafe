@@ -65,6 +65,7 @@ import com.thejohnsondev.isafe.utils.Size16
 import com.thejohnsondev.isafe.utils.Size32
 import com.thejohnsondev.isafe.utils.Size48
 import com.thejohnsondev.isafe.utils.Size86
+import com.thejohnsondev.isafe.utils.copyData
 import com.thejohnsondev.isafe.utils.copySensitiveData
 import com.thejohnsondev.isafe.utils.toJson
 import com.thejohnsondev.isafe.utils.toast
@@ -79,7 +80,7 @@ fun VaultScreen(
     val clipboardManager: ClipboardManager =
         getSystemService(context, ClipboardManager::class.java) as ClipboardManager
     val keyboardController = LocalSoftwareKeyboardController.current
-    val state = viewModel.state.collectAsState(VaultState())
+    val state = viewModel.state.collectAsState(VaultViewModel.State())
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -91,7 +92,7 @@ fun VaultScreen(
     }
     StatusBarColor()
     LaunchedEffect(true) {
-        viewModel.perform(VaultAction.FetchVault)
+        viewModel.perform(VaultViewModel.Action.FetchVault)
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)
@@ -169,18 +170,19 @@ fun VaultScreen(
 
             },
             onDeletePasswordClick = { password ->
-                viewModel.perform(VaultAction.DeletePassword(password))
+                viewModel.perform(VaultViewModel.Action.DeletePassword(password))
             },
             onEditPasswordClick = { password ->
                 navController.navigate(
-                    "${Screens.AddEditPassword.name}/${password.toJson()}")
+                    "${Screens.AddEditPassword.name}/${password.toJson()}"
+                )
             },
             onSearchQueryEntered = { query ->
-                viewModel.perform(VaultAction.Search(query))
+                viewModel.perform(VaultViewModel.Action.Search(query))
             },
             onStopSearching = {
                 keyboardController?.hide()
-                viewModel.perform(VaultAction.StopSearching)
+                viewModel.perform(VaultViewModel.Action.StopSearching)
             })
     }
 }
@@ -188,7 +190,7 @@ fun VaultScreen(
 @Composable
 fun VaultContent(
     modifier: Modifier = Modifier,
-    state: VaultState,
+    state: VaultViewModel.State,
     lazyListState: LazyListState,
     clipboardManager: ClipboardManager,
     onPasswordClick: (PasswordModel) -> Unit,
@@ -312,8 +314,11 @@ fun ItemsList(
                 PasswordItem(
                     item = it,
                     onClick = {},
-                    onCopyClick = { password ->
+                    onCopySensitiveClick = { password ->
                         clipboardManager.copySensitiveData(password)
+                    },
+                    onCopyClick = { title ->
+                        clipboardManager.copyData(title)
                     },
                     onDeleteClick = { password ->
                         onDeletePasswordClick(password)

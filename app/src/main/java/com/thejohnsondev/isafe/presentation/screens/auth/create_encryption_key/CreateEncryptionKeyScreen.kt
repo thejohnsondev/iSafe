@@ -45,7 +45,8 @@ fun CreateEncryptionKeyScreen(
     viewModel: CreateEncryptionKeyViewModel
 ) {
     val context = LocalContext.current
-    val screenState = viewModel.viewState.collectAsState(initial = CreateEncryptionKeyViewState())
+    val screenState =
+        viewModel.viewState.collectAsState(initial = CreateEncryptionKeyViewModel.State())
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -90,7 +91,7 @@ fun CreateEncryptionKeyScreen(
                     modifier = Modifier
                         .padding(Size16)
                         .clickable {
-                            viewModel.perform(CreateEncryptionKeyAction.Logout)
+                            viewModel.perform(CreateEncryptionKeyViewModel.Action.Logout)
                             navController.navigate(Screens.SignUpScreen.name)
                         },
                     imageVector = Icons.Default.ArrowBack,
@@ -112,7 +113,7 @@ fun CreateEncryptionKeyScreen(
             ISafeFileLoader(
                 isLoading = screenState.value.loadingState == LoadingState.Loading
             ) {
-                viewModel.perform(CreateEncryptionKeyAction.GenerateKey(it))
+                viewModel.perform(CreateEncryptionKeyViewModel.Action.GenerateKey(it))
             }
         }
     }

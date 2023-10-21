@@ -33,12 +33,12 @@ class VaultViewModel @Inject constructor(
         ::mergeSources
     )
 
-    fun perform(action: VaultAction) {
+    fun perform(action: Action) {
         when (action) {
-            is VaultAction.FetchVault -> fetchVault()
-            is VaultAction.DeletePassword -> deletePassword(action.password)
-            is VaultAction.Search -> search(action.query)
-            VaultAction.StopSearching -> stopSearching()
+            is Action.FetchVault -> fetchVault()
+            is Action.DeletePassword -> deletePassword(action.password)
+            is Action.Search -> search(action.query)
+            is Action.StopSearching -> stopSearching()
         }
     }
 
@@ -61,7 +61,7 @@ class VaultViewModel @Inject constructor(
             return
         }
         val filteredPasswordList = _allPasswordsList.value.filter {
-            it.title.contains(query) or it.organization.contains(query)
+            it.title.lowercase().contains(query.lowercase()) or it.organization.lowercase().contains(query.lowercase())
         }
         _passwordsList.emit(filteredPasswordList)
     }
@@ -73,18 +73,19 @@ class VaultViewModel @Inject constructor(
             return
         }
         val filteredBankAccountsList = _allBankAccountsList.value.filter {
-            it.userName.contains(query) or it.cardNumber.contains(query)
+            it.userName.lowercase().contains(query.lowercase()) or it.cardNumber.lowercase().contains(query.lowercase())
         }
         _bankAccountsList.emit(filteredBankAccountsList)
     }
 
     private fun deletePassword(passwordModel: PasswordModel) = launch {
-        useCases.deletePassword(dataStore.getUserData().id.orEmpty(), passwordModel.timestamp).collect {
-            when (it) {
-                is DatabaseResponse.ResponseFailure -> handleError(it.exception)
-                is DatabaseResponse.ResponseSuccess -> deletePasswordFromList(passwordModel)
+        useCases.deletePassword(dataStore.getUserData().id.orEmpty(), passwordModel.timestamp)
+            .collect {
+                when (it) {
+                    is DatabaseResponse.ResponseFailure -> handleError(it.exception)
+                    is DatabaseResponse.ResponseSuccess -> deletePasswordFromList(passwordModel)
+                }
             }
-        }
     }
 
     private fun deletePasswordFromList(passwordModel: PasswordModel) = launch {
@@ -121,11 +122,25 @@ class VaultViewModel @Inject constructor(
         passwordsList: List<PasswordModel>,
         bankAccountsList: List<BankAccountModel>,
         isSearching: Boolean
-    ): VaultState = VaultState(
+    ): State = State(
         loadingState,
         passwordsList,
         bankAccountsList,
         isSearching
+    )
+
+    sealed class Action {
+        object FetchVault : Action()
+        class DeletePassword(val password: PasswordModel) : Action()
+        class Search(val query: String) : Action()
+        object StopSearching : Action()
+    }
+
+    data class State(
+        val loadingState: LoadingState = LoadingState.Loaded,
+        val passwordsList: List<PasswordModel> = emptyList(),
+        val bankAccountsList: List<BankAccountModel> = emptyList(),
+        val isSearching: Boolean = false
     )
 
 }

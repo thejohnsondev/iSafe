@@ -74,7 +74,7 @@ fun SignUpScreen(navController: NavHostController, viewModel: SignUpViewModel) {
 @Composable
 fun SignUpContent(navController: NavHostController, viewModel: SignUpViewModel) {
     val context = LocalContext.current
-    val screenState = viewModel.viewState.collectAsState(initial = SignUpViewState())
+    val screenState = viewModel.viewState.collectAsState(initial = SignUpViewModel.State())
     val nameState = rememberSaveable {
         mutableStateOf(EMPTY)
     }
@@ -171,7 +171,7 @@ fun LogoSection() {
 @Composable
 fun FieldsSection(
     viewModel: SignUpViewModel,
-    screenState: State<SignUpViewState>,
+    screenState: State<SignUpViewModel.State>,
     nameState: MutableState<String>,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
@@ -199,7 +199,7 @@ fun FieldsSection(
                 textState = nameState,
                 onTextChanged = {
                     nameState.value = it
-                    viewModel.perform(SignUpAction.EnterName(it))
+                    viewModel.perform(SignUpViewModel.Action.EnterName(it))
                 },
                 label = stringResource(R.string.name),
                 onKeyboardAction = KeyboardActions {
@@ -214,7 +214,7 @@ fun FieldsSection(
                 textState = emailState,
                 onTextChanged = {
                     emailState.value = it
-                    viewModel.perform(SignUpAction.ValidateEmail(it))
+                    viewModel.perform(SignUpViewModel.Action.ValidateEmail(it))
                 },
                 label = stringResource(R.string.email),
                 onKeyboardAction = KeyboardActions {
@@ -234,7 +234,7 @@ fun FieldsSection(
                 textState = passwordState,
                 onTextChanged = {
                     passwordState.value = it
-                    viewModel.perform(SignUpAction.ValidatePassword(it))
+                    viewModel.perform(SignUpViewModel.Action.ValidatePassword(it))
                 },
                 label = stringResource(R.string.password),
                 imeAction = ImeAction.Done,
@@ -275,7 +275,7 @@ fun FieldsSection(
 
 @Composable
 fun SignUpButtonSection(
-    screenState: State<SignUpViewState>,
+    screenState: State<SignUpViewModel.State>,
     viewModel: SignUpViewModel,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
@@ -288,7 +288,7 @@ fun SignUpButtonSection(
             enabled = screenState.value.signUpReady,
             onClick = {
                 viewModel.perform(
-                    SignUpAction.SignUpWithEmail(
+                    SignUpViewModel.Action.SignUpWithEmail(
                         nameState.value,
                         emailState.value,
                         passwordState.value

@@ -6,6 +6,7 @@ import com.thejohnsondev.isafe.domain.models.LoadingState
 import com.thejohnsondev.isafe.domain.models.NoteModel
 import com.thejohnsondev.isafe.domain.models.OneTimeEvent
 import com.thejohnsondev.isafe.domain.use_cases.combined.AddNoteUseCases
+import com.thejohnsondev.isafe.utils.EMPTY
 import com.thejohnsondev.isafe.utils.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,11 +29,11 @@ class AddNoteViewModel @Inject constructor(
         ::mergeSources
     )
 
-    fun perform(action: AddNoteAction) {
+    fun perform(action: Action) {
         when (action) {
-            is AddNoteAction.EnterDescription -> enterDescription(action.description)
-            is AddNoteAction.EnterTitle -> enterTitle(action.title)
-            is AddNoteAction.SaveNote -> saveNote()
+            is Action.EnterDescription -> enterDescription(action.description)
+            is Action.EnterTitle -> enterTitle(action.title)
+            is Action.SaveNote -> saveNote()
         }
     }
 
@@ -74,10 +75,22 @@ class AddNoteViewModel @Inject constructor(
         loadingState: LoadingState,
         titleState: String,
         descriptionState: String
-    ): AddNoteState = AddNoteState(
+    ): State = State(
         loadingState,
         titleState,
         descriptionState
+    )
+
+    sealed class Action {
+        class EnterTitle(val title: String) : Action()
+        class EnterDescription(val description: String) : Action()
+        object SaveNote : Action()
+    }
+
+    data class State(
+        val loadingState: LoadingState = LoadingState.Loaded,
+        val titleState: String = EMPTY,
+        val descriptionState: String = EMPTY
     )
 
 }

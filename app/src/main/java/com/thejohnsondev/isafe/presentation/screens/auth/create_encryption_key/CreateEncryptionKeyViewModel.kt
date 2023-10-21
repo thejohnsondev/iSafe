@@ -24,16 +24,16 @@ class CreateEncryptionKeyViewModel @Inject constructor(
 
     private val _keyGenerationState = MutableStateFlow(KeyGenerationState.NOT_GENERATED)
 
-    val viewState: Flow<CreateEncryptionKeyViewState> = combine(
+    val viewState: Flow<State> = combine(
         _loadingState,
         _keyGenerationState,
         ::mergeSources
     )
 
-    fun perform(action: CreateEncryptionKeyAction) {
+    fun perform(action: Action) {
         when (action) {
-            is CreateEncryptionKeyAction.GenerateKey -> generateKey(action.fileUri)
-            is CreateEncryptionKeyAction.Logout -> logout()
+            is Action.GenerateKey -> generateKey(action.fileUri)
+            is Action.Logout -> logout()
         }
     }
 
@@ -77,8 +77,18 @@ class CreateEncryptionKeyViewModel @Inject constructor(
     private fun mergeSources(
         loadingState: LoadingState,
         keyGenerationState: KeyGenerationState
-    ): CreateEncryptionKeyViewState = CreateEncryptionKeyViewState(
+    ): State = State(
         loadingState = loadingState,
         keyGenerationState = keyGenerationState
+    )
+
+    sealed class Action {
+        class GenerateKey(val fileUri: Uri?) : Action()
+        object Logout : Action()
+    }
+
+    data class State(
+        val loadingState: LoadingState = LoadingState.Loaded,
+        val keyGenerationState: KeyGenerationState = KeyGenerationState.NOT_GENERATED
     )
 }

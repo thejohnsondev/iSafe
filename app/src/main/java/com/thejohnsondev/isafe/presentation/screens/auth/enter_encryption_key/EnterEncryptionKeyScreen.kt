@@ -45,7 +45,7 @@ fun EnterEncryptionKeyScreen(
     viewModel: EnterEncryptionKeyViewModel
 ) {
     val context = LocalContext.current
-    val screenState = viewModel.viewState.collectAsState(initial = EnterEncryptionKeyViewState())
+    val screenState = viewModel.viewState.collectAsState(initial = EnterEncryptionKeyViewModel.State())
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -89,7 +89,7 @@ fun EnterEncryptionKeyScreen(
                     modifier = Modifier
                         .padding(Size16)
                         .clickable {
-                            viewModel.perform(EnterEncryptionKeyAction.Logout)
+                            viewModel.perform(EnterEncryptionKeyViewModel.Action.Logout)
                             navController.navigate(Screens.SignUpScreen.name)
                         },
                     imageVector = Icons.Default.ArrowBack,
@@ -116,7 +116,7 @@ fun EnterEncryptionKeyScreen(
                     stringResource(R.string.click_to_upload_your_key_file)
                 }
             ) {
-                viewModel.perform(EnterEncryptionKeyAction.GenerateKey(it))
+                viewModel.perform(EnterEncryptionKeyViewModel.Action.GenerateKey(it))
             }
         }
     }

@@ -82,7 +82,7 @@ fun AddEditPasswordScreen(
     passwordModel: PasswordModel? = null
 ) {
     val context = LocalContext.current
-    val state = viewModel.state.collectAsState(AddEditPasswordState())
+    val state = viewModel.state.collectAsState(AddEditPasswordViewModel.State())
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -97,7 +97,7 @@ fun AddEditPasswordScreen(
         FocusRequester()
     }
     if (passwordModel != null) {
-        viewModel.perform(AddEditPasswordAction.SetPasswordModelForEdit(passwordModel))
+        viewModel.perform(AddEditPasswordViewModel.Action.SetPasswordModelForEdit(passwordModel))
     }
     StatusBarColor()
     LaunchedEffect(true) {
@@ -119,7 +119,7 @@ fun AddEditPasswordScreen(
     }
     Scaffold(topBar = {
         AddEditTopAppBar(onSaveClick = {
-            viewModel.perform(AddEditPasswordAction.SavePassword)
+            viewModel.perform(AddEditPasswordViewModel.Action.SavePassword)
         }, onNavigateBackClick = {
             navController.popBackStack()
         })
@@ -150,7 +150,7 @@ fun AddEditPasswordScreen(
 
 @Composable
 fun AddEditPasswordContent(
-    state: AddEditPasswordState,
+    state: AddEditPasswordViewModel.State,
     viewModel: AddEditPasswordViewModel,
     paddings: PaddingValues,
     organizationFocusRequester: FocusRequester,
@@ -200,7 +200,7 @@ fun AddEditPasswordContent(
                         .fillMaxWidth()
                         .padding(start = Size16),
                     onValueChanged = {
-                        viewModel.perform(AddEditPasswordAction.EnterOrganization(it))
+                        viewModel.perform(AddEditPasswordViewModel.Action.EnterOrganization(it))
                     },
                     value = state.organization,
                     hint = stringResource(id = R.string.organization),
@@ -228,7 +228,7 @@ fun AddEditPasswordContent(
                         .wrapContentHeight()
                         .padding(Size12),
                     onValueChanged = {
-                        viewModel.perform(AddEditPasswordAction.EnterTitle(it))
+                        viewModel.perform(AddEditPasswordViewModel.Action.EnterTitle(it))
                     },
                     value = state.title,
                     hint = stringResource(id = R.string.title),
@@ -261,7 +261,7 @@ fun AddEditPasswordContent(
                             .fillMaxWidth(0.9f)
                             .padding(Size12),
                         onValueChanged = {
-                            viewModel.perform(AddEditPasswordAction.EnterPassword(it))
+                            viewModel.perform(AddEditPasswordViewModel.Action.EnterPassword(it))
                         },
                         value = state.password,
                         hint = stringResource(id = R.string.password),
@@ -296,20 +296,20 @@ fun AddEditPasswordContent(
                     value = additionalField.value,
                     onTitleChanged = {
                         viewModel.perform(
-                            AddEditPasswordAction.EnterAdditionalFieldTitle(
+                            AddEditPasswordViewModel.Action.EnterAdditionalFieldTitle(
                                 additionalField.timeStamp, it
                             )
                         )
                     },
                     onValueChanged = {
                         viewModel.perform(
-                            AddEditPasswordAction.EnterAdditionalFieldValue(
+                            AddEditPasswordViewModel.Action.EnterAdditionalFieldValue(
                                 additionalField.timeStamp, it
                             )
                         )
                     }, onDeleteClick = {
                         viewModel.perform(
-                            AddEditPasswordAction.RemoveAdditionalField(
+                            AddEditPasswordViewModel.Action.RemoveAdditionalField(
                                 additionalField.timeStamp
                             )
                         )
@@ -321,7 +321,7 @@ fun AddEditPasswordContent(
                     .padding(Size16),
                 onClick = {
                     viewModel.perform(
-                        AddEditPasswordAction.AddAdditionalField(
+                        AddEditPasswordViewModel.Action.AddAdditionalField(
                             System.currentTimeMillis().toString()
                         )
                     )
@@ -349,7 +349,7 @@ fun StatusBarColor() {
 @Preview
 @Composable
 fun AddEditPasswordContentPreview() {
-    AddEditPasswordContent(state = AddEditPasswordState(),
+    AddEditPasswordContent(state = AddEditPasswordViewModel.State(),
         viewModel = hiltViewModel(),
         paddings = PaddingValues(0.dp),
         organizationFocusRequester = remember {

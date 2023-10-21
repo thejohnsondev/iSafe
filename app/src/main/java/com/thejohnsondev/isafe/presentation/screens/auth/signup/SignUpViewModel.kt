@@ -32,7 +32,7 @@ class SignUpViewModel @Inject constructor(
         ::isSignUpReady
     )
 
-    val viewState: Flow<SignUpViewState> = combine(
+    val viewState: Flow<State> = combine(
         _isSignUpSuccess,
         _loadingState,
         _emailValidationState,
@@ -41,12 +41,12 @@ class SignUpViewModel @Inject constructor(
         ::mergeSources
     )
 
-    fun perform(action: SignUpAction) {
+    fun perform(action: Action) {
         when (action) {
-            is SignUpAction.SignUpWithEmail -> signUp(action.name, action.email, action.password)
-            is SignUpAction.ValidateEmail -> validateEmail(action.email)
-            is SignUpAction.ValidatePassword -> validatePassword(action.password)
-            is SignUpAction.EnterName -> enterName(action.name)
+            is Action.SignUpWithEmail -> signUp(action.name, action.email, action.password)
+            is Action.ValidateEmail -> validateEmail(action.email)
+            is Action.ValidatePassword -> validatePassword(action.password)
+            is Action.EnterName -> enterName(action.name)
         }
     }
 
@@ -107,15 +107,14 @@ class SignUpViewModel @Inject constructor(
         emailValidationState: EmailValidationState?,
         passwordValidationState: PasswordValidationState?,
         signUpReady: Boolean
-    ): SignUpViewState {
-        return SignUpViewState(
-            isSignUpSuccess = isSignUpSuccess,
-            loadingState = authLoadingState,
-            emailValidationState = emailValidationState,
-            passwordValidationState = passwordValidationState,
-            signUpReady = signUpReady
-        )
-    }
+    ): State = State(
+        isSignUpSuccess = isSignUpSuccess,
+        loadingState = authLoadingState,
+        emailValidationState = emailValidationState,
+        passwordValidationState = passwordValidationState,
+        signUpReady = signUpReady
+    )
+
 
     private fun isSignUpReady(
         name: String,
@@ -126,4 +125,23 @@ class SignUpViewModel @Inject constructor(
                 && emailValidationState is EmailValidationState.EmailCorrectState
                 && passwordValidationState is PasswordValidationState.PasswordCorrectState
 
+    sealed class Action {
+        class SignUpWithEmail(
+            val name: String,
+            val email: String,
+            val password: String
+        ) : Action()
+
+        class ValidateEmail(val email: String) : Action()
+        class ValidatePassword(val password: String) : Action()
+        class EnterName(val name: String) : Action()
+    }
+
+    data class State(
+        val isSignUpSuccess: Boolean? = null,
+        val loadingState: LoadingState = LoadingState.Loaded,
+        val emailValidationState: EmailValidationState? = null,
+        val passwordValidationState: PasswordValidationState? = null,
+        val signUpReady: Boolean = false
+    )
 }

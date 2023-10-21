@@ -74,7 +74,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
 @Composable
 fun LoginContent(navController: NavHostController, viewModel: LoginViewModel) {
     val context = LocalContext.current
-    val screenState = viewModel.viewState.collectAsState(initial = LoginViewState())
+    val screenState = viewModel.viewState.collectAsState(initial = LoginViewModel.State())
     val emailState = rememberSaveable {
         mutableStateOf(EMPTY)
     }
@@ -95,6 +95,7 @@ fun LoginContent(navController: NavHostController, viewModel: LoginViewModel) {
                     it.message,
                     duration = SnackbarDuration.Short
                 )
+
                 is OneTimeEvent.SuccessNavigation -> {
                     navController.navigate(Screens.EnterEncryptionKeyScreen.name)
                 }
@@ -163,7 +164,7 @@ fun LogoSection() {
 @Composable
 fun FieldsSection(
     viewModel: LoginViewModel,
-    screenState: State<LoginViewState>,
+    screenState: State<LoginViewModel.State>,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
     passwordFocusRequest: FocusRequester,
@@ -190,7 +191,7 @@ fun FieldsSection(
                 textState = emailState,
                 onTextChanged = {
                     emailState.value = it
-                    viewModel.perform(LoginAction.ValidateEmail(it))
+                    viewModel.perform(LoginViewModel.Action.ValidateEmail(it))
                 },
                 label = stringResource(R.string.email),
                 onKeyboardAction = KeyboardActions {
@@ -210,7 +211,7 @@ fun FieldsSection(
                 textState = passwordState,
                 onTextChanged = {
                     passwordState.value = it
-                    viewModel.perform(LoginAction.ValidatePassword(it))
+                    viewModel.perform(LoginViewModel.Action.ValidatePassword(it))
                 },
                 label = stringResource(R.string.password),
                 imeAction = ImeAction.Done,
@@ -251,7 +252,7 @@ fun FieldsSection(
 
 @Composable
 fun LoginButtonSection(
-    screenState: State<LoginViewState>,
+    screenState: State<LoginViewModel.State>,
     viewModel: LoginViewModel,
     emailState: MutableState<String>,
     passwordState: MutableState<String>
@@ -263,7 +264,7 @@ fun LoginButtonSection(
             enabled = screenState.value.loginReady,
             onClick = {
                 viewModel.perform(
-                    LoginAction.LoginWithEmail(
+                    LoginViewModel.Action.LoginWithEmail(
                         emailState.value,
                         passwordState.value
                     )

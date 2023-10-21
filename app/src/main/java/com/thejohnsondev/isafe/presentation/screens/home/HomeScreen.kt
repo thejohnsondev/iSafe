@@ -42,7 +42,7 @@ import com.thejohnsondev.isafe.utils.fromJson
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun HomeScreen(rootNavController: NavController, homeViewModel: HomeViewModel) {
+fun HomeScreen(rootNavController: NavController) {
     val navController = rememberAnimatedNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 

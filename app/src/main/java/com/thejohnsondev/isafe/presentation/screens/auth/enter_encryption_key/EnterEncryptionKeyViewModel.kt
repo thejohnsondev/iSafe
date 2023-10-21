@@ -23,17 +23,17 @@ class EnterEncryptionKeyViewModel @Inject constructor(
     private val _keyGenerationState = MutableStateFlow(KeyGenerationState.NOT_GENERATED)
     private val _isUploadedKeyFileCorrect = MutableStateFlow<Boolean?>(null)
 
-    val viewState: Flow<EnterEncryptionKeyViewState> = combine(
+    val viewState: Flow<State> = combine(
         _loadingState,
         _keyGenerationState,
         _isUploadedKeyFileCorrect,
         ::mergeSources
     )
 
-    fun perform(action: EnterEncryptionKeyAction) {
+    fun perform(action: Action) {
         when (action) {
-            is EnterEncryptionKeyAction.GenerateKey -> generateKey(action.fileUri)
-            is EnterEncryptionKeyAction.Logout -> logout()
+            is Action.GenerateKey -> generateKey(action.fileUri)
+            is Action.Logout -> logout()
         }
     }
 
@@ -72,10 +72,21 @@ class EnterEncryptionKeyViewModel @Inject constructor(
         loadingState: LoadingState,
         keyGenerationState: KeyGenerationState,
         isUploadedKeyFileCorrect: Boolean?
-    ): EnterEncryptionKeyViewState = EnterEncryptionKeyViewState(
+    ): State = State(
         loadingState = loadingState,
         keyGenerationState = keyGenerationState,
         isUploadedKeyFileCorrect = isUploadedKeyFileCorrect
+    )
+
+    sealed class Action {
+        class GenerateKey(val fileUri: Uri?) : Action()
+        object Logout : Action()
+    }
+
+    data class State(
+        val loadingState: LoadingState = LoadingState.Loaded,
+        val keyGenerationState: KeyGenerationState = KeyGenerationState.NOT_GENERATED,
+        val isUploadedKeyFileCorrect: Boolean? = null
     )
 
 }

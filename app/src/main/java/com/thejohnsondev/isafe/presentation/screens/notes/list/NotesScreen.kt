@@ -61,7 +61,7 @@ fun NotesScreen(
     viewModel: NotesViewModel,
 ) {
     val context = LocalContext.current
-    val state = viewModel.state.collectAsState(NotesState())
+    val state = viewModel.state.collectAsState(NotesViewModel.State())
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -73,7 +73,7 @@ fun NotesScreen(
     }
     StatusBarColor()
     LaunchedEffect(true) {
-        viewModel.perform(NotesAction.FetchNotes)
+        viewModel.perform(NotesViewModel.Action.FetchNotes)
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)
@@ -146,7 +146,7 @@ fun NotesScreen(
 @Composable
 fun NotesContent(
     modifier: Modifier = Modifier,
-    screenState: NotesState,
+    screenState: NotesViewModel.State,
     state: LazyListState,
     onNoteClick: (NoteModel) -> Unit
 ) {
@@ -194,7 +194,7 @@ fun StatusBarColor() {
 @Composable
 fun NotesScreenPreview() {
     NotesContent(
-        screenState = NotesState(
+        screenState = NotesViewModel.State(
             loadingState = LoadingState.Loaded,
             notesList = emptyList()
         ),

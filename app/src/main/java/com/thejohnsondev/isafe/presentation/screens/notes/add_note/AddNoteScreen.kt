@@ -54,7 +54,7 @@ fun AddNoteScreen(
     viewModel: AddNoteViewModel
 ) {
     val context = LocalContext.current
-    val state = viewModel.state.collectAsState(AddNoteState())
+    val state = viewModel.state.collectAsState(AddNoteViewModel.State())
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -88,7 +88,7 @@ fun AddNoteScreen(
         topBar = {
             AddEditTopAppBar(
                 onSaveClick = {
-                    viewModel.perform(AddNoteAction.SaveNote)
+                    viewModel.perform(AddNoteViewModel.Action.SaveNote)
                 },
                 onNavigateBackClick = {
                     navController.popBackStack()
@@ -124,7 +124,7 @@ fun AddNoteScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddNoteContent(
-    state: AddNoteState,
+    state: AddNoteViewModel.State,
     viewModel: AddNoteViewModel,
     paddings: PaddingValues,
     titleFocusRequester: FocusRequester,
@@ -153,7 +153,7 @@ fun AddNoteContent(
                     ),
                 value = state.titleState,
                 onValueChanged = {
-                    viewModel.perform(AddNoteAction.EnterTitle(it))
+                    viewModel.perform(AddNoteViewModel.Action.EnterTitle(it))
                 },
                 hint = stringResource(R.string.title),
                 focusRequester = titleFocusRequester,
@@ -171,7 +171,7 @@ fun AddNoteContent(
                     .padding(horizontal = Size16, vertical = Size8),
                 value = state.descriptionState,
                 onValueChanged = {
-                    viewModel.perform(AddNoteAction.EnterDescription(it))
+                    viewModel.perform(AddNoteViewModel.Action.EnterDescription(it))
                 },
                 hint = stringResource(R.string.note),
                 textColor = MaterialTheme.colorScheme.onSurface,
