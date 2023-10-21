@@ -139,7 +139,7 @@ fun VaultScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    navController.navigate(Screens.AddEditPassword.name)
+                    navController.navigate("${Screens.AddEditPassword.name}/null")
                 },
                 expanded = expandedFab,
                 icon = {
