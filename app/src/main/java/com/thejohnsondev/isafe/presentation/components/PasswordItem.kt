@@ -374,7 +374,7 @@ fun AdditionalFieldItem(
 @Composable
 fun PasswordItemPreview() {
     PasswordItem(item = PasswordModel(
-        timestamp = "1694854940885",
+        id = "1694854940885",
         organization = "Google",
         title = "emal@gmail.com",
         password = "Pass123$"
@@ -391,7 +391,7 @@ fun PasswordItemPreview() {
 fun ExpandedContentPreview() {
     ExpandedContent(
         passwordModel = PasswordModel(
-            timestamp = "1694854940885",
+            id = "1694854940885",
             organization = "Google",
             title = "emal@gmail.com",
             password = "Pass123$"

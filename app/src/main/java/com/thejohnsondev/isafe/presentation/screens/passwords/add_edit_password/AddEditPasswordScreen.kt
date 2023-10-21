@@ -297,20 +297,20 @@ fun AddEditPasswordContent(
                     onTitleChanged = {
                         viewModel.perform(
                             AddEditPasswordViewModel.Action.EnterAdditionalFieldTitle(
-                                additionalField.timeStamp, it
+                                additionalField.id, it
                             )
                         )
                     },
                     onValueChanged = {
                         viewModel.perform(
                             AddEditPasswordViewModel.Action.EnterAdditionalFieldValue(
-                                additionalField.timeStamp, it
+                                additionalField.id, it
                             )
                         )
                     }, onDeleteClick = {
                         viewModel.perform(
                             AddEditPasswordViewModel.Action.RemoveAdditionalField(
-                                additionalField.timeStamp
+                                additionalField.id
                             )
                         )
                     })

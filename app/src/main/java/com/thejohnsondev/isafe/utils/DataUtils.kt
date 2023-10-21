@@ -9,10 +9,12 @@ import android.os.PersistableBundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import com.google.gson.Gson
+import com.google.gson.stream.JsonReader
 import com.thejohnsondev.isafe.R
 import com.thejohnsondev.isafe.domain.models.EmailValidationState
 import com.thejohnsondev.isafe.domain.models.PasswordValidationState
 import java.io.File
+import java.io.StringReader
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.regex.Pattern
@@ -64,7 +66,9 @@ fun Any?.toJson(): String {
 }
 
 inline fun <reified T> String?.fromJson(): T {
-    return Gson().fromJson(this, T::class.java)
+    val jsonReader = JsonReader(StringReader(this))
+    jsonReader.isLenient = true
+    return Gson().fromJson(jsonReader, T::class.java)
 }
 
 @Suppress("DEPRECATION")

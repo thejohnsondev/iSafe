@@ -61,7 +61,7 @@ class AddEditPasswordViewModel @Inject constructor(
 
     private fun removeAdditionalField(fieldTimeStamp: String) = launch {
         val currentList = _additionalFields.value.toMutableList()
-        currentList.removeIf { it.timeStamp == fieldTimeStamp }
+        currentList.removeIf { it.id == fieldTimeStamp }
         _additionalFields.emit(currentList)
     }
 
@@ -70,7 +70,7 @@ class AddEditPasswordViewModel @Inject constructor(
         _title.emit(passwordModel.title)
         _password.emit(passwordModel.password)
         _additionalFields.emit(passwordModel.additionalFields)
-        _timeStamp.emit(passwordModel.timestamp)
+        _timeStamp.emit(passwordModel.id)
         _isEdit.emit(true)
     }
 
@@ -90,7 +90,7 @@ class AddEditPasswordViewModel @Inject constructor(
         val currentList = _additionalFields.value.toMutableList()
         currentList.add(
             AdditionalField(
-                timeStamp = timeStamp,
+                id = timeStamp,
                 title = EMPTY,
                 value = EMPTY
             )
@@ -101,12 +101,12 @@ class AddEditPasswordViewModel @Inject constructor(
     private fun enterAdditionalFieldTitle(timeStamp: String, title: String) = launch {
         val itemIndex = _additionalFields.value.indexOf(
             _additionalFields.value.find {
-                it.timeStamp == timeStamp
+                it.id == timeStamp
             }
         )
         if (itemIndex == -1) return@launch
         val field = AdditionalField(
-            timeStamp = timeStamp,
+            id = timeStamp,
             title = title,
             value = _additionalFields.value[itemIndex].value
         )
@@ -119,12 +119,12 @@ class AddEditPasswordViewModel @Inject constructor(
     private fun enterAdditionalFieldValue(timeStamp: String, value: String) = launch {
         val itemIndex = _additionalFields.value.indexOf(
             _additionalFields.value.find {
-                it.timeStamp == timeStamp
+                it.id == timeStamp
             }
         )
         if (itemIndex == -1) return@launch
         val field = AdditionalField(
-            timeStamp = timeStamp,
+            id = timeStamp,
             title = _additionalFields.value[itemIndex].title,
             value = value
         )
@@ -138,7 +138,7 @@ class AddEditPasswordViewModel @Inject constructor(
         val timeStamp =
             if (_isEdit.value) _timeStamp.value else System.currentTimeMillis().toString()
         val passwordModel = PasswordModel(
-            timestamp = timeStamp,
+            id = timeStamp,
             _organization.value,
             null,
             _title.value,

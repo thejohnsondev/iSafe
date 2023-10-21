@@ -11,10 +11,10 @@ import com.thejohnsondev.isafe.domain.models.PasswordModel
 import com.thejohnsondev.isafe.domain.models.UserPasswordsResponse
 import com.thejohnsondev.isafe.domain.repositories.PasswordsRepository
 import com.thejohnsondev.isafe.utils.PARAM_ADDITIONAL_FIELDS
+import com.thejohnsondev.isafe.utils.PARAM_ID
 import com.thejohnsondev.isafe.utils.PARAM_ORGANIZATION
 import com.thejohnsondev.isafe.utils.PARAM_ORGANIZATION_LOGO
 import com.thejohnsondev.isafe.utils.PARAM_PASSWORD
-import com.thejohnsondev.isafe.utils.PARAM_TIMESTAMP
 import com.thejohnsondev.isafe.utils.PARAM_TITLE
 import com.thejohnsondev.isafe.utils.PARAM_VALUE
 import com.thejohnsondev.isafe.utils.PASSWORDS_DB_REF
@@ -58,7 +58,7 @@ class PasswordsRepositoryImpl @Inject constructor(
                                     (it as List<HashMap<String, String>>).forEach {
                                         additionalFieldsList.add(
                                             AdditionalField(
-                                                timeStamp = it.get(PARAM_TIMESTAMP).orEmpty(),
+                                                id = it.get(PARAM_ID).orEmpty(),
                                                 title = it.get(PARAM_TITLE)?.decrypt(getKey())
                                                     .orEmpty(),
                                                 value = it.get(PARAM_VALUE)?.decrypt(getKey())
@@ -73,8 +73,8 @@ class PasswordsRepositoryImpl @Inject constructor(
                             (it as HashMap<String, Any?>?).let {
                                 passwordsList.add(
                                     PasswordModel(
-                                        timestamp = (it as HashMap<String, String>?)?.get(
-                                            PARAM_TIMESTAMP
+                                        id = (it as HashMap<String, String>?)?.get(
+                                            PARAM_ID
                                         ).orEmpty(),
                                         organization = (it as HashMap<String, String>?)?.get(
                                             PARAM_ORGANIZATION
@@ -113,7 +113,7 @@ class PasswordsRepositoryImpl @Inject constructor(
                 (it as List<HashMap<String, String>>).forEach {
                     additionalFieldsList.add(
                         AdditionalField(
-                            timeStamp = it.get(PARAM_TIMESTAMP).orEmpty(),
+                            id = it.get(PARAM_ID).orEmpty(),
                             title = it.get(PARAM_TITLE)?.decrypt(getKey()).orEmpty(),
                             value = it.get(PARAM_VALUE)?.decrypt(getKey()).orEmpty()
                         )
@@ -131,14 +131,14 @@ class PasswordsRepositoryImpl @Inject constructor(
                 close()
             }
             val encryptedPassword = PasswordModel(
-                timestamp = password.timestamp,
+                id = password.id,
                 organization = password.organization.encrypt(getKey()),
                 organizationLogo = password.organizationLogo?.encrypt(getKey()),
                 title = password.title.encrypt(getKey()),
                 password = password.password.encrypt(getKey()),
                 additionalFields = password.additionalFields.map {
                     AdditionalField(
-                        timeStamp = it.timeStamp,
+                        id = it.id,
                         title = it.title.encrypt(getKey()),
                         value = it.value.encrypt(getKey())
                     )
@@ -147,7 +147,7 @@ class PasswordsRepositoryImpl @Inject constructor(
             firebaseDatabase.getReference(USERS_DB_REF)
                 .child(userId)
                 .child(PASSWORDS_DB_REF)
-                .child(password.timestamp)
+                .child(password.id)
                 .setValue(encryptedPassword)
                 .addOnSuccessListener {
                     coroutineScope.launch {
@@ -166,17 +166,17 @@ class PasswordsRepositoryImpl @Inject constructor(
             val passwordRef = firebaseDatabase.getReference(USERS_DB_REF)
                 .child(userId)
                 .child(PASSWORDS_DB_REF)
-                .child(password.timestamp)
+                .child(password.id)
 
             val newPasswordValues = mapOf(
-                PARAM_TIMESTAMP to password.timestamp,
+                PARAM_ID to password.id,
                 PARAM_ORGANIZATION to password.organization.encrypt(getKey()),
                 PARAM_ORGANIZATION_LOGO to password.organizationLogo?.encrypt(getKey()),
                 PARAM_TITLE to password.title.encrypt(getKey()),
                 PARAM_PASSWORD to password.password.encrypt(getKey()),
                 PARAM_ADDITIONAL_FIELDS to password.additionalFields.map {
                     mapOf(
-                        PARAM_TIMESTAMP to it.timeStamp,
+                        PARAM_ID to it.id,
                         PARAM_TITLE to it.title.encrypt(getKey()),
                         PARAM_VALUE to it.value.encrypt(getKey())
                     )

@@ -79,7 +79,7 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun deletePassword(passwordModel: PasswordModel) = launch {
-        useCases.deletePassword(dataStore.getUserData().id.orEmpty(), passwordModel.timestamp)
+        useCases.deletePassword(dataStore.getUserData().id.orEmpty(), passwordModel.id)
             .collect {
                 when (it) {
                     is DatabaseResponse.ResponseFailure -> handleError(it.exception)
@@ -90,7 +90,7 @@ class VaultViewModel @Inject constructor(
 
     private fun deletePasswordFromList(passwordModel: PasswordModel) = launch {
         val passwordsList = _passwordsList.value.toMutableList()
-        passwordsList.removeIf { it.timestamp == passwordModel.timestamp }
+        passwordsList.removeIf { it.id == passwordModel.id }
         _passwordsList.emit(passwordsList)
         _allPasswordsList.emit(passwordsList)
     }
