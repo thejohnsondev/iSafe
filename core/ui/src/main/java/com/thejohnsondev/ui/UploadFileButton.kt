@@ -15,10 +15,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.thejohnsondev.isafe.R
-import com.thejohnsondev.isafe.presentation.ui.theme.EqualRounded
-import com.thejohnsondev.isafe.utils.Size150
-import com.thejohnsondev.isafe.utils.Size24
+import com.thejohnsondev.designsystem.EqualRounded
+import com.thejohnsondev.designsystem.Size150
+import com.thejohnsondev.designsystem.Size24
 
 @Composable
 fun UploadFileButton(
@@ -48,8 +47,8 @@ fun UploadFileButton(
                 modifier = Modifier
                     .padding(Size24)
                     .fillMaxSize(),
-                painter = painterResource(id = if (isError) R.drawable.ic_error else R.drawable.ic_upload_file),
-                contentDescription = stringResource(if (isError) R.string.upload_file_error else R.string.upload_image),
+                painter = painterResource(id = if (isError) com.thejohnsondev.designsystem.R.drawable.ic_error else com.thejohnsondev.designsystem.R.drawable.ic_upload_file),
+                contentDescription = stringResource(if (isError) com.thejohnsondev.common.R.string.upload_file_error else com.thejohnsondev.common.R.string.upload_image),
                 colorFilter = ColorFilter.tint(if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimaryContainer)
             )
         }

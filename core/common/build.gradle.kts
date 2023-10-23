@@ -35,7 +35,6 @@ android {
 dependencies {
 
     implementation(project(":core:model"))
-    implementation(project(":core:common"))
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))

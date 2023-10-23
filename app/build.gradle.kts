@@ -1,6 +1,7 @@
 
 plugins {
     id("com.android.application")
+    id("kotlin-android")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("dagger.hilt.android.plugin")
@@ -41,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0"
+        kotlinCompilerExtensionVersion = "1.3.2"
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -57,6 +58,8 @@ dependencies {
 
     val hiltVersion = "2.44"
     val coroutinesVersion = "1.7.1"
+
+    implementation(project(":feature:vault"))
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
