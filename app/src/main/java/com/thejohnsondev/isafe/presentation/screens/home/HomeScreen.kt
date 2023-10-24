@@ -32,6 +32,7 @@ import com.thejohnsondev.isafe.presentation.screens.passwords.add_edit_password.
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsScreen
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsViewModel
 import com.thejohnsondev.isafe.utils.fromJson
+import com.thejohnsondev.isafe.utils.toJson
 import com.thejohnsondev.vault.navigation.vaultRoute
 import com.thejohnsondev.vault.navigation.vaultScreen
 
@@ -72,8 +73,10 @@ fun HomeScreen(rootNavController: NavController) {
                 vaultScreen(
                     onAddNewPasswordClick = {
                         // TODO: implement
+                        navController.navigate("${Screens.AddEditPassword.name}/null")
                     },
                     onEditPasswordClick = {
+                        navController.navigate("${Screens.AddEditPassword.name}/${it.toJson()}\"")
                         // TODO: implement
                     }
                 )

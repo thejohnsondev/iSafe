@@ -226,7 +226,7 @@ fun Filters(
     onPasswordsClick: () -> Unit,
     onBankAccountsClick: () -> Unit,
 ) {
-    val filterAll = stringResource(id = com.thejohnsondev.common.R.string.add)
+    val filterAll = stringResource(id = com.thejohnsondev.common.R.string.all)
     val filterPasswords = stringResource(id = com.thejohnsondev.common.R.string.passwords)
     val filterBankAccounts = stringResource(id = com.thejohnsondev.common.R.string.bank_accounts)
     val filters = listOf(

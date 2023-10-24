@@ -21,6 +21,7 @@ val Size86 = 86.dp
 val Size128 = 128.dp
 val Size150 = 150.dp
 
+val Text14 = 14.sp
 val Text18 = 18.sp
 val Text20 = 20.sp
 val Text22 = 22.sp

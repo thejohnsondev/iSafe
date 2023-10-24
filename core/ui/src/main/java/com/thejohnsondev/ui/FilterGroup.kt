@@ -20,8 +20,9 @@ import androidx.compose.ui.draw.clip
 import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size32
-import com.thejohnsondev.designsystem.Size48
+import com.thejohnsondev.designsystem.Size42
 import com.thejohnsondev.designsystem.Size8
+import com.thejohnsondev.designsystem.Text14
 
 @Composable
 fun FilterGroup(
@@ -64,7 +65,7 @@ fun Chip(
 
     Box(modifier = Modifier
         .padding(horizontal = Size8, vertical = Size8)
-        .height(Size48)
+        .height(Size42)
         .clip(CircleShape)
         .background(background)
         .clickable {
@@ -79,7 +80,7 @@ fun Chip(
                 modifier = Modifier.padding(
                     vertical = Size12,
                     horizontal = if (isSelected) Size32 else Size16
-                ), text = title, color = contentColor
+                ), text = title, color = contentColor, fontSize = Text14
             )
         }
 
