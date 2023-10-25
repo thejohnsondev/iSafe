@@ -1,15 +1,15 @@
-package com.thejohnsondev.isafe.presentation.screens.passwords.add_edit_password
+package com.thejohnsondev.addpassword
 
-import com.thejohnsondev.isafe.data.local_data_source.DataStore
-import com.thejohnsondev.isafe.domain.models.AdditionalField
-import com.thejohnsondev.isafe.domain.models.DatabaseResponse
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.domain.models.PasswordModel
-import com.thejohnsondev.isafe.domain.use_cases.combined.AddEditPasswordUseCases
-import com.thejohnsondev.isafe.utils.EMPTY
-import com.thejohnsondev.isafe.utils.base.BaseViewModel
-import com.thejohnsondev.isafe.utils.combine
+import com.thejohnsondev.common.EMPTY
+import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.common.combine
+import com.thejohnsondev.datastore.DataStore
+import com.thejohnsondev.domain.add_edit_password.AddEditPasswordUseCases
+import com.thejohnsondev.model.AdditionalField
+import com.thejohnsondev.model.DatabaseResponse
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.model.PasswordModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

@@ -20,18 +20,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.isafe.domain.models.PasswordModel
+import com.thejohnsondev.addpassword.navigation.addEditPasswordScreen
+import com.thejohnsondev.addpassword.navigation.navigateToAddEditPassword
 import com.thejohnsondev.isafe.presentation.navigation.ISafeBottomNavigation
 import com.thejohnsondev.isafe.presentation.navigation.Screens
 import com.thejohnsondev.isafe.presentation.screens.notes.add_note.AddNoteScreen
 import com.thejohnsondev.isafe.presentation.screens.notes.add_note.AddNoteViewModel
 import com.thejohnsondev.isafe.presentation.screens.notes.list.NotesScreen
 import com.thejohnsondev.isafe.presentation.screens.notes.list.NotesViewModel
-import com.thejohnsondev.isafe.presentation.screens.passwords.add_edit_password.AddEditPasswordScreen
-import com.thejohnsondev.isafe.presentation.screens.passwords.add_edit_password.AddEditPasswordViewModel
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsScreen
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsViewModel
-import com.thejohnsondev.isafe.utils.fromJson
 import com.thejohnsondev.isafe.utils.toJson
 import com.thejohnsondev.vault.navigation.vaultRoute
 import com.thejohnsondev.vault.navigation.vaultScreen
@@ -72,12 +70,15 @@ fun HomeScreen(rootNavController: NavController) {
             ) {
                 vaultScreen(
                     onAddNewPasswordClick = {
-                        // TODO: implement
-                        navController.navigate("${Screens.AddEditPassword.name}/null")
+                        navController.navigateToAddEditPassword(password = null)
                     },
                     onEditPasswordClick = {
-                        navController.navigate("${Screens.AddEditPassword.name}/${it.toJson()}\"")
-                        // TODO: implement
+                        navController.navigateToAddEditPassword(password = it.toJson())
+                    }
+                )
+                addEditPasswordScreen(
+                    onGoBackClick = {
+                        navController.popBackStack()
                     }
                 )
                 composable(
@@ -103,18 +104,6 @@ fun HomeScreen(rootNavController: NavController) {
                     AddNoteScreen(
                         navController = navController,
                         viewModel = viewModel
-                    )
-                }
-                composable(
-                    route = "${Screens.AddEditPassword.name}/{password}"
-                ) { navBackStackEntry ->
-                    val passwordModel = navBackStackEntry.arguments?.getString("password")
-                        .fromJson<PasswordModel?>()
-                    val viewModel = hiltViewModel<AddEditPasswordViewModel>()
-                    AddEditPasswordScreen(
-                        navController = navController,
-                        viewModel = viewModel,
-                        passwordModel = passwordModel
                     )
                 }
             }

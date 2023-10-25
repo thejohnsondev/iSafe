@@ -1,6 +1,10 @@
-package com.thejohnsondev.domain.vault.di
+package com.thejohnsondev.domain.di
 
 import com.thejohnsondev.data.vault.PasswordsRepository
+import com.thejohnsondev.domain.add_edit_password.CreatePasswordUseCase
+import com.thejohnsondev.domain.add_edit_password.CreatePasswordUseCaseImpl
+import com.thejohnsondev.domain.add_edit_password.UpdatePasswordUseCase
+import com.thejohnsondev.domain.add_edit_password.UpdatePasswordUseCaseImpl
 import com.thejohnsondev.domain.vault.DeletePasswordUseCase
 import com.thejohnsondev.domain.vault.DeletePasswordUseCaseImpl
 import com.thejohnsondev.domain.vault.GetAllPasswordsUseCase
@@ -27,5 +31,17 @@ object DomainModule {
     fun provideGetAllPasswordsUseCase(
         passwordsRepository: PasswordsRepository
     ): GetAllPasswordsUseCase = GetAllPasswordsUseCaseImpl(passwordsRepository)
+
+    @Singleton
+    @Provides
+    fun provideCreatePasswordUseCase(
+        passwordsRepository: PasswordsRepository
+    ): CreatePasswordUseCase = CreatePasswordUseCaseImpl(passwordsRepository)
+
+    @Singleton
+    @Provides
+    fun provideUpdatePasswordUseCase(
+        passwordsRepository: PasswordsRepository
+    ): UpdatePasswordUseCase = UpdatePasswordUseCaseImpl(passwordsRepository)
 
 }

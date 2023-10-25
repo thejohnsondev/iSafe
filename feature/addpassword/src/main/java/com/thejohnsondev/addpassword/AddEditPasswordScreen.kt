@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.passwords.add_edit_password
+package com.thejohnsondev.addpassword
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -51,35 +51,33 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.isafe.R
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.domain.models.PasswordModel
-import com.thejohnsondev.isafe.presentation.components.AddEditTopAppBar
-import com.thejohnsondev.isafe.presentation.components.AdditionalField
-import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
-import com.thejohnsondev.isafe.presentation.components.HintTextField
-import com.thejohnsondev.isafe.presentation.components.LoadedImage
-import com.thejohnsondev.isafe.presentation.ui.theme.EqualRounded
-import com.thejohnsondev.isafe.utils.EMPTY
-import com.thejohnsondev.isafe.utils.Size12
-import com.thejohnsondev.isafe.utils.Size16
-import com.thejohnsondev.isafe.utils.Size24
-import com.thejohnsondev.isafe.utils.Size36
-import com.thejohnsondev.isafe.utils.Size4
-import com.thejohnsondev.isafe.utils.Size8
-import com.thejohnsondev.isafe.utils.Text20
-import com.thejohnsondev.isafe.utils.Text22
-import com.thejohnsondev.isafe.utils.toast
+import com.thejohnsondev.common.EMPTY
+import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.EqualRounded
+import com.thejohnsondev.designsystem.Size12
+import com.thejohnsondev.designsystem.Size16
+import com.thejohnsondev.designsystem.Size24
+import com.thejohnsondev.designsystem.Size36
+import com.thejohnsondev.designsystem.Size4
+import com.thejohnsondev.designsystem.Size8
+import com.thejohnsondev.designsystem.Text20
+import com.thejohnsondev.designsystem.Text22
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.model.PasswordModel
+import com.thejohnsondev.ui.AddEditTopAppBar
+import com.thejohnsondev.ui.AdditionalField
+import com.thejohnsondev.ui.FullScreenLoading
+import com.thejohnsondev.ui.HintTextField
+import com.thejohnsondev.ui.LoadedImage
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditPasswordScreen(
-    navController: NavController,
     viewModel: AddEditPasswordViewModel,
-    passwordModel: PasswordModel? = null
+    passwordModel: PasswordModel? = null,
+    onGoBackClick: () -> Unit
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState(AddEditPasswordViewModel.State())
@@ -111,7 +109,7 @@ fun AddEditPasswordScreen(
 
                 is OneTimeEvent.SuccessNavigation -> {
                     keyboardController?.hide()
-                    navController.popBackStack()
+                    onGoBackClick()
                 }
 
             }
@@ -121,7 +119,7 @@ fun AddEditPasswordScreen(
         AddEditTopAppBar(onSaveClick = {
             viewModel.perform(AddEditPasswordViewModel.Action.SavePassword)
         }, onNavigateBackClick = {
-            navController.popBackStack()
+            onGoBackClick()
         })
     }, snackbarHost = {
         SnackbarHost(snackbarHostState) { data ->
@@ -189,8 +187,8 @@ fun AddEditPasswordContent(
                             .fillMaxSize()
                             .padding(Size4),
                         imageUrl = EMPTY,
-                        errorImageVector = R.drawable.ic_passwords,
-                        placeholderResId = R.drawable.ic_passwords,
+                        errorImageVector = com.thejohnsondev.designsystem.R.drawable.ic_passwords,
+                        placeholderResId = com.thejohnsondev.designsystem.R.drawable.ic_passwords,
                         backgroundColor = Color.White
                     )
                 }
@@ -203,7 +201,7 @@ fun AddEditPasswordContent(
                         viewModel.perform(AddEditPasswordViewModel.Action.EnterOrganization(it))
                     },
                     value = state.organization,
-                    hint = stringResource(id = R.string.organization),
+                    hint = stringResource(id = com.thejohnsondev.common.R.string.organization),
                     focusRequester = organizationFocusRequester,
                     textColor = MaterialTheme.colorScheme.onSurface,
                     fontSize = Text22,
@@ -231,7 +229,7 @@ fun AddEditPasswordContent(
                         viewModel.perform(AddEditPasswordViewModel.Action.EnterTitle(it))
                     },
                     value = state.title,
-                    hint = stringResource(id = R.string.title),
+                    hint = stringResource(id = com.thejohnsondev.common.R.string.title),
                     focusRequester = titleFocusRequester,
                     textColor = MaterialTheme.colorScheme.onSurface,
                     fontSize = Text20,
@@ -264,7 +262,7 @@ fun AddEditPasswordContent(
                             viewModel.perform(AddEditPasswordViewModel.Action.EnterPassword(it))
                         },
                         value = state.password,
-                        hint = stringResource(id = R.string.password),
+                        hint = stringResource(id = com.thejohnsondev.common.R.string.password),
                         focusRequester = passwordFocusRequester,
                         textColor = MaterialTheme.colorScheme.onSurface,
                         fontSize = Text20,
@@ -282,7 +280,7 @@ fun AddEditPasswordContent(
                         Icon(
                             modifier = Modifier.padding(end = Size8),
                             imageVector = eyeImage,
-                            contentDescription = stringResource(R.string.visibility),
+                            contentDescription = stringResource(com.thejohnsondev.common.R.string.visibility),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -332,7 +330,7 @@ fun AddEditPasswordContent(
                 ),
             ) {
                 Text(
-                    text = stringResource(R.string.add_field),
+                    text = stringResource(com.thejohnsondev.common.R.string.add_field),
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }

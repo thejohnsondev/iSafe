@@ -60,6 +60,7 @@ dependencies {
     val coroutinesVersion = "1.7.1"
 
     implementation(project(":feature:vault"))
+    implementation(project(":feature:addpassword"))
 
     implementation(project(":core:model"))
 
