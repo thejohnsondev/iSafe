@@ -1,4 +1,4 @@
-package com.thejohnsondev.addpassword
+package com.thejohnsondev.passwordaddedit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

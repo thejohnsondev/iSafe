@@ -1,15 +1,15 @@
-package com.thejohnsondev.addpassword.navigation
+package com.thejohnsondev.passwordaddedit.navigation
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.thejohnsondev.addpassword.AddEditPasswordScreen
-import com.thejohnsondev.addpassword.AddEditPasswordViewModel
 import com.thejohnsondev.common.fromJson
 import com.thejohnsondev.common.navigation.Screens
 import com.thejohnsondev.model.PasswordModel
+import com.thejohnsondev.passwordaddedit.AddEditPasswordScreen
+import com.thejohnsondev.passwordaddedit.AddEditPasswordViewModel
 
 val addEditPasswordRoute = Screens.AddEditPassword.name
 

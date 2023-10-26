@@ -1,4 +1,4 @@
-package com.thejohnsondev.addpassword
+package com.thejohnsondev.passwordaddedit
 
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.base.BaseViewModel

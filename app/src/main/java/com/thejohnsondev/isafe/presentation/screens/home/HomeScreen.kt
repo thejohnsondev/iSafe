@@ -20,8 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.addpassword.navigation.addEditPasswordScreen
-import com.thejohnsondev.addpassword.navigation.navigateToAddEditPassword
+
 import com.thejohnsondev.isafe.presentation.navigation.ISafeBottomNavigation
 import com.thejohnsondev.isafe.presentation.navigation.Screens
 import com.thejohnsondev.isafe.presentation.screens.notes.add_note.AddNoteScreen
@@ -31,6 +30,8 @@ import com.thejohnsondev.isafe.presentation.screens.notes.list.NotesViewModel
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsScreen
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsViewModel
 import com.thejohnsondev.isafe.utils.toJson
+import com.thejohnsondev.passwordaddedit.navigation.addEditPasswordScreen
+import com.thejohnsondev.passwordaddedit.navigation.navigateToAddEditPassword
 import com.thejohnsondev.vault.navigation.vaultRoute
 import com.thejohnsondev.vault.navigation.vaultScreen
 
@@ -48,6 +49,7 @@ fun HomeScreen(rootNavController: NavController) {
         Screens.AddEditPassword.name -> {
             bottomBarState.value = false
         }
+
         else -> {
             bottomBarState.value = true
         }

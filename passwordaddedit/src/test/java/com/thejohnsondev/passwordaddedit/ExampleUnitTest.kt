@@ -1,4 +1,4 @@
-package com.thejohnsondev.addpassword
+package com.thejohnsondev.passwordaddedit
 
 import org.junit.Test
 
