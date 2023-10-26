@@ -59,8 +59,11 @@ dependencies {
     val hiltVersion = "2.44"
     val coroutinesVersion = "1.7.1"
 
-    implementation(project(":vault"))
-    implementation(project(":passwordaddedit"))
+    implementation(project(":vault:presentation"))
+    implementation(project(":vault:domain"))
+    implementation(project(":vault:data"))
+    implementation(project(":passwordaddedit:presentation"))
+    implementation(project(":passwordaddedit:domain"))
 
     implementation(project(":core:model"))
 

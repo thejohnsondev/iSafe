@@ -30,10 +30,10 @@ import com.thejohnsondev.isafe.presentation.screens.notes.list.NotesViewModel
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsScreen
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsViewModel
 import com.thejohnsondev.isafe.utils.toJson
-import com.thejohnsondev.passwordaddedit.navigation.addEditPasswordScreen
-import com.thejohnsondev.passwordaddedit.navigation.navigateToAddEditPassword
-import com.thejohnsondev.vault.navigation.vaultRoute
-import com.thejohnsondev.vault.navigation.vaultScreen
+import com.thejohnsondev.presentation.navigation.addEditPasswordScreen
+import com.thejohnsondev.presentation.navigation.navigateToAddEditPassword
+import com.thejohnsondev.presentation.navigation.vaultRoute
+import com.thejohnsondev.presentation.navigation.vaultScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)

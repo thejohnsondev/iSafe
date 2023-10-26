@@ -14,16 +14,18 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "iSafe"
+
 include(":app")
-include(":feature:vault")
+
 include(":core:common")
-include(":core:domain")
 include(":core:model")
 include(":core:network")
 include(":core:ui")
 include(":core:datastore")
 include(":core:designsystem")
-include(":core:data")
-include(":feature:addpassword")
-include(":vault")
-include(":passwordaddedit")
+
+include(":vault:presentation")
+include(":vault:domain")
+include(":vault:data")
+include(":passwordaddedit:presentation")
+include(":passwordaddedit:domain")
