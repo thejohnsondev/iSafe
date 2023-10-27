@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.thejohnsondev.datastore"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 29

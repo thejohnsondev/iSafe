@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.thejohnsondev.model"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 29
