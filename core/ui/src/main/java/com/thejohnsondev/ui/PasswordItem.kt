@@ -47,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.thejohnsondev.common.EXPAND_ANIM_DURATION
 import com.thejohnsondev.common.hidden
 import com.thejohnsondev.designsystem.EqualRounded
+import com.thejohnsondev.designsystem.Percent80
 import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size4
@@ -135,7 +136,8 @@ fun PasswordItem(
                     }
                     Column {
                         Text(
-                            modifier = Modifier.padding(start = Size16),
+                            modifier = Modifier.padding(start = Size16)
+                                .fillMaxWidth(Percent80),
                             text = item.organization,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
@@ -144,7 +146,8 @@ fun PasswordItem(
                             maxLines = 1
                         )
                         Text(
-                            modifier = Modifier.padding(start = Size16),
+                            modifier = Modifier.padding(start = Size16)
+                                .fillMaxWidth(Percent80),
                             text = item.title,
                             style = MaterialTheme.typography.bodyMedium,
                             color = contentColor,
@@ -374,8 +377,40 @@ fun AdditionalFieldItem(
 fun PasswordItemPreview() {
     PasswordItem(item = PasswordModel(
         id = "1694854940885",
-        organization = "Google",
-        title = "emal@gmail.com",
+        organization = "Google Google Google Google Google Google",
+        title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
+        password = "Pass123$"
+    ),
+        onClick = {},
+        onCopySensitiveClick = {},
+        onCopyClick = {},
+        onDeleteClick = {},
+        onEditClick = {})
+}
+
+@Preview(showBackground = true, widthDp = 500)
+@Composable
+fun PasswordItemPreview2() {
+    PasswordItem(item = PasswordModel(
+        id = "1694854940885",
+        organization = "Google Google Google Google Google Google",
+        title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
+        password = "Pass123$"
+    ),
+        onClick = {},
+        onCopySensitiveClick = {},
+        onCopyClick = {},
+        onDeleteClick = {},
+        onEditClick = {})
+}
+
+@Preview(showBackground = true, widthDp = 300)
+@Composable
+fun PasswordItemPreview3() {
+    PasswordItem(item = PasswordModel(
+        id = "1694854940885",
+        organization = "Google Google Google Google Google Google",
+        title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
         password = "Pass123$"
     ),
         onClick = {},
