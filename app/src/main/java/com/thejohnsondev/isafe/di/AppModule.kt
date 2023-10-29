@@ -1,6 +1,5 @@
 package com.thejohnsondev.isafe.di
 
-import android.app.Application
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -66,7 +65,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -75,20 +73,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideApplicationContext(application: Application): Context =
-        application.applicationContext
-
-    @Singleton
-    @Provides
-    fun provideIOCoroutineScope(): CoroutineScope = CoroutineScope(Dispatchers.IO)
-
-    @Singleton
-    @Provides
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
-
-    @Singleton
-    @Provides
-    fun provideFirebaseDatabase(): FirebaseDatabase = FirebaseDatabase.getInstance()
 
     @Singleton
     @Provides

@@ -15,16 +15,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
-    // TODO: remove from the app module and uncomment
-
-//    @Singleton
-//    @Provides
-//    fun provideFirebaseDatabase(): FirebaseDatabase = FirebaseDatabase.getInstance()
-//
-//    @Singleton
-//    @Provides
-//    fun provideIOCoroutineScope(): CoroutineScope = CoroutineScope(Dispatchers.IO)
-
     @Singleton
     @Provides
     fun providePasswordsRepository(
