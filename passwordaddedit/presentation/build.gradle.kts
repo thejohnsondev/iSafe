@@ -42,10 +42,7 @@ android {
 
 dependencies {
 
-    val hiltVersion = "2.44"
-
     implementation(project(":passwordaddedit:domain"))
-
     implementation(project(":core:model"))
     implementation(project(":core:common"))
     implementation(project(":core:designsystem"))
@@ -53,12 +50,12 @@ dependencies {
     implementation(project(":core:datastore"))
 
     implementation(libs.androidx.ktx)
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(platform(libs.org.jetbrains.kotlin.bom))
+    implementation(libs.androidx.appcompat)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
 
     // Compose
     implementation(libs.androidx.activity.compose)
@@ -67,19 +64,15 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.compose.material.icons.extended)
 
     // Accompanist
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.30.0")
-
-    // Navigation
-    implementation("androidx.navigation:navigation-compose")
+    implementation(libs.com.google.accompanist.systemuicontroller)
 
     // Hilt-Dagger
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    implementation(libs.com.google.dagger.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.com.google.dagger.hilt.compiler)
 
-    // Extended icons
-    implementation("androidx.compose.material:material-icons-extended:1.4.3")
 }
