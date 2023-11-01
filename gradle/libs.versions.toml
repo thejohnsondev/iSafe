@@ -15,6 +15,7 @@ accompanist-navigation-animation = "0.30.0"
 material-icons-extended = "1.4.3"
 hilt-android = "2.44"
 hilt-navigation-compose = "1.0.0"
+coroutines = "1.7.1"
 
 [libraries]
 
@@ -48,6 +49,11 @@ com-google-accompanist-navigation-animation = { group = "com.google.accompanist"
 com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt-android" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
 com-google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt-android" }
+
+#Coroutines
+org-jetbrains-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+org-jetbrains-kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+org-jetbrains-kotlinx-coroutines-playservices = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines" }
 
 
 [plugins]
