@@ -158,7 +158,8 @@ fun PasswordItem(
                 }
 
                 IconButton(
-                    modifier = Modifier.size(Size42),
+                    modifier = Modifier.size(Size42)
+                        .bounceClick(),
                     onClick = {
                         onCopySensitiveClick(item.password)
                     }) {
@@ -265,7 +266,8 @@ fun ExpandedContent(
             Button(
                 modifier = Modifier
                     .weight(0.5f)
-                    .padding(start = Size16, end = Size8, bottom = Size16, top = Size16),
+                    .padding(start = Size16, end = Size8, bottom = Size16, top = Size16)
+                    .bounceClick(),
                 onClick = {
                     onEditClick(passwordModel)
                 },
@@ -292,7 +294,8 @@ fun ExpandedContent(
             Button(
                 modifier = Modifier
                     .weight(0.5f)
-                    .padding(start = Size8, end = Size16, bottom = Size16, top = Size16),
+                    .padding(start = Size8, end = Size16, bottom = Size16, top = Size16)
+                    .bounceClick(),
                 onClick = {
                     onDeleteClick(passwordModel)
                 },
