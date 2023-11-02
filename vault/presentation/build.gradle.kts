@@ -42,9 +42,6 @@ android {
 
 dependencies {
 
-    val hiltVersion = "2.44"
-    val coroutinesVersion = "1.7.1"
-
     implementation(project(":vault:domain"))
 
     implementation(project(":core:model"))

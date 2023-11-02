@@ -56,9 +56,6 @@ android {
 
 dependencies {
 
-    val hiltVersion = "2.44"
-    val coroutinesVersion = "1.7.1"
-
     implementation(project(":vault:presentation"))
     implementation(project(":vault:domain"))
     implementation(project(":vault:data"))
@@ -77,48 +74,48 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    // Test
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-database-ktx")
+    implementation(platform(libs.com.google.firebase.bom))
+    implementation(libs.com.google.firebase.databasektx)
+    implementation(libs.com.google.firebase.authktx)
+    implementation(libs.com.google.firebase.analyticsktx)
 
     // Splash screen api
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.androidx.core.splashscreen)
 
     // Accompanist utils
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.30.0")
+    implementation(libs.com.google.accompanist.systemuicontroller)
+    implementation(libs.com.google.accompanist.navigation.animation)
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion")
+    implementation(libs.org.jetbrains.kotlinx.coroutines.core)
+    implementation(libs.org.jetbrains.kotlinx.coroutines.android)
+    implementation(libs.org.jetbrains.kotlinx.coroutines.playservices)
 
     // Hilt-Dagger
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    implementation(libs.com.google.dagger.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.com.google.dagger.hilt.compiler)
 
-    // Navigation
-    implementation("androidx.navigation:navigation-compose")
+    // Compose
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.compose.material.icons.extended)
 
     // Secure data store
-    implementation("androidx.security:security-crypto:1.0.0")
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation(libs.androidx.security.crypto)
+    implementation(libs.com.google.code.gson)
 
     // Coil
-    implementation("io.coil-kt:coil-compose:2.4.0")
-
-    // Extended icons
-    implementation("androidx.compose.material:material-icons-extended:1.4.3")
+    implementation(libs.io.coil.compose)
 
 }

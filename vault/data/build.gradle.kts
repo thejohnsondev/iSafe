@@ -38,26 +38,25 @@ android {
 
 dependencies {
 
-    val hiltVersion = "2.44"
-
     implementation(project(":core:model"))
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(libs.androidx.ktx)
+    implementation(platform(libs.org.jetbrains.kotlin.bom))
+    implementation(libs.androidx.appcompat)
+
+    // Test
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
 
     // Hilt-Dagger
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    implementation(libs.com.google.dagger.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.com.google.dagger.hilt.compiler)
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
-    implementation("com.google.firebase:firebase-database-ktx")
+    implementation(platform(libs.com.google.firebase.bom))
+    implementation(libs.com.google.firebase.databasektx)
 }
