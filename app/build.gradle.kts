@@ -56,23 +56,14 @@ android {
 
 dependencies {
 
-    implementation(project(":vault:presentation"))
-    implementation(project(":vault:domain"))
-    implementation(project(":vault:data"))
-    implementation(project(":passwordaddedit:presentation"))
-    implementation(project(":passwordaddedit:domain"))
     implementation(project(":core:model"))
     implementation(project(":core:common"))
+    implementation(project(":vault:presentation"))
+    implementation(project(":passwordaddedit:presentation"))
+    implementation(project(":generatekey:presentation"))
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
 
     // Test
     testImplementation(libs.junit)
@@ -110,6 +101,13 @@ dependencies {
     // Compose
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+
 
     // Secure data store
     implementation(libs.androidx.security.crypto)

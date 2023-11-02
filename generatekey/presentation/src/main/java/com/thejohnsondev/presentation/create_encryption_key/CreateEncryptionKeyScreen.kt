@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.auth.create_encryption_key
+package com.thejohnsondev.presentation.create_encryption_key
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -26,23 +26,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.isafe.R
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.presentation.components.ISafeFileLoader
-import com.thejohnsondev.isafe.presentation.navigation.Screens
-import com.thejohnsondev.isafe.utils.Size16
-import com.thejohnsondev.isafe.utils.Size86
-import com.thejohnsondev.isafe.utils.toast
+import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.Size16
+import com.thejohnsondev.designsystem.Size86
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.ui.ISafeFileLoader
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun CreateEncryptionKeyScreen(
-    navController: NavHostController,
-    viewModel: CreateEncryptionKeyViewModel
+    viewModel: CreateEncryptionKeyViewModel,
+    onGoToHomeScreen: () -> Unit,
+    onGoToSignUpScreen: () -> Unit
 ) {
     val context = LocalContext.current
     val screenState =
@@ -61,7 +59,7 @@ fun CreateEncryptionKeyScreen(
                 )
 
                 is OneTimeEvent.SuccessNavigation -> {
-                    navController.navigate(Screens.HomeScreen.name)
+                    onGoToHomeScreen()
                 }
             }
         }
@@ -82,7 +80,7 @@ fun CreateEncryptionKeyScreen(
         topBar = {
             CenterAlignedTopAppBar(title = {
                 Text(
-                    text = stringResource(R.string.key_generation),
+                    text = stringResource(com.thejohnsondev.common.R.string.key_generation),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -92,10 +90,10 @@ fun CreateEncryptionKeyScreen(
                         .padding(Size16)
                         .clickable {
                             viewModel.perform(CreateEncryptionKeyViewModel.Action.Logout)
-                            navController.navigate(Screens.SignUpScreen.name)
+                            onGoToSignUpScreen()
                         },
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = stringResource(R.string.arrow_back),
+                    contentDescription = stringResource(com.thejohnsondev.common.R.string.arrow_back),
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
 

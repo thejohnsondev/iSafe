@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("dagger.hilt.android.plugin")
+    kotlin("kapt")
 }
 
 android {
@@ -27,12 +29,25 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.3.2"
+    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
 }
 
 dependencies {
+
+    implementation(project(":generatekey:domain"))
+    implementation(project(":auth:domain"))
+    implementation(project(":core:common"))
+    implementation(project(":core:model"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:designsystem"))
 
     implementation(libs.androidx.ktx)
     implementation(platform(libs.org.jetbrains.kotlin.bom))
@@ -53,4 +68,9 @@ dependencies {
 
     // Accompanist
     implementation(libs.com.google.accompanist.systemuicontroller)
+
+    // Hilt-Dagger
+    implementation(libs.com.google.dagger.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.com.google.dagger.hilt.compiler)
 }

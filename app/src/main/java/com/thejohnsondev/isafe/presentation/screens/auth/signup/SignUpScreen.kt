@@ -65,14 +65,21 @@ import com.thejohnsondev.isafe.utils.Size86
 import com.thejohnsondev.isafe.utils.toast
 
 @Composable
-fun SignUpScreen(navController: NavHostController, viewModel: SignUpViewModel) {
-    SignUpContent(navController, viewModel)
+fun SignUpScreen(
+    navController: NavHostController,
+    viewModel: SignUpViewModel,
+    onGoToCreateKeyScreen: () -> Unit
+) {
+    SignUpContent(navController, viewModel, onGoToCreateKeyScreen)
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SignUpContent(navController: NavHostController, viewModel: SignUpViewModel) {
+fun SignUpContent(
+    navController: NavHostController, viewModel: SignUpViewModel,
+    onGoToCreateKeyScreen: () -> Unit
+) {
     val context = LocalContext.current
     val screenState = viewModel.viewState.collectAsState(initial = SignUpViewModel.State())
     val nameState = rememberSaveable {
@@ -101,7 +108,7 @@ fun SignUpContent(navController: NavHostController, viewModel: SignUpViewModel) 
                 )
 
                 is OneTimeEvent.SuccessNavigation -> {
-                    navController.navigate(Screens.CreateEncryptionKeyScreen.name)
+                    onGoToCreateKeyScreen()
                 }
 
             }

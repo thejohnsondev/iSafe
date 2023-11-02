@@ -1,12 +1,12 @@
-package com.thejohnsondev.isafe.presentation.screens.auth.enter_encryption_key
+package com.thejohnsondev.presentation.enter_encryption_key
 
 import android.net.Uri
-import com.thejohnsondev.isafe.domain.models.KeyGenerateResult
-import com.thejohnsondev.isafe.domain.models.KeyGenerationState
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.domain.use_cases.combined.EnterEncryptionKeyUseCases
-import com.thejohnsondev.isafe.utils.base.BaseViewModel
+import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.domain.EnterEncryptionKeyUseCases
+import com.thejohnsondev.model.KeyGenerateResult
+import com.thejohnsondev.model.KeyGenerationState
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.OneTimeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -37,7 +37,7 @@ class EnterEncryptionKeyViewModel @Inject constructor(
         }
     }
 
-    private fun logout() = launch{
+    private fun logout() = launch {
         useCases.logout()
     }
 

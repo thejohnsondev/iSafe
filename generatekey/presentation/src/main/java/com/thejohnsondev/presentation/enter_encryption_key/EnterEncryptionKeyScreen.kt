@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.auth.enter_encryption_key
+package com.thejohnsondev.presentation.enter_encryption_key
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -26,26 +26,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.isafe.R
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.presentation.components.ISafeFileLoader
-import com.thejohnsondev.isafe.presentation.navigation.Screens
-import com.thejohnsondev.isafe.utils.Size16
-import com.thejohnsondev.isafe.utils.Size86
-import com.thejohnsondev.isafe.utils.toast
+import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.Size16
+import com.thejohnsondev.designsystem.Size86
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.ui.ISafeFileLoader
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EnterEncryptionKeyScreen(
-    navController: NavHostController,
-    viewModel: EnterEncryptionKeyViewModel
+    viewModel: EnterEncryptionKeyViewModel,
+    onGoToHomeScreen: () -> Unit,
+    onGoToSignUpScreen: () -> Unit
 ) {
     val context = LocalContext.current
-    val screenState = viewModel.viewState.collectAsState(initial = EnterEncryptionKeyViewModel.State())
+    val screenState =
+        viewModel.viewState.collectAsState(initial = EnterEncryptionKeyViewModel.State())
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -60,7 +59,7 @@ fun EnterEncryptionKeyScreen(
                 )
 
                 is OneTimeEvent.SuccessNavigation -> {
-                    navController.navigate(Screens.HomeScreen.name)
+                    onGoToHomeScreen()
                 }
             }
         }
@@ -80,7 +79,7 @@ fun EnterEncryptionKeyScreen(
         topBar = {
             CenterAlignedTopAppBar(title = {
                 Text(
-                    text = stringResource(R.string.enter_key_file),
+                    text = stringResource(com.thejohnsondev.common.R.string.enter_key_file),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -90,10 +89,10 @@ fun EnterEncryptionKeyScreen(
                         .padding(Size16)
                         .clickable {
                             viewModel.perform(EnterEncryptionKeyViewModel.Action.Logout)
-                            navController.navigate(Screens.SignUpScreen.name)
+                            onGoToSignUpScreen()
                         },
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription = stringResource(R.string.arrow_back),
+                    contentDescription = stringResource(com.thejohnsondev.common.R.string.arrow_back),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -111,9 +110,9 @@ fun EnterEncryptionKeyScreen(
                 isLoading = screenState.value.loadingState == LoadingState.Loading,
                 isError = screenState.value.isUploadedKeyFileCorrect == false,
                 descriptionText = if (screenState.value.isUploadedKeyFileCorrect == false) {
-                    stringResource(R.string.uploaded_file_wrong)
+                    stringResource(com.thejohnsondev.common.R.string.uploaded_file_wrong)
                 } else {
-                    stringResource(R.string.click_to_upload_your_key_file)
+                    stringResource(com.thejohnsondev.common.R.string.click_to_upload_your_key_file)
                 }
             ) {
                 viewModel.perform(EnterEncryptionKeyViewModel.Action.GenerateKey(it))

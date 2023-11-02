@@ -54,7 +54,6 @@ import com.thejohnsondev.isafe.domain.models.PasswordValidationState
 import com.thejohnsondev.isafe.presentation.components.ISafeLogo
 import com.thejohnsondev.isafe.presentation.components.RoundedButton
 import com.thejohnsondev.isafe.presentation.components.TextField
-import com.thejohnsondev.isafe.presentation.navigation.Screens
 import com.thejohnsondev.isafe.presentation.ui.theme.TopRounded
 import com.thejohnsondev.isafe.utils.EMPTY
 import com.thejohnsondev.isafe.utils.Size16
@@ -65,14 +64,26 @@ import com.thejohnsondev.isafe.utils.Size86
 import com.thejohnsondev.isafe.utils.toast
 
 @Composable
-fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
-    LoginContent(navController = navController, viewModel = viewModel)
+fun LoginScreen(
+    navController: NavHostController,
+    viewModel: LoginViewModel,
+    onGoToEnterKeyScreen: () -> Unit
+) {
+    LoginContent(
+        navController = navController,
+        viewModel = viewModel,
+        onGoToEnterKeyScreen = onGoToEnterKeyScreen
+    )
 }
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginContent(navController: NavHostController, viewModel: LoginViewModel) {
+fun LoginContent(
+    navController: NavHostController,
+    viewModel: LoginViewModel,
+    onGoToEnterKeyScreen: () -> Unit
+) {
     val context = LocalContext.current
     val screenState = viewModel.viewState.collectAsState(initial = LoginViewModel.State())
     val emailState = rememberSaveable {
@@ -97,7 +108,7 @@ fun LoginContent(navController: NavHostController, viewModel: LoginViewModel) {
                 )
 
                 is OneTimeEvent.SuccessNavigation -> {
-                    navController.navigate(Screens.EnterEncryptionKeyScreen.name)
+                    onGoToEnterKeyScreen()
                 }
             }
         }
