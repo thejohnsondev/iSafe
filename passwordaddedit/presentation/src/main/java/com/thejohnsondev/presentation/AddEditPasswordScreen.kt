@@ -71,6 +71,7 @@ import com.thejohnsondev.ui.AdditionalField
 import com.thejohnsondev.ui.FullScreenLoading
 import com.thejohnsondev.ui.HintTextField
 import com.thejohnsondev.ui.LoadedImage
+import com.thejohnsondev.ui.bounceClick
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -316,7 +317,8 @@ fun AddEditPasswordContent(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Size16),
+                    .padding(Size16)
+                    .bounceClick(),
                 onClick = {
                     viewModel.perform(
                         AddEditPasswordViewModel.Action.AddAdditionalField(

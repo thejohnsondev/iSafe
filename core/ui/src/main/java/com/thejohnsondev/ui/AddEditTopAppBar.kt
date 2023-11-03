@@ -34,7 +34,9 @@ fun AddEditTopAppBar(
         },
         actions = {
             Button(
-                modifier = Modifier.padding(horizontal = Size16),
+                modifier = Modifier
+                    .padding(horizontal = Size16)
+                    .bounceClick(),
                 onClick = { onSaveClick() }) {
                 Text(text = stringResource(com.thejohnsondev.common.R.string.save))
             }

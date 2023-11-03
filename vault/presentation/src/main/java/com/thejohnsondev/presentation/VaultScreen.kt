@@ -62,6 +62,7 @@ import com.thejohnsondev.ui.FilterGroup
 import com.thejohnsondev.ui.FullScreenLoading
 import com.thejohnsondev.ui.PasswordItem
 import com.thejohnsondev.ui.SearchBar
+import com.thejohnsondev.ui.bounceClick
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -133,6 +134,8 @@ fun VaultScreen(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
+                modifier = Modifier
+                    .bounceClick(),
                 onClick = {
                     onAddNewPasswordClick()
                 },
