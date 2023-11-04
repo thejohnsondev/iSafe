@@ -1,103 +1,68 @@
 package com.thejohnsondev.isafe.presentation.navigation
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.thejohnsondev.isafe.presentation.screens.auth.check_auth_state.CheckAuthStateScreen
-import com.thejohnsondev.isafe.presentation.screens.auth.check_auth_state.CheckAuthStateViewModel
-import com.thejohnsondev.isafe.presentation.screens.auth.create_encryption_key.CreateEncryptionKeyScreen
-import com.thejohnsondev.isafe.presentation.screens.auth.create_encryption_key.CreateEncryptionKeyViewModel
-import com.thejohnsondev.isafe.presentation.screens.auth.enter_encryption_key.EnterEncryptionKeyScreen
-import com.thejohnsondev.isafe.presentation.screens.auth.enter_encryption_key.EnterEncryptionKeyViewModel
-import com.thejohnsondev.isafe.presentation.screens.auth.login.LoginScreen
-import com.thejohnsondev.isafe.presentation.screens.auth.login.LoginViewModel
-import com.thejohnsondev.isafe.presentation.screens.auth.signup.SignUpScreen
-import com.thejohnsondev.isafe.presentation.screens.auth.signup.SignUpViewModel
-import com.thejohnsondev.isafe.presentation.screens.home.HomeScreen
-import com.thejohnsondev.isafe.presentation.screens.home.HomeViewModel
-import com.thejohnsondev.isafe.utils.TWEEN_ANIM_DEFAULT_DURATION
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.thejohnsondev.common.navigation.Screens
+import com.thejohnsondev.presentation.nagivation.checkAuthStateRoute
+import com.thejohnsondev.presentation.nagivation.checkAuthStateScreen
+import com.thejohnsondev.presentation.nagivation.loginScreen
+import com.thejohnsondev.presentation.nagivation.navigateToLogin
+import com.thejohnsondev.presentation.nagivation.signUpScreen
+import com.thejohnsondev.presentation.navigation.createKeyScreen
+import com.thejohnsondev.presentation.navigation.enterKeyScreen
+import com.thejohnsondev.presentation.navigation.navigateToCreateKey
+import com.thejohnsondev.presentation.navigation.navigateToEnterKey
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation() {
-    val navController = rememberAnimatedNavController()
-    AnimatedNavHost(
+    val navController = rememberNavController()
+    NavHost(
         navController = navController,
-        startDestination = Screens.CheckAuthScreen.name
+        startDestination = checkAuthStateRoute
     ) {
-        composable(
-            route = Screens.CheckAuthScreen.name,
-            enterTransition = null,
-            popEnterTransition = null
-        ) {
-            val viewModel = hiltViewModel<CheckAuthStateViewModel>()
-            CheckAuthStateScreen(navController = navController, viewModel = viewModel)
-        }
-        composable(
-            route = Screens.LoginScreen.name,
-            enterTransition = {
-                fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
-            },
-            exitTransition = {
-                fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+        checkAuthStateScreen(
+            goToScreen = { screen, navOptions ->
+                navController.navigate(screen, navOptions)
             }
-        ) {
-            val viewModel = hiltViewModel<LoginViewModel>()
-            LoginScreen(navController = navController, viewModel = viewModel)
-        }
-        composable(
-            route = Screens.SignUpScreen.name,
-            enterTransition = {
-                fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+        )
+        loginScreen(
+            goToEnterKey = {
+                navController.navigateToEnterKey()
             },
-            exitTransition = {
-                fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+            goBack = {
+                navController.popBackStack()
             }
-        ) {
-            val viewModel = hiltViewModel<SignUpViewModel>()
-            SignUpScreen(navController = navController, viewModel = viewModel)
-        }
-        composable(
-            route = Screens.HomeScreen.name,
-            enterTransition = {
-                fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+        )
+        signUpScreen(
+            goToCreateKey = {
+                navController.navigateToCreateKey()
             },
-            exitTransition = {
-                fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+            goToLogin = {
+                navController.navigateToLogin()
             }
-        ) {
-            val viewModel = hiltViewModel<HomeViewModel>()
-            HomeScreen(rootNavController = navController, homeViewModel = viewModel)
-        }
-        composable(
-            route = Screens.CreateEncryptionKeyScreen.name,
-            enterTransition = {
-                fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+        )
+        createKeyScreen(
+            onGoToHomeScreen = {
+                navController.navigate(Screens.HomeScreen.name)
             },
-            exitTransition = {
-                fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+            onGoToSignUpScreen = {
+                navController.navigate(Screens.SignUpScreen.name)
             }
-        ) {
-            val viewModel = hiltViewModel<CreateEncryptionKeyViewModel>()
-            CreateEncryptionKeyScreen(navController = navController, viewModel = viewModel)
-        }
-        composable(
-            route = Screens.EnterEncryptionKeyScreen.name,
-            enterTransition = {
-                fadeIn(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+        )
+        enterKeyScreen(
+            onGoToHomeScreen = {
+                navController.navigate(Screens.HomeScreen.name)
             },
-            exitTransition = {
-                fadeOut(animationSpec = tween(TWEEN_ANIM_DEFAULT_DURATION))
+            onGoToSignUpScreen = {
+                navController.navigate(Screens.SignUpScreen.name)
             }
+        )
+        composable(
+            route = Screens.HomeScreen.name
         ) {
-            val viewModel = hiltViewModel<EnterEncryptionKeyViewModel>()
-            EnterEncryptionKeyScreen(navController = navController, viewModel = viewModel)
+            HomeNavigation(rootNavController = navController)
         }
     }
 }
