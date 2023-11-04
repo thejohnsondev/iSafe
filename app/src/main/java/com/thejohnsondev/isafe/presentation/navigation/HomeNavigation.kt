@@ -1,7 +1,6 @@
-package com.thejohnsondev.isafe.presentation.screens.home
+package com.thejohnsondev.isafe.presentation.navigation
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,9 +17,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.isafe.presentation.navigation.ISafeBottomNavigation
-import com.thejohnsondev.isafe.presentation.navigation.Screens
-import com.thejohnsondev.isafe.utils.toJson
+import com.thejohnsondev.common.navigation.Screens
+import com.thejohnsondev.common.toJson
 import com.thejohnsondev.presentation.nagivation.navigateToSignUp
 import com.thejohnsondev.presentation.navigation.addEditPasswordScreen
 import com.thejohnsondev.presentation.navigation.addNoteScreen
@@ -32,9 +30,9 @@ import com.thejohnsondev.presentation.navigation.vaultRoute
 import com.thejohnsondev.presentation.navigation.vaultScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(rootNavController: NavController) {
+fun HomeNavigation(rootNavController: NavController) {
     val navController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 

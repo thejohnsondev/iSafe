@@ -58,6 +58,7 @@ dependencies {
 
     implementation(project(":core:model"))
     implementation(project(":core:common"))
+    implementation(project(":core:designsystem"))
     implementation(project(":auth:presentation"))
     implementation(project(":generatekey:presentation"))
     implementation(project(":vault:presentation"))

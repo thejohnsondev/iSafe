@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.isafe.presentation.navigation.Navigation
-import com.thejohnsondev.isafe.presentation.ui.theme.ISafeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

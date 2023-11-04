@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.thejohnsondev.isafe.presentation.screens.home.HomeScreen
+import com.thejohnsondev.common.navigation.Screens
 import com.thejohnsondev.presentation.nagivation.checkAuthStateRoute
 import com.thejohnsondev.presentation.nagivation.checkAuthStateScreen
 import com.thejohnsondev.presentation.nagivation.loginScreen
@@ -62,7 +62,7 @@ fun Navigation() {
         composable(
             route = Screens.HomeScreen.name
         ) {
-            HomeScreen(rootNavController = navController)
+            HomeNavigation(rootNavController = navController)
         }
     }
 }
