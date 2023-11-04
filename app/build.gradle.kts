@@ -58,9 +58,10 @@ dependencies {
 
     implementation(project(":core:model"))
     implementation(project(":core:common"))
+    implementation(project(":auth:presentation"))
+    implementation(project(":generatekey:presentation"))
     implementation(project(":vault:presentation"))
     implementation(project(":passwordaddedit:presentation"))
-    implementation(project(":generatekey:presentation"))
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

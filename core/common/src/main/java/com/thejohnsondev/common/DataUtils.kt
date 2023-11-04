@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.thejohnsondev.model.EmailIncorrectReason
 import com.thejohnsondev.model.EmailValidationState
 import com.thejohnsondev.model.IncorrectPasswordReason
+import com.thejohnsondev.model.IncorrectPasswordReason.*
 import com.thejohnsondev.model.PasswordValidationState
 import java.io.File
 import java.io.StringReader
@@ -24,22 +25,22 @@ const val NOTE_TIME_FORMAT = "dd MMM yyyy, hh:mm"
 fun String.isPasswordValid(): PasswordValidationState {
     val length = this.length
     if (length < PASS_MIN_SIZE) return PasswordValidationState.PasswordIncorrectState(
-        IncorrectPasswordReason.BAD_LENGTH
+        BAD_LENGTH
     )
 
     val containsNumbers = this.any { it.isDigit() }
     if (!containsNumbers) return PasswordValidationState.PasswordIncorrectState(
-        IncorrectPasswordReason.NO_NUMBERS
+        NO_NUMBERS
     )
 
     val containsUpperCase = this.any { it.isUpperCase() }
     if (!containsUpperCase) return PasswordValidationState.PasswordIncorrectState(
-        IncorrectPasswordReason.NO_CAPITAL
+        NO_CAPITAL
     )
 
     val containsLowerCase = this.any { it.isLowerCase() }
     if (!containsLowerCase) return PasswordValidationState.PasswordIncorrectState(
-        IncorrectPasswordReason.NO_SMALL
+        NO_SMALL
     )
 
     return PasswordValidationState.PasswordCorrectState
@@ -143,4 +144,19 @@ fun ClipboardManager.copySensitiveData(string: String) {
 
 fun ClipboardManager.copyData(string: String) {
     setPrimaryClip(ClipData.newPlainText(string, string))
+}
+
+fun Context.getPasswordErrorMessage(reason: IncorrectPasswordReason): String {
+    return when(reason) {
+        BAD_LENGTH -> getString(R.string.password_error_bad_length)
+        NO_NUMBERS -> getString(R.string.password_error_no_numbers)
+        NO_CAPITAL -> getString(R.string.password_error_no_capital)
+        NO_SMALL -> getString(R.string.password_error_no_capital)
+    }
+}
+
+fun Context.getEmailErrorMessage(reason: EmailIncorrectReason): String {
+    return when(reason) {
+        EmailIncorrectReason.INCORRECT -> getString(R.string.email_error_incorrect)
+    }
 }

@@ -65,4 +65,8 @@ class AuthRepositoryImpl @Inject constructor(
             sendOrNothing(DEFAULT_USER_ID)
         }
     }
+
+    override fun isUserLoggedIn(): Boolean {
+        return !FirebaseAuth.getInstance().currentUser?.email.isNullOrBlank()
+    }
 }

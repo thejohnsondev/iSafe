@@ -1,6 +1,7 @@
-package com.thejohnsondev.isafe.presentation.screens.auth.signup
+package com.thejohnsondev.presentation.login
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
@@ -43,55 +44,54 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.isafe.R
-import com.thejohnsondev.isafe.domain.models.EmailValidationState
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.domain.models.PasswordValidationState
-import com.thejohnsondev.isafe.presentation.components.ISafeLogo
-import com.thejohnsondev.isafe.presentation.components.RoundedButton
-import com.thejohnsondev.isafe.presentation.components.TextField
-import com.thejohnsondev.isafe.presentation.navigation.Screens
-import com.thejohnsondev.isafe.presentation.ui.theme.TopRounded
-import com.thejohnsondev.isafe.utils.EMPTY
-import com.thejohnsondev.isafe.utils.Size16
-import com.thejohnsondev.isafe.utils.Size24
-import com.thejohnsondev.isafe.utils.Size4
-import com.thejohnsondev.isafe.utils.Size8
-import com.thejohnsondev.isafe.utils.Size86
-import com.thejohnsondev.isafe.utils.toast
+import com.thejohnsondev.common.EMPTY
+import com.thejohnsondev.common.getEmailErrorMessage
+import com.thejohnsondev.common.getPasswordErrorMessage
+import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.Size16
+import com.thejohnsondev.designsystem.Size24
+import com.thejohnsondev.designsystem.Size4
+import com.thejohnsondev.designsystem.Size8
+import com.thejohnsondev.designsystem.Size86
+import com.thejohnsondev.designsystem.TopRounded
+import com.thejohnsondev.model.EmailValidationState
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.model.PasswordValidationState
+import com.thejohnsondev.ui.ISafeLogo
+import com.thejohnsondev.ui.RoundedButton
+import com.thejohnsondev.ui.TextField
 
 @Composable
-fun SignUpScreen(
-    navController: NavHostController,
-    viewModel: SignUpViewModel,
-    onGoToCreateKeyScreen: () -> Unit
+fun LoginScreen(
+    viewModel: LoginViewModel,
+    goToEnterKey: () -> Unit,
+    goBack: () -> Unit
 ) {
-    SignUpContent(navController, viewModel, onGoToCreateKeyScreen)
+    LoginContent(
+        viewModel = viewModel,
+        onGoToEnterKeyScreen = goToEnterKey,
+        onGoBack = goBack
+    )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SignUpContent(
-    navController: NavHostController, viewModel: SignUpViewModel,
-    onGoToCreateKeyScreen: () -> Unit
+fun LoginContent(
+    viewModel: LoginViewModel,
+    onGoToEnterKeyScreen: () -> Unit,
+    onGoBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val screenState = viewModel.viewState.collectAsState(initial = SignUpViewModel.State())
-    val nameState = rememberSaveable {
-        mutableStateOf(EMPTY)
-    }
+    val screenState = viewModel.viewState.collectAsState(initial = LoginViewModel.State())
     val emailState = rememberSaveable {
         mutableStateOf(EMPTY)
     }
     val passwordState = rememberSaveable {
         mutableStateOf(EMPTY)
     }
-    val emailFocusRequest = remember { FocusRequester() }
     val passwordFocusRequest = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val snackbarHostState = remember {
@@ -108,9 +108,8 @@ fun SignUpContent(
                 )
 
                 is OneTimeEvent.SuccessNavigation -> {
-                    onGoToCreateKeyScreen()
+                    onGoToEnterKeyScreen()
                 }
-
             }
         }
     }
@@ -140,27 +139,26 @@ fun SignUpContent(
             ) {
                 LogoSection()
                 FieldsSection(
+                    context = context,
                     viewModel = viewModel,
                     screenState = screenState,
-                    nameState = nameState,
                     emailState = emailState,
                     passwordState = passwordState,
-                    emailFocusRequest = emailFocusRequest,
                     passwordFocusRequest = passwordFocusRequest,
                     keyboardController = keyboardController,
-                    navController = navController
+                    onGoBack = onGoBack
                 )
             }
-            SignUpButtonSection(
+            LoginButtonSection(
                 screenState = screenState,
                 viewModel = viewModel,
                 emailState = emailState,
-                passwordState = passwordState,
-                nameState = nameState
+                passwordState = passwordState
             )
         }
     }
 }
+
 
 @Composable
 fun StatusBarColor() {
@@ -177,15 +175,14 @@ fun LogoSection() {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FieldsSection(
-    viewModel: SignUpViewModel,
-    screenState: State<SignUpViewModel.State>,
-    nameState: MutableState<String>,
+    context: Context,
+    viewModel: LoginViewModel,
+    screenState: State<LoginViewModel.State>,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
-    emailFocusRequest: FocusRequester,
     passwordFocusRequest: FocusRequester,
     keyboardController: SoftwareKeyboardController?,
-    navController: NavController
+    onGoBack: () -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxHeight(),
@@ -197,42 +194,29 @@ fun FieldsSection(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(Size16),
-                text = stringResource(R.string.sign_up),
+                text = stringResource(com.thejohnsondev.common.R.string.log_in),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            TextField(
-                textState = nameState,
-                onTextChanged = {
-                    nameState.value = it
-                    viewModel.perform(SignUpViewModel.Action.EnterName(it))
-                },
-                label = stringResource(R.string.name),
-                onKeyboardAction = KeyboardActions {
-                    emailFocusRequest.requestFocus()
-                },
-                imeAction = ImeAction.Next
-            )
             Spacer(modifier = Modifier.height(Size8))
             TextField(
-                modifier = Modifier
-                    .focusRequester(emailFocusRequest),
                 textState = emailState,
                 onTextChanged = {
                     emailState.value = it
-                    viewModel.perform(SignUpViewModel.Action.ValidateEmail(it))
+                    viewModel.perform(LoginViewModel.Action.ValidateEmail(it))
                 },
-                label = stringResource(R.string.email),
+                label = stringResource(com.thejohnsondev.common.R.string.email),
                 onKeyboardAction = KeyboardActions {
                     passwordFocusRequest.requestFocus()
 
                 }, imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email,
                 isError = screenState.value.emailValidationState !is EmailValidationState.EmailCorrectState,
-                errorText = if (screenState.value.emailValidationState is EmailValidationState.EmailIncorrectState) stringResource(
-                    id = (screenState.value.emailValidationState as EmailValidationState.EmailIncorrectState).reasonResId
-                ) else null
+                errorText = if (screenState.value.emailValidationState is EmailValidationState.EmailIncorrectState) context.getEmailErrorMessage(
+                    (screenState.value.emailValidationState as EmailValidationState.EmailIncorrectState).reason
+                )
+                else null
             )
             Spacer(modifier = Modifier.height(Size8))
             TextField(
@@ -241,17 +225,17 @@ fun FieldsSection(
                 textState = passwordState,
                 onTextChanged = {
                     passwordState.value = it
-                    viewModel.perform(SignUpViewModel.Action.ValidatePassword(it))
+                    viewModel.perform(LoginViewModel.Action.ValidatePassword(it))
                 },
-                label = stringResource(R.string.password),
+                label = stringResource(com.thejohnsondev.common.R.string.password),
                 imeAction = ImeAction.Done,
                 onKeyboardAction = KeyboardActions {
                     keyboardController?.hide()
                 },
                 keyboardType = KeyboardType.Password,
                 isError = screenState.value.passwordValidationState !is PasswordValidationState.PasswordCorrectState,
-                errorText = if (screenState.value.passwordValidationState is PasswordValidationState.PasswordIncorrectState) stringResource(
-                    id = (screenState.value.passwordValidationState as PasswordValidationState.PasswordIncorrectState).reasonResId
+                errorText = if (screenState.value.passwordValidationState is PasswordValidationState.PasswordIncorrectState) context.getPasswordErrorMessage(
+                    (screenState.value.passwordValidationState as PasswordValidationState.PasswordIncorrectState).reason
                 ) else null
             )
             Row(
@@ -261,15 +245,15 @@ fun FieldsSection(
                     .padding(Size16)
             ) {
                 Text(
-                    text = stringResource(R.string.already_have_an_account),
+                    text = stringResource(com.thejohnsondev.common.R.string.don_t_have_an_account),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = stringResource(R.string.log_in),
+                    text = stringResource(com.thejohnsondev.common.R.string.sign_up),
                     modifier = Modifier
                         .padding(start = Size4)
                         .clickable {
-                            navController.navigate(Screens.LoginScreen.name)
+                            onGoBack
                         },
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
@@ -281,22 +265,20 @@ fun FieldsSection(
 }
 
 @Composable
-fun SignUpButtonSection(
-    screenState: State<SignUpViewModel.State>,
-    viewModel: SignUpViewModel,
+fun LoginButtonSection(
+    screenState: State<LoginViewModel.State>,
+    viewModel: LoginViewModel,
     emailState: MutableState<String>,
-    passwordState: MutableState<String>,
-    nameState: MutableState<String>
+    passwordState: MutableState<String>
 ) {
     Column(verticalArrangement = Arrangement.Bottom) {
         RoundedButton(
-            text = stringResource(id = R.string.sign_up),
+            text = stringResource(id = com.thejohnsondev.common.R.string.log_in),
             modifier = Modifier.padding(bottom = Size16),
-            enabled = screenState.value.signUpReady,
+            enabled = screenState.value.loginReady,
             onClick = {
                 viewModel.perform(
-                    SignUpViewModel.Action.SignUpWithEmail(
-                        nameState.value,
+                    LoginViewModel.Action.LoginWithEmail(
                         emailState.value,
                         passwordState.value
                     )

@@ -9,6 +9,8 @@ import com.thejohnsondev.domain.CreateUserUseCase
 import com.thejohnsondev.domain.CreateUserUseCaseImpl
 import com.thejohnsondev.domain.EmailValidateUseCase
 import com.thejohnsondev.domain.EmailValidationUseCaseImpl
+import com.thejohnsondev.domain.GetFirstScreenRouteUseCase
+import com.thejohnsondev.domain.GetFirstScreenRouteUseCaseImpl
 import com.thejohnsondev.domain.GetLocalUserDataUseCase
 import com.thejohnsondev.domain.GetLocalUserDataUseCaseImpl
 import com.thejohnsondev.domain.GetRemoteUserDataUseCase
@@ -84,6 +86,14 @@ object AuthDomainModule {
     fun provideSaveUserSecretUseCase(
         userRepository: UserRepository
     ): SaveUserSecretUseCase = SaveUserSecretUseCaseImpl(userRepository)
+
+    @Singleton
+    @Provides
+    fun provideIsUserLoggedInUseCase(
+        authRepository: AuthRepository,
+        dataStore: DataStore
+    ): GetFirstScreenRouteUseCase =
+        GetFirstScreenRouteUseCaseImpl(authRepository, dataStore)
 
     @Singleton
     @Provides

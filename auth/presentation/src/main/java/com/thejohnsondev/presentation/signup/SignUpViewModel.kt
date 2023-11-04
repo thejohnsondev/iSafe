@@ -1,15 +1,15 @@
-package com.thejohnsondev.isafe.presentation.screens.auth.signup
+package com.thejohnsondev.presentation.signup
 
-import com.thejohnsondev.isafe.domain.models.AuthResponse
-import com.thejohnsondev.isafe.domain.models.DatabaseResponse
-import com.thejohnsondev.isafe.domain.models.EmailValidationState
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.domain.models.PasswordValidationState
-import com.thejohnsondev.isafe.domain.models.UserModel
-import com.thejohnsondev.isafe.domain.use_cases.combined.AuthUseCases
-import com.thejohnsondev.isafe.utils.EMPTY
-import com.thejohnsondev.isafe.utils.base.BaseViewModel
+import com.thejohnsondev.common.EMPTY
+import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.domain.AuthUseCases
+import com.thejohnsondev.model.AuthResponse
+import com.thejohnsondev.model.DatabaseResponse
+import com.thejohnsondev.model.EmailValidationState
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.model.PasswordValidationState
+import com.thejohnsondev.model.UserModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,7 +67,7 @@ class SignUpViewModel @Inject constructor(
         useCases.signUp(email, password).collect {
             when (it) {
                 is AuthResponse.ResponseSuccess -> {
-                    createUserInRemoteDb(it.authResult.user?.uid.toString(), name)
+                    createUserInRemoteDb(it.userId, name)
                 }
 
                 is AuthResponse.ResponseFailure -> {

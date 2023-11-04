@@ -1,14 +1,14 @@
-package com.thejohnsondev.isafe.presentation.screens.auth.login
+package com.thejohnsondev.presentation.login
 
-import com.thejohnsondev.isafe.domain.models.AuthResponse
-import com.thejohnsondev.isafe.domain.models.EmailValidationState
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.domain.models.PasswordValidationState
-import com.thejohnsondev.isafe.domain.models.UserDataResponse
-import com.thejohnsondev.isafe.domain.models.UserModel
-import com.thejohnsondev.isafe.domain.use_cases.combined.AuthUseCases
-import com.thejohnsondev.isafe.utils.base.BaseViewModel
+import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.domain.AuthUseCases
+import com.thejohnsondev.model.AuthResponse
+import com.thejohnsondev.model.EmailValidationState
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.model.PasswordValidationState
+import com.thejohnsondev.model.UserDataResponse
+import com.thejohnsondev.model.UserModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,7 +54,7 @@ class LoginViewModel @Inject constructor(
                 }
 
                 is AuthResponse.ResponseSuccess -> {
-                    getUserData(it.authResult.user?.uid.orEmpty())
+                    getUserData(it.userId)
                 }
             }
         }

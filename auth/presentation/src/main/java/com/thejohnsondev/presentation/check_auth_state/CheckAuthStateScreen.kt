@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.auth.check_auth_state
+package com.thejohnsondev.presentation.check_auth_state
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -6,16 +6,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
-import com.thejohnsondev.isafe.presentation.navigation.Screens
+import com.thejohnsondev.common.navigation.Screens
+import com.thejohnsondev.ui.FullScreenLoading
 
 @Composable
 fun CheckAuthStateScreen(
-    navController: NavHostController,
-    viewModel: CheckAuthStateViewModel
+    viewModel: CheckAuthStateViewModel,
+    goToScreen: (String, NavOptions) -> Unit
 ) {
     StatusBarColor()
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -23,9 +22,9 @@ fun CheckAuthStateScreen(
     }
     val firstScreenRoute = viewModel.firstScreenRoute.collectAsState()
     firstScreenRoute.value ?: return
-    navController.navigate(
+    goToScreen(
         firstScreenRoute.value!!,
-        navOptions = NavOptions.Builder()
+        NavOptions.Builder()
             .setPopUpTo(Screens.CheckAuthScreen.name, true)
             .build()
     )
