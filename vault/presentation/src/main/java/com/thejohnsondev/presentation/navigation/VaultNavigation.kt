@@ -17,7 +17,6 @@ fun NavController.navigateToVault(navOptions: NavOptions? = null) {
     navigate(vaultRoute, navOptions)
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.vaultScreen(
     onAddNewPasswordClick: () -> Unit,
     onEditPasswordClick: (PasswordModel) -> Unit

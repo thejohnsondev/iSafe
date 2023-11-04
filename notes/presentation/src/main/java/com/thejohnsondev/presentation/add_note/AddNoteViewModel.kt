@@ -1,13 +1,13 @@
-package com.thejohnsondev.isafe.presentation.screens.notes.add_note
+package com.thejohnsondev.presentation.add_note
 
-import com.thejohnsondev.isafe.data.local_data_source.DataStore
-import com.thejohnsondev.isafe.domain.models.DatabaseResponse
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.NoteModel
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.domain.use_cases.combined.AddNoteUseCases
-import com.thejohnsondev.isafe.utils.EMPTY
-import com.thejohnsondev.isafe.utils.base.BaseViewModel
+import com.thejohnsondev.common.EMPTY
+import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.datastore.DataStore
+import com.thejohnsondev.domain.AddNoteUseCases
+import com.thejohnsondev.model.DatabaseResponse
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.NoteModel
+import com.thejohnsondev.model.OneTimeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine

@@ -62,6 +62,7 @@ dependencies {
     implementation(project(":generatekey:presentation"))
     implementation(project(":vault:presentation"))
     implementation(project(":passwordaddedit:presentation"))
+    implementation(project(":notes:presentation"))
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

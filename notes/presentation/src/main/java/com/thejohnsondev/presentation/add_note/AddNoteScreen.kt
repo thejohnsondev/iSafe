@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.notes.add_note
+package com.thejohnsondev.presentation.add_note
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,25 +33,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.isafe.R
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.presentation.components.AddEditTopAppBar
-import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
-import com.thejohnsondev.isafe.presentation.components.HintTextField
-import com.thejohnsondev.isafe.utils.Size16
-import com.thejohnsondev.isafe.utils.Size8
-import com.thejohnsondev.isafe.utils.Text18
-import com.thejohnsondev.isafe.utils.Text22
-import com.thejohnsondev.isafe.utils.toast
+import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.Size16
+import com.thejohnsondev.designsystem.Size8
+import com.thejohnsondev.designsystem.Text18
+import com.thejohnsondev.designsystem.Text22
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.ui.AddEditTopAppBar
+import com.thejohnsondev.ui.FullScreenLoading
+import com.thejohnsondev.ui.HintTextField
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun AddNoteScreen(
-    navController: NavController,
-    viewModel: AddNoteViewModel
+    viewModel: AddNoteViewModel,
+    goBack: () -> Unit
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState(AddNoteViewModel.State())
@@ -78,7 +76,7 @@ fun AddNoteScreen(
 
                 is OneTimeEvent.SuccessNavigation -> {
                     keyboardController?.hide()
-                    navController.popBackStack()
+                    goBack()
                 }
 
             }
@@ -91,7 +89,7 @@ fun AddNoteScreen(
                     viewModel.perform(AddNoteViewModel.Action.SaveNote)
                 },
                 onNavigateBackClick = {
-                    navController.popBackStack()
+                    goBack()
                 })
         },
         snackbarHost = {
@@ -155,7 +153,7 @@ fun AddNoteContent(
                 onValueChanged = {
                     viewModel.perform(AddNoteViewModel.Action.EnterTitle(it))
                 },
-                hint = stringResource(R.string.title),
+                hint = stringResource(com.thejohnsondev.common.R.string.title),
                 focusRequester = titleFocusRequester,
                 textColor = MaterialTheme.colorScheme.onSurface,
                 fontSize = Text22,
@@ -173,7 +171,7 @@ fun AddNoteContent(
                 onValueChanged = {
                     viewModel.perform(AddNoteViewModel.Action.EnterDescription(it))
                 },
-                hint = stringResource(R.string.note),
+                hint = stringResource(com.thejohnsondev.common.R.string.note),
                 textColor = MaterialTheme.colorScheme.onSurface,
                 fontSize = Text18,
                 focusRequester = descriptionFocusRequester,

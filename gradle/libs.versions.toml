@@ -21,6 +21,8 @@ firebase-bom = "32.2.0"
 security-crypto = "1.0.0"
 gson = "2.10.1"
 splashscreen = "1.0.1"
+agp = "8.1.0-rc01"
+org-jetbrains-kotlin-android = "1.7.20"
 
 [libraries]
 
@@ -80,3 +82,5 @@ com-google-code-gson = { group = "com.google.code.gson", name = "gson", version.
 
 
 [plugins]
+com-android-library = { id = "com.android.library", version.ref = "agp" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }

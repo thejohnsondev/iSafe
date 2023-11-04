@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.notes.list
+package com.thejohnsondev.presentation.list
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -42,23 +42,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.isafe.R
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.NoteModel
-import com.thejohnsondev.isafe.domain.models.OneTimeEvent
-import com.thejohnsondev.isafe.presentation.components.FullScreenLoading
-import com.thejohnsondev.isafe.presentation.components.NoteItem
-import com.thejohnsondev.isafe.presentation.navigation.Screens
-import com.thejohnsondev.isafe.utils.Size16
-import com.thejohnsondev.isafe.utils.Size86
-import com.thejohnsondev.isafe.utils.toast
+import com.thejohnsondev.common.navigation.Screens
+import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.Size16
+import com.thejohnsondev.designsystem.Size86
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.NoteModel
+import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.ui.FullScreenLoading
+import com.thejohnsondev.ui.NoteItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NotesScreen(
-    navController: NavHostController,
     viewModel: NotesViewModel,
+    goToAddNote: () -> Unit
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState(NotesViewModel.State())
@@ -102,7 +101,7 @@ fun NotesScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.your_notes),
+                        text = stringResource(com.thejohnsondev.common.R.string.your_notes),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                     )
@@ -112,17 +111,17 @@ fun NotesScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    navController.navigate(Screens.AddNote.name)
+                    goToAddNote()
                 },
                 expanded = expandedFab,
                 icon = {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.add)
+                        contentDescription = stringResource(com.thejohnsondev.common.R.string.add)
                     )
                 },
                 text = {
-                    Text(text = stringResource(R.string.add_note))
+                    Text(text = stringResource(com.thejohnsondev.common.R.string.add_note))
                 },
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,

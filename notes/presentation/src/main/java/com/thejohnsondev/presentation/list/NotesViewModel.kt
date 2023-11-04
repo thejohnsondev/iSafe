@@ -1,11 +1,11 @@
-package com.thejohnsondev.isafe.presentation.screens.notes.list
+package com.thejohnsondev.presentation.list
 
-import com.thejohnsondev.isafe.data.local_data_source.DataStore
-import com.thejohnsondev.isafe.domain.models.LoadingState
-import com.thejohnsondev.isafe.domain.models.NoteModel
-import com.thejohnsondev.isafe.domain.models.UserNotesResponse
-import com.thejohnsondev.isafe.domain.use_cases.combined.NotesUseCases
-import com.thejohnsondev.isafe.utils.base.BaseViewModel
+import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.datastore.DataStore
+import com.thejohnsondev.domain.NotesUseCases
+import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.NoteModel
+import com.thejohnsondev.model.UserNotesResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -57,7 +57,7 @@ class NotesViewModel @Inject constructor(
     )
 
     sealed class Action {
-        object FetchNotes: Action()
+        object FetchNotes : Action()
     }
 
     data class State(

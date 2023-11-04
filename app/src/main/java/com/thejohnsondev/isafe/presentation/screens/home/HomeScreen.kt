@@ -20,18 +20,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-
 import com.thejohnsondev.isafe.presentation.navigation.ISafeBottomNavigation
 import com.thejohnsondev.isafe.presentation.navigation.Screens
-import com.thejohnsondev.isafe.presentation.screens.notes.add_note.AddNoteScreen
-import com.thejohnsondev.isafe.presentation.screens.notes.add_note.AddNoteViewModel
-import com.thejohnsondev.isafe.presentation.screens.notes.list.NotesScreen
-import com.thejohnsondev.isafe.presentation.screens.notes.list.NotesViewModel
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsScreen
 import com.thejohnsondev.isafe.presentation.screens.settings.SettingsViewModel
 import com.thejohnsondev.isafe.utils.toJson
 import com.thejohnsondev.presentation.navigation.addEditPasswordScreen
+import com.thejohnsondev.presentation.navigation.addNoteScreen
 import com.thejohnsondev.presentation.navigation.navigateToAddEditPassword
+import com.thejohnsondev.presentation.navigation.navigateToAddNote
+import com.thejohnsondev.presentation.navigation.notesScreen
 import com.thejohnsondev.presentation.navigation.vaultRoute
 import com.thejohnsondev.presentation.navigation.vaultScreen
 
@@ -83,27 +81,22 @@ fun HomeScreen(rootNavController: NavController) {
                         navController.popBackStack()
                     }
                 )
-                composable(
-                    route = Screens.NotesScreen.name
-                ) {
-                    val viewModel = hiltViewModel<NotesViewModel>()
-                    NotesScreen(navController = navController, viewModel = viewModel)
-                }
+                addNoteScreen(
+                    goBack = {
+                        navController.popBackStack()
+                    }
+                )
+                notesScreen(
+                    goToAddNote = {
+                        navController.navigateToAddNote()
+                    }
+                )
                 composable(
                     route = Screens.Settings.name
                 ) {
                     val viewModel = hiltViewModel<SettingsViewModel>()
                     SettingsScreen(
                         rootNavController = rootNavController,
-                        navController = navController,
-                        viewModel = viewModel
-                    )
-                }
-                composable(
-                    route = Screens.AddNote.name
-                ) {
-                    val viewModel = hiltViewModel<AddNoteViewModel>()
-                    AddNoteScreen(
                         navController = navController,
                         viewModel = viewModel
                     )
