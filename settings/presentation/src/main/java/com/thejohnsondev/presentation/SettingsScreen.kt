@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.screens.settings
+package com.thejohnsondev.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,13 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.thejohnsondev.isafe.presentation.navigation.Screens
+import com.thejohnsondev.common.navigation.Screens
 
 @Composable
 fun SettingsScreen(
-    rootNavController: NavController,
-    navController: NavHostController,
-    viewModel: SettingsViewModel
+    viewModel: SettingsViewModel,
+    goToSignUp: () -> Unit
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -27,7 +26,7 @@ fun SettingsScreen(
             Text(text = "Settings")
             Button(onClick = {
                 viewModel.perform(SettingsViewModel.Action.Logout)
-                rootNavController.navigate(Screens.SignUpScreen.name)
+                    goToSignUp()
             }) {
                 Text(text = "Logout")
             }

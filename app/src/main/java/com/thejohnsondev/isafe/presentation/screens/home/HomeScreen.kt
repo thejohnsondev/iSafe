@@ -13,23 +13,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.isafe.presentation.navigation.ISafeBottomNavigation
 import com.thejohnsondev.isafe.presentation.navigation.Screens
-import com.thejohnsondev.isafe.presentation.screens.settings.SettingsScreen
-import com.thejohnsondev.isafe.presentation.screens.settings.SettingsViewModel
 import com.thejohnsondev.isafe.utils.toJson
+import com.thejohnsondev.presentation.nagivation.navigateToSignUp
 import com.thejohnsondev.presentation.navigation.addEditPasswordScreen
 import com.thejohnsondev.presentation.navigation.addNoteScreen
 import com.thejohnsondev.presentation.navigation.navigateToAddEditPassword
 import com.thejohnsondev.presentation.navigation.navigateToAddNote
 import com.thejohnsondev.presentation.navigation.notesScreen
+import com.thejohnsondev.presentation.navigation.settingsScreen
 import com.thejohnsondev.presentation.navigation.vaultRoute
 import com.thejohnsondev.presentation.navigation.vaultScreen
 
@@ -91,16 +89,11 @@ fun HomeScreen(rootNavController: NavController) {
                         navController.navigateToAddNote()
                     }
                 )
-                composable(
-                    route = Screens.Settings.name
-                ) {
-                    val viewModel = hiltViewModel<SettingsViewModel>()
-                    SettingsScreen(
-                        rootNavController = rootNavController,
-                        navController = navController,
-                        viewModel = viewModel
-                    )
-                }
+                settingsScreen(
+                    goToSignUp = {
+                        rootNavController.navigateToSignUp()
+                    }
+                )
             }
         }
     }

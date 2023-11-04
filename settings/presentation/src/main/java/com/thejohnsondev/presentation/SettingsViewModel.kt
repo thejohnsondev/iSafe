@@ -1,7 +1,7 @@
-package com.thejohnsondev.isafe.presentation.screens.settings
+package com.thejohnsondev.presentation
 
-import com.thejohnsondev.isafe.domain.use_cases.combined.SettingsUseCases
-import com.thejohnsondev.isafe.utils.base.BaseViewModel
+import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.domain.SettingsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun logout() = launch {
-        useCases.logout()
+        useCases.logout.invoke()
     }
 
     sealed class Action {
