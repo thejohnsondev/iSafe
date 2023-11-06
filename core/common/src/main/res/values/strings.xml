@@ -12,6 +12,7 @@
     <string name="password">Password</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="log_in">Log in</string>
+    <string name="logout">Logout</string>
     <string name="i">i</string>
     <string name="safe">Safe</string>
     <string name="buttons">Buttons</string>

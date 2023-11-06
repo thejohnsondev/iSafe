@@ -9,9 +9,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.thejohnsondev.common.navigation.Screens
+import androidx.compose.ui.res.stringResource
+import com.thejohnsondev.common.R
 
 @Composable
 fun SettingsScreen(
@@ -23,12 +22,11 @@ fun SettingsScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Settings")
             Button(onClick = {
                 viewModel.perform(SettingsViewModel.Action.Logout)
-                    goToSignUp()
+                goToSignUp()
             }) {
-                Text(text = "Logout")
+                Text(text = stringResource(id = R.string.logout))
             }
         }
     }
