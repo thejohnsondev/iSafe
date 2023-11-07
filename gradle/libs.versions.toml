@@ -6,6 +6,8 @@ kotlin-bom = "1.8.0"
 lifecycle-runtime-ktx = "2.6.1"
 material-2 = "1.10.0"
 junit = "4.13.2"
+mockito = "2.10.0"
+truth = "1.1"
 android-junit = "1.1.5"
 espresso = "3.5.1"
 activity-compose = "1.7.2"
@@ -41,6 +43,8 @@ androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifec
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "android-junit" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+google-truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 
 #Compose
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
