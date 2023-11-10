@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.designsystem.EqualRounded
 import com.thejohnsondev.designsystem.Percent90
+import com.thejohnsondev.designsystem.Percent95
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
 
@@ -44,7 +45,8 @@ fun SearchBar(
     }
     val focusManager = LocalFocusManager.current
     Surface(
-        modifier = modifier,
+        modifier = modifier
+            .bounceClick(Percent95),
         shape = EqualRounded.large,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
