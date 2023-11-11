@@ -305,7 +305,7 @@ fun ItemsList(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
-            items(passwordsList) {
+            items(passwordsList.sortedByDescending { it.id }) {
                 PasswordItem(
                     item = it,
                     onClick = {},

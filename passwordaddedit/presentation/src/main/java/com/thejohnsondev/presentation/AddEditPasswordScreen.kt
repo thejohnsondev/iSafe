@@ -125,7 +125,7 @@ fun AddEditPasswordScreen(
     }, snackbarHost = {
         SnackbarHost(snackbarHostState) { data ->
             Snackbar(
-                modifier = Modifier.padding(WindowInsets.ime.asPaddingValues())
+                modifier = Modifier.padding(Size8)
             ) {
                 Text(text = data.visuals.message)
             }
