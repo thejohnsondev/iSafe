@@ -80,6 +80,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    // todo remove unused dependencies
+
     // Firebase
     implementation(platform(libs.com.google.firebase.bom))
     implementation(libs.com.google.firebase.databasektx)
