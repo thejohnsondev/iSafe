@@ -274,7 +274,7 @@ fun LoginButtonSection(
     Column(verticalArrangement = Arrangement.Bottom) {
         RoundedButton(
             text = stringResource(id = com.thejohnsondev.common.R.string.log_in),
-            modifier = Modifier.padding(bottom = Size16),
+            modifier = Modifier.padding(Size8),
             enabled = screenState.value.loginReady,
             onClick = {
                 viewModel.perform(

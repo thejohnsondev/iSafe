@@ -52,6 +52,7 @@ import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size32
 import com.thejohnsondev.designsystem.Size48
+import com.thejohnsondev.designsystem.Size72
 import com.thejohnsondev.designsystem.Size86
 import com.thejohnsondev.model.BankAccountModel
 import com.thejohnsondev.model.LoadingState
@@ -290,7 +291,8 @@ fun ItemsList(
                 visible = passwordsList.isEmpty() && bankAccountsList.isEmpty(),
             ) {
                 EmptyListPlaceHolder(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .padding(Size32)
 
                 )
@@ -305,7 +307,7 @@ fun ItemsList(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
-            items(passwordsList) {
+            items(passwordsList.sortedByDescending { it.id }) {
                 PasswordItem(
                     item = it,
                     onClick = {},
@@ -336,6 +338,9 @@ fun ItemsList(
             items(bankAccountsList) {
 
             }
+        }
+        item {
+            Spacer(modifier = Modifier.padding(bottom = Size72))
         }
 
 

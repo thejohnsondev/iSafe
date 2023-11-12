@@ -45,6 +45,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.thejohnsondev.common.EXPAND_ANIM_DURATION
+import com.thejohnsondev.common.NOTE_TIME_FORMAT
+import com.thejohnsondev.common.R
+import com.thejohnsondev.common.getTimeFormatted
 import com.thejohnsondev.common.hidden
 import com.thejohnsondev.designsystem.EqualRounded
 import com.thejohnsondev.designsystem.Percent80
@@ -136,7 +139,8 @@ fun PasswordItem(
                     }
                     Column {
                         Text(
-                            modifier = Modifier.padding(start = Size16)
+                            modifier = Modifier
+                                .padding(start = Size16)
                                 .fillMaxWidth(Percent80),
                             text = item.organization,
                             style = MaterialTheme.typography.titleMedium,
@@ -146,7 +150,8 @@ fun PasswordItem(
                             maxLines = 1
                         )
                         Text(
-                            modifier = Modifier.padding(start = Size16)
+                            modifier = Modifier
+                                .padding(start = Size16)
                                 .fillMaxWidth(Percent80),
                             text = item.title,
                             style = MaterialTheme.typography.bodyMedium,
@@ -158,7 +163,8 @@ fun PasswordItem(
                 }
 
                 IconButton(
-                    modifier = Modifier.size(Size42)
+                    modifier = Modifier
+                        .size(Size42)
                         .bounceClick(),
                     onClick = {
                         onCopySensitiveClick(item.password)
@@ -266,7 +272,7 @@ fun ExpandedContent(
             Button(
                 modifier = Modifier
                     .weight(0.5f)
-                    .padding(start = Size16, end = Size8, bottom = Size16, top = Size16)
+                    .padding(start = Size16, end = Size8, bottom = Size8, top = Size16)
                     .bounceClick(),
                 onClick = {
                     onEditClick(passwordModel)
@@ -294,7 +300,7 @@ fun ExpandedContent(
             Button(
                 modifier = Modifier
                     .weight(0.5f)
-                    .padding(start = Size8, end = Size16, bottom = Size16, top = Size16)
+                    .padding(start = Size8, end = Size16, bottom = Size8, top = Size16)
                     .bounceClick(),
                 onClick = {
                     onDeleteClick(passwordModel)
@@ -320,6 +326,19 @@ fun ExpandedContent(
                 )
             }
         }
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Start)
+                .padding(start = Size16, end = Size16, bottom = Size16),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
+            text = stringResource(
+                id = R.string.created_on,
+                passwordModel.id.toLongOrNull()?.getTimeFormatted(NOTE_TIME_FORMAT).orEmpty()
+            )
+        )
     }
 }
 

@@ -31,4 +31,5 @@ val Percent40 = 0.4f
 val Percent70 = 0.7f
 val Percent80 = 0.8f
 val Percent90 = 0.9f
+val Percent95 = 0.95f
 val Percent100 = 1f

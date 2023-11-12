@@ -128,6 +128,7 @@ class PasswordsRepositoryImpl @Inject constructor(
             if (password.organization.isEmpty() && password.title.isEmpty() && password.password.isEmpty()) {
                 sendOrNothing(DatabaseResponse.ResponseFailure(Exception("Your password is empty")))
                 close()
+                return@awaitChannelFlow
             }
             val encryptedPassword = PasswordModel(
                 id = password.id,

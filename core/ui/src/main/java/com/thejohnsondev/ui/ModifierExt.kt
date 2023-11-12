@@ -20,10 +20,10 @@ import com.thejohnsondev.designsystem.Percent90
 
 enum class ButtonState { Pressed, Idle }
 
-fun Modifier.bounceClick() = composed {
+fun Modifier.bounceClick(minScale: Float = Percent90) = composed {
     var buttonState by remember { mutableStateOf(ButtonState.Idle) }
     val scale by animateFloatAsState(
-        if (buttonState == ButtonState.Pressed) Percent90 else Percent100,
+        if (buttonState == ButtonState.Pressed) minScale else Percent100,
         label = EMPTY
     )
 

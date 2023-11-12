@@ -286,7 +286,7 @@ fun SignUpButtonSection(
     Column(verticalArrangement = Arrangement.Bottom) {
         RoundedButton(
             text = stringResource(id = com.thejohnsondev.common.R.string.sign_up),
-            modifier = Modifier.padding(bottom = Size16),
+            modifier = Modifier.padding(Size8),
             enabled = screenState.value.signUpReady,
             onClick = {
                 viewModel.perform(
