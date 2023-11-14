@@ -125,11 +125,6 @@ class PasswordsRepositoryImpl @Inject constructor(
 
     override fun createPassword(userId: String, password: PasswordModel): Flow<DatabaseResponse> =
         awaitChannelFlow {
-            if (password.organization.isEmpty() && password.title.isEmpty() && password.password.isEmpty()) {
-                sendOrNothing(DatabaseResponse.ResponseFailure(Exception("Your password is empty")))
-                close()
-                return@awaitChannelFlow
-            }
             val encryptedPassword = PasswordModel(
                 id = password.id,
                 organization = password.organization.encrypt(getKey()),
