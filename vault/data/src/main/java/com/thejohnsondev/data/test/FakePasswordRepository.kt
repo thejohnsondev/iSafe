@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 
 class FakePasswordRepository: PasswordsRepository {
 
-    private val passwords = HashMap<String, List<PasswordModel>>()
+    val passwords = HashMap<String, List<PasswordModel>>()
 
     init {
         passwords["1"] = user1TestPasswords
