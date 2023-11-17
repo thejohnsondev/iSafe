@@ -13,6 +13,7 @@ espresso = "3.5.1"
 activity-compose = "1.7.2"
 coil-compose = "2.4.0"
 compose-bom = "2023.10.01"
+composereorderable = "0.9.6"
 ui-tooling = "1.0.0-rc01"
 accompanist-systemuicontroller = "0.27.0"
 accompanist-navigation-animation = "0.30.0"
@@ -60,6 +61,7 @@ androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material-icons-extended" }
 io-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
+burnoutcrew-composereorderable = { module = "org.burnoutcrew.composereorderable:reorderable", version.ref = "composereorderable" }
 
 #Accompanist
 com-google-accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-systemuicontroller" }
