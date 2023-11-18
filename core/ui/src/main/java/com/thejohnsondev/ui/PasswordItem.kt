@@ -88,10 +88,20 @@ fun PasswordItem(
     }, label = "") {
         if (expanded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
     }
+    val draggingCardBgColor by transition.animateColor({
+        tween(durationMillis = EXPAND_ANIM_DURATION)
+    }, label = "") {
+        if (isDragging) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
+    }
     val contentColor by transition.animateColor({
         tween(durationMillis = EXPAND_ANIM_DURATION)
     }, label = "") {
         if (expanded) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    val draggingContentColor by transition.animateColor({
+        tween(durationMillis = EXPAND_ANIM_DURATION)
+    }, label = "") {
+        if (isDragging) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
     }
     val cardPaddingHorizontal by transition.animateDp({
         tween(durationMillis = EXPAND_ANIM_DURATION)
@@ -112,17 +122,12 @@ fun PasswordItem(
             .padding(start = cardPaddingHorizontal, bottom = Size8, end = cardPaddingHorizontal),
         shape = EqualRounded.medium,
         colors = CardDefaults.cardColors(
-            containerColor = cardBgColor
+            containerColor = if (isReordering) draggingCardBgColor else cardBgColor
         )
     ) {
         Column(
             modifier = if (isReordering) {
                 Modifier
-                    .combinedClickable(
-                        onClick = {
-                            onClick(item)
-                            expanded = !expanded
-                        })
                     .padding(contentPadding)
             } else {
                 Modifier
@@ -169,7 +174,7 @@ fun PasswordItem(
                             text = item.organization,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = contentColor,
+                            color = if (isReordering) draggingContentColor else contentColor,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1
                         )
@@ -179,7 +184,7 @@ fun PasswordItem(
                                 .fillMaxWidth(Percent80),
                             text = item.title,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = contentColor,
+                            color = if (isReordering) draggingContentColor else contentColor,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1
                         )
@@ -198,7 +203,7 @@ fun PasswordItem(
                         contentDescription = stringResource(
                             com.thejohnsondev.common.R.string.copy
                         ),
-                        tint = contentColor
+                        tint = if (isReordering) draggingContentColor else contentColor
                     )
                 }
 
