@@ -56,6 +56,7 @@ import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size4
 import com.thejohnsondev.designsystem.Size42
 import com.thejohnsondev.designsystem.Size8
+import com.thejohnsondev.designsystem.SizeDefault
 import com.thejohnsondev.model.AdditionalField
 import com.thejohnsondev.model.PasswordModel
 
@@ -65,6 +66,8 @@ import com.thejohnsondev.model.PasswordModel
 fun PasswordItem(
     modifier: Modifier = Modifier,
     item: PasswordModel,
+    isReordering: Boolean = false,
+    isDragging: Boolean = false,
     onClick: (PasswordModel) -> Unit,
     onCopySensitiveClick: (String) -> Unit,
     onCopyClick: (String) -> Unit,
@@ -95,6 +98,12 @@ fun PasswordItem(
     }, label = "") {
         if (expanded) Size8 else Size16
     }
+    val contentPadding by transition.animateDp({
+        tween(durationMillis = EXPAND_ANIM_DURATION)
+    }, label = "") {
+        if (isDragging) Size8 else SizeDefault
+    }
+
 
     Card(
         modifier = modifier
@@ -107,13 +116,28 @@ fun PasswordItem(
         )
     ) {
         Column(
-            modifier = Modifier.combinedClickable(
-                onClick = {
-                    onClick(item)
-                    expanded = !expanded
-                }, onLongClick = {
-                    onCopyClick(item.title)
-                }), horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Top
+            modifier = if (isReordering) {
+                Modifier
+                    .combinedClickable(
+                        onClick = {
+                            onClick(item)
+                            expanded = !expanded
+                        })
+                    .padding(contentPadding)
+            } else {
+                Modifier
+                    .combinedClickable(
+                        onClick = {
+                            onClick(item)
+                            expanded = !expanded
+                        },
+                        onLongClick = {
+                            onCopyClick(item.title)
+                        })
+                    .padding(contentPadding)
+            },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
         ) {
             Row(
                 modifier = Modifier
@@ -403,6 +427,24 @@ fun PasswordItemPreview() {
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
         password = "Pass123$"
     ),
+        isReordering = false,
+        onClick = {},
+        onCopySensitiveClick = {},
+        onCopyClick = {},
+        onDeleteClick = {},
+        onEditClick = {})
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PasswordItemPreviewReorder() {
+    PasswordItem(item = PasswordModel(
+        id = "1694854940885",
+        organization = "Google Google Google Google Google Google",
+        title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
+        password = "Pass123$"
+    ),
+        isReordering = true,
         onClick = {},
         onCopySensitiveClick = {},
         onCopyClick = {},
@@ -419,6 +461,7 @@ fun PasswordItemPreview2() {
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
         password = "Pass123$"
     ),
+        isReordering = false,
         onClick = {},
         onCopySensitiveClick = {},
         onCopyClick = {},
@@ -435,6 +478,7 @@ fun PasswordItemPreview3() {
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
         password = "Pass123$"
     ),
+        isReordering = false,
         onClick = {},
         onCopySensitiveClick = {},
         onCopyClick = {},
