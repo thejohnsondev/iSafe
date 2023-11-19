@@ -296,67 +296,17 @@ fun ItemsList(
 ) {
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxWidth()) {
         item {
-            SearchBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Size16),
-                onQueryEntered = { query ->
-                    onSearchQueryEntered(query)
-                },
-                onQueryClear = {
-                    onStopSearching()
-                })
+            SearchBarItem(onSearchQueryEntered, onStopSearching)
         }
         item {
-            AnimatedVisibility(visible = !isSearching) {
-                Filters(
-                    onAllClick = {
-
-                    }, onPasswordsClick = {
-
-                    }, onBankAccountsClick = {
-
-                    }
-                )
-            }
+            FiltersItem(isSearching)
         }
         item {
-            AnimatedVisibility(
-                visible = passwordsList.isEmpty() && bankAccountsList.isEmpty(),
-            ) {
-                EmptyListPlaceHolder(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(Size32)
-
-                )
-            }
+            EmptyListPlaceholder(passwordsList, bankAccountsList)
         }
         if (passwordsList.isNotEmpty()) {
             item {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(id = com.thejohnsondev.common.R.string.passwords),
-                        modifier = Modifier.padding(Size16),
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    IconButton(modifier = Modifier
-                        .padding(Size16),
-                        onClick = {
-                            onToggleReordering()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = if (isReordering) Icons.Default.Done else Icons.Default.Reorder,
-                            contentDescription = null,
-                        )
-                    }
-                }
+                PasswordsTitleItem(onToggleReordering, isReordering)
             }
             items(passwordsList) {
                 PasswordItem(
@@ -379,13 +329,7 @@ fun ItemsList(
         }
         if (bankAccountsList.isNotEmpty()) {
             item {
-                Spacer(modifier = Modifier.height(Size16))
-                Text(
-                    text = stringResource(id = com.thejohnsondev.common.R.string.bank_accounts),
-                    modifier = Modifier.padding(horizontal = Size16),
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                BankAccountsTitleItem()
             }
             items(bankAccountsList) {
 
@@ -413,7 +357,7 @@ fun ReorderingItemsList(
     isReordering: Boolean,
     reorder: (Int, Int) -> Unit
 ) {
-    // TODO: refactor, extract common items, add updating the reordered list on the database
+    // TODO: add updating the reordered list on the database
     val state = rememberReorderableLazyListState(onMove = { from, to ->
         reorder(from.index, to.index)
     })
@@ -422,68 +366,18 @@ fun ReorderingItemsList(
         modifier = Modifier.fillMaxSize()
     ) {
         item {
-            SearchBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(Size16),
-                onQueryEntered = { query ->
-                    onSearchQueryEntered(query)
-                },
-                onQueryClear = {
-                    onStopSearching()
-                })
+            SearchBarItem(onSearchQueryEntered, onStopSearching)
         }
         item {
-            AnimatedVisibility(visible = !isSearching) {
-                Filters(
-                    onAllClick = {
-
-                    }, onPasswordsClick = {
-
-                    }, onBankAccountsClick = {
-
-                    }
-                )
-            }
+            FiltersItem(isSearching)
         }
         item {
-
-            AnimatedVisibility(
-                visible = passwordsList.isEmpty() && bankAccountsList.isEmpty(),
-            ) {
-                EmptyListPlaceHolder(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(Size32)
-                )
-            }
+            EmptyListPlaceholder(passwordsList, bankAccountsList)
         }
 
         if (passwordsList.isNotEmpty()) {
             item {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(id = com.thejohnsondev.common.R.string.passwords),
-                        modifier = Modifier.padding(Size16),
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    IconButton(modifier = Modifier
-                        .padding(Size16),
-                        onClick = {
-                            onToggleReordering()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = if (isReordering) Icons.Default.Done else Icons.Default.Reorder,
-                            contentDescription = null,
-                        )
-                    }
-                }
+                PasswordsTitleItem(onToggleReordering, isReordering)
             }
             item {
                 LazyColumn(
@@ -519,13 +413,7 @@ fun ReorderingItemsList(
         }
         if (bankAccountsList.isNotEmpty()) {
             item {
-                Spacer(modifier = Modifier.height(Size16))
-                Text(
-                    text = stringResource(id = com.thejohnsondev.common.R.string.bank_accounts),
-                    modifier = Modifier.padding(horizontal = Size16),
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                BankAccountsTitleItem()
             }
             item {
                 LazyColumn(
@@ -542,6 +430,98 @@ fun ReorderingItemsList(
             }
         }
     }
+}
+
+@Composable
+fun SearchBarItem(
+    onSearchQueryEntered: (String) -> Unit,
+    onStopSearching: () -> Unit,
+) {
+    SearchBar(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(Size16),
+        onQueryEntered = { query ->
+            onSearchQueryEntered(query)
+        },
+        onQueryClear = {
+            onStopSearching()
+        })
+}
+
+@Composable
+fun FiltersItem(
+    isSearching: Boolean
+) {
+    AnimatedVisibility(visible = !isSearching) {
+        Filters(
+            onAllClick = {
+
+            }, onPasswordsClick = {
+
+            }, onBankAccountsClick = {
+
+            }
+        )
+    }
+}
+
+@Composable
+fun EmptyListPlaceholder(
+    passwordsList: List<PasswordModel>,
+    bankAccountsList: List<BankAccountModel>
+) {
+    AnimatedVisibility(
+        visible = passwordsList.isEmpty() && bankAccountsList.isEmpty(),
+    ) {
+        EmptyListPlaceHolder(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(Size32)
+
+        )
+    }
+}
+
+@Composable
+fun PasswordsTitleItem(
+    onToggleReordering: () -> Unit,
+    isReordering: Boolean,
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = stringResource(id = com.thejohnsondev.common.R.string.passwords),
+            modifier = Modifier.padding(Size16),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        IconButton(modifier = Modifier
+            .padding(Size16),
+            onClick = {
+                onToggleReordering()
+            }
+        ) {
+            Icon(
+                imageVector = if (isReordering) Icons.Default.Done else Icons.Default.Reorder,
+                contentDescription = null,
+            )
+        }
+    }
+}
+
+@Composable
+fun BankAccountsTitleItem() {
+    Spacer(modifier = Modifier.height(Size16))
+    Text(
+        text = stringResource(id = com.thejohnsondev.common.R.string.bank_accounts),
+        modifier = Modifier.padding(horizontal = Size16),
+        style = MaterialTheme.typography.headlineMedium,
+        color = MaterialTheme.colorScheme.onBackground
+    )
 }
 
 
