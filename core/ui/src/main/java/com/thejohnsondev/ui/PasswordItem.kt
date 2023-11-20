@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -55,6 +56,7 @@ import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size4
 import com.thejohnsondev.designsystem.Size42
+import com.thejohnsondev.designsystem.Size56
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.SizeDefault
 import com.thejohnsondev.model.AdditionalField
@@ -108,10 +110,10 @@ fun PasswordItem(
     }, label = "") {
         if (expanded) Size8 else Size16
     }
-    val contentPadding by transition.animateDp({
+    val imageSize by transition.animateDp({
         tween(durationMillis = EXPAND_ANIM_DURATION)
     }, label = "") {
-        if (isDragging) Size8 else SizeDefault
+        if (isDragging) Size56 else Size42
     }
 
 
@@ -128,7 +130,6 @@ fun PasswordItem(
         Column(
             modifier = if (isReordering) {
                 Modifier
-                    .padding(contentPadding)
             } else {
                 Modifier
                     .combinedClickable(
@@ -139,7 +140,6 @@ fun PasswordItem(
                         onLongClick = {
                             onCopyClick(item.title)
                         })
-                    .padding(contentPadding)
             },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
@@ -148,11 +148,14 @@ fun PasswordItem(
                 modifier = Modifier
                     .padding(Size16)
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Surface(
-                        modifier = Modifier.size(Size42),
+                        modifier = Modifier.size(imageSize),
                         color = Color.White,
                         shape = EqualRounded.small
                     ) {
@@ -199,7 +202,7 @@ fun PasswordItem(
                         onCopySensitiveClick(item.password)
                     }) {
                     Icon(
-                        imageVector = Icons.Default.ContentCopy,
+                        imageVector = if (isReordering) Icons.Default.DragHandle else Icons.Default.ContentCopy,
                         contentDescription = stringResource(
                             com.thejohnsondev.common.R.string.copy
                         ),
@@ -450,6 +453,24 @@ fun PasswordItemPreviewReorder() {
         password = "Pass123$"
     ),
         isReordering = true,
+        onClick = {},
+        onCopySensitiveClick = {},
+        onCopyClick = {},
+        onDeleteClick = {},
+        onEditClick = {})
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PasswordItemPreviewDragging() {
+    PasswordItem(item = PasswordModel(
+        id = "1694854940885",
+        organization = "Google Google Google Google Google Google",
+        title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
+        password = "Pass123$"
+    ),
+        isReordering = true,
+        isDragging = true,
         onClick = {},
         onCopySensitiveClick = {},
         onCopyClick = {},
