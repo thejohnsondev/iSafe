@@ -41,6 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -76,6 +78,7 @@ fun PasswordItem(
     onDeleteClick: (PasswordModel) -> Unit,
     onEditClick: (PasswordModel) -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -138,6 +141,7 @@ fun PasswordItem(
                             expanded = !expanded
                         },
                         onLongClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onCopyClick(item.title)
                         })
             },
@@ -199,6 +203,7 @@ fun PasswordItem(
                         .size(Size42)
                         .bounceClick(),
                     onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         onCopySensitiveClick(item.password)
                     }) {
                     Icon(
@@ -219,6 +224,7 @@ fun PasswordItem(
             ExpandedContent(
                 passwordModel = item,
                 onCopyClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onCopySensitiveClick(it)
                 },
                 onDeleteClick = {
@@ -245,6 +251,7 @@ fun ExpandedContent(
     var isHidden by remember {
         mutableStateOf(true)
     }
+    val haptic = LocalHapticFeedback.current
     val password = if (isHidden) passwordModel.password.hidden() else passwordModel.password
     val eyeImage = if (isHidden) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
     Column(
@@ -307,6 +314,7 @@ fun ExpandedContent(
                     .padding(start = Size16, end = Size8, bottom = Size8, top = Size16)
                     .bounceClick(),
                 onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     onEditClick(passwordModel)
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -335,6 +343,7 @@ fun ExpandedContent(
                     .padding(start = Size8, end = Size16, bottom = Size8, top = Size16)
                     .bounceClick(),
                 onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     onDeleteClick(passwordModel)
                 },
                 colors = ButtonDefaults.buttonColors(
