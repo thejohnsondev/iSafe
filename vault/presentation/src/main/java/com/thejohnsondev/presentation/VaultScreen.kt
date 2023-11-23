@@ -133,7 +133,7 @@ fun VaultScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = stringResource(com.thejohnsondev.common.R.string.your_vault),
+                            text = stringResource(R.string.your_vault),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                         )
@@ -159,11 +159,11 @@ fun VaultScreen(
                 icon = {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(com.thejohnsondev.common.R.string.add)
+                        contentDescription = stringResource(R.string.add)
                     )
                 },
                 text = {
-                    Text(text = stringResource(com.thejohnsondev.common.R.string.add))
+                    Text(text = stringResource(R.string.add))
                 },
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -271,9 +271,9 @@ fun Filters(
     onPasswordsClick: () -> Unit,
     onBankAccountsClick: () -> Unit,
 ) {
-    val filterAll = stringResource(id = com.thejohnsondev.common.R.string.all)
-    val filterPasswords = stringResource(id = com.thejohnsondev.common.R.string.passwords)
-    val filterBankAccounts = stringResource(id = com.thejohnsondev.common.R.string.bank_accounts)
+    val filterAll = stringResource(id = R.string.all)
+    val filterPasswords = stringResource(id = R.string.passwords)
+    val filterBankAccounts = stringResource(id = R.string.bank_accounts)
     val filters = listOf(
         filterAll,
         filterPasswords,
@@ -506,11 +506,12 @@ fun PasswordsTitleItem(
             .padding(horizontal = Size16)
     ) {
         Text(
-            text = stringResource(id = com.thejohnsondev.common.R.string.passwords),
+            text = stringResource(id = R.string.passwords),
             modifier = Modifier.padding(vertical = Size16),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
+        // TODO: add save button 
         Box {
             IconButton(modifier = Modifier
                 .padding(vertical = Size16),
@@ -548,7 +549,7 @@ fun PasswordsTitleItem(
 fun BankAccountsTitleItem() {
     Spacer(modifier = Modifier.height(Size16))
     Text(
-        text = stringResource(id = com.thejohnsondev.common.R.string.bank_accounts),
+        text = stringResource(id = R.string.bank_accounts),
         modifier = Modifier.padding(horizontal = Size16),
         style = MaterialTheme.typography.headlineMedium,
         color = MaterialTheme.colorScheme.onBackground
