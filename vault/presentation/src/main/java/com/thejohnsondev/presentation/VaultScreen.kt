@@ -18,9 +18,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Reorder
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -200,6 +200,8 @@ fun VaultScreen(
             },
             onToggleReordering = {
                 viewModel.perform(VaultViewModel.Action.ToggleReordering)
+            }, onSaveReorderClick = {
+                // TODO: save
             })
     }
 }
@@ -218,6 +220,7 @@ fun VaultContent(
     onStopSearching: () -> Unit,
     reorder: (Int, Int) -> Unit,
     onToggleReordering: () -> Unit,
+    onSaveReorderClick: () -> Unit,
 ) {
     Surface(
         modifier = modifier,
@@ -244,6 +247,7 @@ fun VaultContent(
                     onStopSearching = onStopSearching,
                     reorder = reorder,
                     onToggleReordering = onToggleReordering,
+                    onSaveReorderClick = onSaveReorderClick,
                 )
             } else {
                 ItemsList(
@@ -257,7 +261,8 @@ fun VaultContent(
                     onEditPasswordClick = onEditPasswordClick,
                     onSearchQueryEntered = onSearchQueryEntered,
                     onStopSearching = onStopSearching,
-                    onToggleReordering = onToggleReordering
+                    onToggleReordering = onToggleReordering,
+                    onSaveReorderClick = onSaveReorderClick
                 )
             }
         }
@@ -299,6 +304,7 @@ fun ItemsList(
     onSearchQueryEntered: (String) -> Unit,
     onStopSearching: () -> Unit,
     onToggleReordering: () -> Unit,
+    onSaveReorderClick: () -> Unit,
     isReordering: Boolean,
     isSearching: Boolean
 ) {
@@ -314,7 +320,7 @@ fun ItemsList(
         }
         if (passwordsList.isNotEmpty()) {
             item {
-                PasswordsTitleItem(onToggleReordering, isReordering)
+                PasswordsTitleItem(onToggleReordering, onSaveReorderClick, isReordering)
             }
             items(passwordsList) {
                 PasswordItem(
@@ -361,6 +367,7 @@ fun ReorderingItemsList(
     onSearchQueryEntered: (String) -> Unit,
     onStopSearching: () -> Unit,
     onToggleReordering: () -> Unit,
+    onSaveReorderClick: () -> Unit,
     isSearching: Boolean,
     isReordering: Boolean,
     reorder: (Int, Int) -> Unit
@@ -385,7 +392,7 @@ fun ReorderingItemsList(
 
         if (passwordsList.isNotEmpty()) {
             item {
-                PasswordsTitleItem(onToggleReordering, isReordering)
+                PasswordsTitleItem(onToggleReordering, onSaveReorderClick, isReordering)
             }
             item {
                 LazyColumn(
@@ -494,6 +501,7 @@ fun EmptyListPlaceholder(
 @Composable
 fun PasswordsTitleItem(
     onToggleReordering: () -> Unit,
+    onSaveReorderClick: () -> Unit,
     isReordering: Boolean,
 ) {
     var isDropDownMenuExpanded by remember {
@@ -511,35 +519,51 @@ fun PasswordsTitleItem(
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
-        // TODO: add save button 
-        Box {
-            IconButton(modifier = Modifier
-                .padding(vertical = Size16),
-                onClick = {
-                    isDropDownMenuExpanded = !isDropDownMenuExpanded
+        Row(
+            horizontalArrangement = Arrangement.End
+        ) {
+            if (isReordering) {
+                Button(
+                    modifier = Modifier
+                        .padding(start = Size16, top = Size16, bottom = Size16)
+                        .bounceClick(),
+                    onClick = {
+                        onSaveReorderClick()
+                        onToggleReordering()
+                    }) {
+                    Text(text = stringResource(R.string.save))
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = null,
-                )
             }
-            DropdownMenu(
-                expanded = isDropDownMenuExpanded,
-                onDismissRequest = {
-                    isDropDownMenuExpanded = false
-                },
-            ) {
-                DropdownMenuItem(onClick = {
-                    onToggleReordering()
-                }, text = {
-                    Text(text = stringResource(id = R.string.reorder))
-                }, leadingIcon = {
-                    Icon(imageVector = Icons.Default.Reorder, contentDescription = null)
-                }, colors = MenuDefaults.itemColors(
-                    textColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    leadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ))
+
+            Box {
+                IconButton(modifier = Modifier
+                    .padding(vertical = Size16),
+                    onClick = {
+                        isDropDownMenuExpanded = !isDropDownMenuExpanded
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null,
+                    )
+                }
+                DropdownMenu(
+                    expanded = isDropDownMenuExpanded,
+                    onDismissRequest = {
+                        isDropDownMenuExpanded = false
+                    },
+                ) {
+                    DropdownMenuItem(onClick = {
+                        onToggleReordering()
+                    }, text = {
+                        Text(text = stringResource(id = R.string.reorder))
+                    }, leadingIcon = {
+                        Icon(imageVector = Icons.Default.Reorder, contentDescription = null)
+                    }, colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        leadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ))
+                }
             }
         }
     }
