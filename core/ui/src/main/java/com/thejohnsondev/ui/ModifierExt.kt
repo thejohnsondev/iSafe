@@ -12,7 +12,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.designsystem.Percent100
 import com.thejohnsondev.designsystem.Percent90
@@ -48,4 +50,10 @@ fun Modifier.bounceClick(minScale: Float = Percent90) = composed {
                 }
             }
         }
+}
+
+fun Modifier.softHaptic() = composed {
+    val haptic = LocalHapticFeedback.current
+    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+    this
 }
