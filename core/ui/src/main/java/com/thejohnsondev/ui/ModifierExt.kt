@@ -51,9 +51,3 @@ fun Modifier.bounceClick(minScale: Float = Percent90) = composed {
             }
         }
 }
-
-fun Modifier.softHaptic() = composed {
-    val haptic = LocalHapticFeedback.current
-    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-    this
-}
