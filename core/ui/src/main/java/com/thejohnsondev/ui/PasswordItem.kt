@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -40,6 +41,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,7 +58,9 @@ import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size4
 import com.thejohnsondev.designsystem.Size42
+import com.thejohnsondev.designsystem.Size56
 import com.thejohnsondev.designsystem.Size8
+import com.thejohnsondev.designsystem.SizeDefault
 import com.thejohnsondev.model.AdditionalField
 import com.thejohnsondev.model.PasswordModel
 
@@ -65,12 +70,15 @@ import com.thejohnsondev.model.PasswordModel
 fun PasswordItem(
     modifier: Modifier = Modifier,
     item: PasswordModel,
+    isReordering: Boolean = false,
+    isDragging: Boolean = false,
     onClick: (PasswordModel) -> Unit,
     onCopySensitiveClick: (String) -> Unit,
     onCopyClick: (String) -> Unit,
     onDeleteClick: (PasswordModel) -> Unit,
     onEditClick: (PasswordModel) -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -85,16 +93,32 @@ fun PasswordItem(
     }, label = "") {
         if (expanded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
     }
+    val draggingCardBgColor by transition.animateColor({
+        tween(durationMillis = EXPAND_ANIM_DURATION)
+    }, label = "") {
+        if (isDragging) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
+    }
     val contentColor by transition.animateColor({
         tween(durationMillis = EXPAND_ANIM_DURATION)
     }, label = "") {
         if (expanded) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    val draggingContentColor by transition.animateColor({
+        tween(durationMillis = EXPAND_ANIM_DURATION)
+    }, label = "") {
+        if (isDragging) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
     }
     val cardPaddingHorizontal by transition.animateDp({
         tween(durationMillis = EXPAND_ANIM_DURATION)
     }, label = "") {
         if (expanded) Size8 else Size16
     }
+    val imageSize by transition.animateDp({
+        tween(durationMillis = EXPAND_ANIM_DURATION)
+    }, label = "") {
+        if (isDragging) Size56 else Size42
+    }
+
 
     Card(
         modifier = modifier
@@ -103,27 +127,39 @@ fun PasswordItem(
             .padding(start = cardPaddingHorizontal, bottom = Size8, end = cardPaddingHorizontal),
         shape = EqualRounded.medium,
         colors = CardDefaults.cardColors(
-            containerColor = cardBgColor
+            containerColor = if (isReordering) draggingCardBgColor else cardBgColor
         )
     ) {
         Column(
-            modifier = Modifier.combinedClickable(
-                onClick = {
-                    onClick(item)
-                    expanded = !expanded
-                }, onLongClick = {
-                    onCopyClick(item.title)
-                }), horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Top
+            modifier = if (isReordering) {
+                Modifier
+            } else {
+                Modifier
+                    .combinedClickable(
+                        onClick = {
+                            onClick(item)
+                            expanded = !expanded
+                        },
+                        onLongClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onCopyClick(item.title)
+                        })
+            },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
         ) {
             Row(
                 modifier = Modifier
                     .padding(Size16)
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Surface(
-                        modifier = Modifier.size(Size42),
+                        modifier = Modifier.size(imageSize),
                         color = Color.White,
                         shape = EqualRounded.small
                     ) {
@@ -145,7 +181,7 @@ fun PasswordItem(
                             text = item.organization,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = contentColor,
+                            color = if (isReordering) draggingContentColor else contentColor,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1
                         )
@@ -155,7 +191,7 @@ fun PasswordItem(
                                 .fillMaxWidth(Percent80),
                             text = item.title,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = contentColor,
+                            color = if (isReordering) draggingContentColor else contentColor,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1
                         )
@@ -167,14 +203,15 @@ fun PasswordItem(
                         .size(Size42)
                         .bounceClick(),
                     onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         onCopySensitiveClick(item.password)
                     }) {
                     Icon(
-                        imageVector = Icons.Default.ContentCopy,
+                        imageVector = if (isReordering) Icons.Default.DragHandle else Icons.Default.ContentCopy,
                         contentDescription = stringResource(
                             com.thejohnsondev.common.R.string.copy
                         ),
-                        tint = contentColor
+                        tint = if (isReordering) draggingContentColor else contentColor
                     )
                 }
 
@@ -187,6 +224,7 @@ fun PasswordItem(
             ExpandedContent(
                 passwordModel = item,
                 onCopyClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onCopySensitiveClick(it)
                 },
                 onDeleteClick = {
@@ -213,6 +251,7 @@ fun ExpandedContent(
     var isHidden by remember {
         mutableStateOf(true)
     }
+    val haptic = LocalHapticFeedback.current
     val password = if (isHidden) passwordModel.password.hidden() else passwordModel.password
     val eyeImage = if (isHidden) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
     Column(
@@ -275,6 +314,7 @@ fun ExpandedContent(
                     .padding(start = Size16, end = Size8, bottom = Size8, top = Size16)
                     .bounceClick(),
                 onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     onEditClick(passwordModel)
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -303,6 +343,7 @@ fun ExpandedContent(
                     .padding(start = Size8, end = Size16, bottom = Size8, top = Size16)
                     .bounceClick(),
                 onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     onDeleteClick(passwordModel)
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -403,6 +444,42 @@ fun PasswordItemPreview() {
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
         password = "Pass123$"
     ),
+        isReordering = false,
+        onClick = {},
+        onCopySensitiveClick = {},
+        onCopyClick = {},
+        onDeleteClick = {},
+        onEditClick = {})
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PasswordItemPreviewReorder() {
+    PasswordItem(item = PasswordModel(
+        id = "1694854940885",
+        organization = "Google Google Google Google Google Google",
+        title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
+        password = "Pass123$"
+    ),
+        isReordering = true,
+        onClick = {},
+        onCopySensitiveClick = {},
+        onCopyClick = {},
+        onDeleteClick = {},
+        onEditClick = {})
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PasswordItemPreviewDragging() {
+    PasswordItem(item = PasswordModel(
+        id = "1694854940885",
+        organization = "Google Google Google Google Google Google",
+        title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
+        password = "Pass123$"
+    ),
+        isReordering = true,
+        isDragging = true,
         onClick = {},
         onCopySensitiveClick = {},
         onCopyClick = {},
@@ -419,6 +496,7 @@ fun PasswordItemPreview2() {
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
         password = "Pass123$"
     ),
+        isReordering = false,
         onClick = {},
         onCopySensitiveClick = {},
         onCopyClick = {},
@@ -435,6 +513,7 @@ fun PasswordItemPreview3() {
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
         password = "Pass123$"
     ),
+        isReordering = false,
         onClick = {},
         onCopySensitiveClick = {},
         onCopyClick = {},

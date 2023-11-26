@@ -3,25 +3,33 @@ package com.thejohnsondev.presentation
 import android.content.ClipboardManager
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Reorder
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
@@ -35,7 +43,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -46,6 +56,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.content.ContextCompat.getSystemService
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.thejohnsondev.common.R
 import com.thejohnsondev.common.copyData
 import com.thejohnsondev.common.copySensitiveData
 import com.thejohnsondev.common.toast
@@ -64,6 +75,10 @@ import com.thejohnsondev.ui.FullScreenLoading
 import com.thejohnsondev.ui.PasswordItem
 import com.thejohnsondev.ui.SearchBar
 import com.thejohnsondev.ui.bounceClick
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
+import org.burnoutcrew.reorderable.rememberReorderableLazyListState
+import org.burnoutcrew.reorderable.reorderable
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -118,7 +133,7 @@ fun VaultScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = stringResource(com.thejohnsondev.common.R.string.your_vault),
+                            text = stringResource(R.string.your_vault),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                         )
@@ -144,11 +159,11 @@ fun VaultScreen(
                 icon = {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(com.thejohnsondev.common.R.string.add)
+                        contentDescription = stringResource(R.string.add)
                     )
                 },
                 text = {
-                    Text(text = stringResource(com.thejohnsondev.common.R.string.add))
+                    Text(text = stringResource(R.string.add))
                 },
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -179,6 +194,14 @@ fun VaultScreen(
             onStopSearching = {
                 keyboardController?.hide()
                 viewModel.perform(VaultViewModel.Action.StopSearching)
+            },
+            reorder = { from, to ->
+                viewModel.perform(VaultViewModel.Action.Reorder(from, to))
+            },
+            onToggleReordering = {
+                viewModel.perform(VaultViewModel.Action.ToggleReordering)
+            }, onSaveReorderClick = {
+                // TODO: save
             })
     }
 }
@@ -194,7 +217,10 @@ fun VaultContent(
     onDeletePasswordClick: (PasswordModel) -> Unit,
     onEditPasswordClick: (PasswordModel) -> Unit,
     onSearchQueryEntered: (String) -> Unit,
-    onStopSearching: () -> Unit
+    onStopSearching: () -> Unit,
+    reorder: (Int, Int) -> Unit,
+    onToggleReordering: () -> Unit,
+    onSaveReorderClick: () -> Unit,
 ) {
     Surface(
         modifier = modifier,
@@ -208,17 +234,37 @@ fun VaultContent(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
         ) {
-            ItemsList(
-                passwordsList = state.passwordsList,
-                bankAccountsList = state.bankAccountsList,
-                isSearching = state.isSearching,
-                lazyListState = lazyListState,
-                clipboardManager = clipboardManager,
-                onDeletePasswordClick = onDeletePasswordClick,
-                onEditPasswordClick = onEditPasswordClick,
-                onSearchQueryEntered = onSearchQueryEntered,
-                onStopSearching = onStopSearching
-            )
+            if (state.isReordering) {
+                ReorderingItemsList(
+                    passwordsList = state.passwordsList,
+                    bankAccountsList = state.bankAccountsList,
+                    isSearching = state.isSearching,
+                    isReordering = state.isReordering,
+                    clipboardManager = clipboardManager,
+                    onDeletePasswordClick = onDeletePasswordClick,
+                    onEditPasswordClick = onEditPasswordClick,
+                    onSearchQueryEntered = onSearchQueryEntered,
+                    onStopSearching = onStopSearching,
+                    reorder = reorder,
+                    onToggleReordering = onToggleReordering,
+                    onSaveReorderClick = onSaveReorderClick,
+                )
+            } else {
+                ItemsList(
+                    passwordsList = state.passwordsList,
+                    bankAccountsList = state.bankAccountsList,
+                    isSearching = state.isSearching,
+                    isReordering = state.isReordering,
+                    lazyListState = lazyListState,
+                    clipboardManager = clipboardManager,
+                    onDeletePasswordClick = onDeletePasswordClick,
+                    onEditPasswordClick = onEditPasswordClick,
+                    onSearchQueryEntered = onSearchQueryEntered,
+                    onStopSearching = onStopSearching,
+                    onToggleReordering = onToggleReordering,
+                    onSaveReorderClick = onSaveReorderClick
+                )
+            }
         }
 
     }
@@ -230,9 +276,9 @@ fun Filters(
     onPasswordsClick: () -> Unit,
     onBankAccountsClick: () -> Unit,
 ) {
-    val filterAll = stringResource(id = com.thejohnsondev.common.R.string.all)
-    val filterPasswords = stringResource(id = com.thejohnsondev.common.R.string.passwords)
-    val filterBankAccounts = stringResource(id = com.thejohnsondev.common.R.string.bank_accounts)
+    val filterAll = stringResource(id = R.string.all)
+    val filterPasswords = stringResource(id = R.string.passwords)
+    val filterBankAccounts = stringResource(id = R.string.bank_accounts)
     val filters = listOf(
         filterAll,
         filterPasswords,
@@ -257,59 +303,29 @@ fun ItemsList(
     onEditPasswordClick: (PasswordModel) -> Unit,
     onSearchQueryEntered: (String) -> Unit,
     onStopSearching: () -> Unit,
+    onToggleReordering: () -> Unit,
+    onSaveReorderClick: () -> Unit,
+    isReordering: Boolean,
     isSearching: Boolean
 ) {
     LazyColumn(state = lazyListState, modifier = Modifier.fillMaxWidth()) {
         item {
-            SearchBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(Size16),
-                onQueryEntered = { query ->
-                    onSearchQueryEntered(query)
-                },
-                onQueryClear = {
-                    onStopSearching()
-                })
+            SearchBarItem(onSearchQueryEntered, onStopSearching)
         }
         item {
-            AnimatedVisibility(visible = !isSearching) {
-                Filters(
-                    onAllClick = {
-
-                    }, onPasswordsClick = {
-
-                    }, onBankAccountsClick = {
-
-                    }
-                )
-            }
+            FiltersItem(isSearching)
         }
         item {
-            AnimatedVisibility(
-                visible = passwordsList.isEmpty() && bankAccountsList.isEmpty(),
-            ) {
-                EmptyListPlaceHolder(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(Size32)
-
-                )
-            }
+            EmptyListPlaceholder(passwordsList, bankAccountsList)
         }
         if (passwordsList.isNotEmpty()) {
             item {
-                Text(
-                    text = stringResource(id = com.thejohnsondev.common.R.string.passwords),
-                    modifier = Modifier.padding(Size16),
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                PasswordsTitleItem(onToggleReordering, onSaveReorderClick, isReordering)
             }
-            items(passwordsList.sortedByDescending { it.id }) {
+            items(passwordsList) {
                 PasswordItem(
                     item = it,
+                    isReordering = isReordering,
                     onClick = {},
                     onCopySensitiveClick = { password ->
                         clipboardManager.copySensitiveData(password)
@@ -327,13 +343,7 @@ fun ItemsList(
         }
         if (bankAccountsList.isNotEmpty()) {
             item {
-                Spacer(modifier = Modifier.height(Size16))
-                Text(
-                    text = stringResource(id = com.thejohnsondev.common.R.string.bank_accounts),
-                    modifier = Modifier.padding(Size16),
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                BankAccountsTitleItem()
             }
             items(bankAccountsList) {
 
@@ -345,8 +355,231 @@ fun ItemsList(
 
 
     }
-
 }
+
+@Composable
+fun ReorderingItemsList(
+    passwordsList: List<PasswordModel>,
+    bankAccountsList: List<BankAccountModel>,
+    clipboardManager: ClipboardManager,
+    onDeletePasswordClick: (PasswordModel) -> Unit,
+    onEditPasswordClick: (PasswordModel) -> Unit,
+    onSearchQueryEntered: (String) -> Unit,
+    onStopSearching: () -> Unit,
+    onToggleReordering: () -> Unit,
+    onSaveReorderClick: () -> Unit,
+    isSearching: Boolean,
+    isReordering: Boolean,
+    reorder: (Int, Int) -> Unit
+) {
+    // TODO: add updating the reordered list on the database
+    val state = rememberReorderableLazyListState(onMove = { from, to ->
+        reorder(from.index, to.index)
+    })
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
+            SearchBarItem(onSearchQueryEntered, onStopSearching)
+        }
+        item {
+            FiltersItem(isSearching)
+        }
+        item {
+            EmptyListPlaceholder(passwordsList, bankAccountsList)
+        }
+
+        if (passwordsList.isNotEmpty()) {
+            item {
+                PasswordsTitleItem(onToggleReordering, onSaveReorderClick, isReordering)
+            }
+            item {
+                LazyColumn(
+                    state = state.listState,
+                    modifier = Modifier
+                        .fillParentMaxHeight()
+                        .reorderable(state)
+                        .detectReorderAfterLongPress(state)
+                ) {
+                    items(passwordsList, key = { it.id }) {
+                        ReorderableItem(reorderableState = state, key = it.id) { isDragging ->
+                            PasswordItem(
+                                item = it,
+                                isReordering = isReordering,
+                                isDragging = isDragging,
+                                onClick = {},
+                                onCopySensitiveClick = { password ->
+                                    clipboardManager.copySensitiveData(password)
+                                },
+                                onCopyClick = { title ->
+                                    clipboardManager.copyData(title)
+                                },
+                                onDeleteClick = { password ->
+                                    onDeletePasswordClick(password)
+                                },
+                                onEditClick = { password ->
+                                    onEditPasswordClick(password)
+                                })
+                        }
+                    }
+                }
+            }
+        }
+        if (bankAccountsList.isNotEmpty()) {
+            item {
+                BankAccountsTitleItem()
+            }
+            item {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillParentMaxHeight()
+                ) {
+                    items(bankAccountsList) {
+
+                    }
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.padding(bottom = Size72))
+            }
+        }
+    }
+}
+
+@Composable
+fun SearchBarItem(
+    onSearchQueryEntered: (String) -> Unit,
+    onStopSearching: () -> Unit,
+) {
+    SearchBar(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(Size16),
+        onQueryEntered = { query ->
+            onSearchQueryEntered(query)
+        },
+        onQueryClear = {
+            onStopSearching()
+        })
+}
+
+@Composable
+fun FiltersItem(
+    isSearching: Boolean
+) {
+    AnimatedVisibility(visible = !isSearching) {
+        Filters(
+            onAllClick = {
+
+            }, onPasswordsClick = {
+
+            }, onBankAccountsClick = {
+
+            }
+        )
+    }
+}
+
+@Composable
+fun EmptyListPlaceholder(
+    passwordsList: List<PasswordModel>,
+    bankAccountsList: List<BankAccountModel>
+) {
+    AnimatedVisibility(
+        visible = passwordsList.isEmpty() && bankAccountsList.isEmpty(),
+    ) {
+        EmptyListPlaceHolder(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(Size32)
+
+        )
+    }
+}
+
+@Composable
+fun PasswordsTitleItem(
+    onToggleReordering: () -> Unit,
+    onSaveReorderClick: () -> Unit,
+    isReordering: Boolean,
+) {
+    var isDropDownMenuExpanded by remember {
+        mutableStateOf(false)
+    }
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Size16)
+    ) {
+        Text(
+            text = stringResource(id = R.string.passwords),
+            modifier = Modifier.padding(vertical = Size16),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Row(
+            horizontalArrangement = Arrangement.End
+        ) {
+            if (isReordering) {
+                Button(
+                    modifier = Modifier
+                        .padding(start = Size16, top = Size16, bottom = Size16)
+                        .bounceClick(),
+                    onClick = {
+                        onSaveReorderClick()
+                        onToggleReordering()
+                    }) {
+                    Text(text = stringResource(R.string.save))
+                }
+            }
+
+            Box {
+                IconButton(modifier = Modifier
+                    .padding(vertical = Size16),
+                    onClick = {
+                        isDropDownMenuExpanded = !isDropDownMenuExpanded
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = null,
+                    )
+                }
+                DropdownMenu(
+                    expanded = isDropDownMenuExpanded,
+                    onDismissRequest = {
+                        isDropDownMenuExpanded = false
+                    },
+                ) {
+                    DropdownMenuItem(onClick = {
+                        onToggleReordering()
+                    }, text = {
+                        Text(text = stringResource(id = R.string.reorder))
+                    }, leadingIcon = {
+                        Icon(imageVector = Icons.Default.Reorder, contentDescription = null)
+                    }, colors = MenuDefaults.itemColors(
+                        textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        leadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun BankAccountsTitleItem() {
+    Spacer(modifier = Modifier.height(Size16))
+    Text(
+        text = stringResource(id = R.string.bank_accounts),
+        modifier = Modifier.padding(horizontal = Size16),
+        style = MaterialTheme.typography.headlineMedium,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+}
+
 
 @Composable
 fun StatusBarColor() {

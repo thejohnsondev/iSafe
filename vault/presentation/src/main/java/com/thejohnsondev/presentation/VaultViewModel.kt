@@ -25,12 +25,14 @@ class VaultViewModel @Inject constructor(
     private val _passwordsList = MutableStateFlow<List<PasswordModel>>(emptyList())
     private val _bankAccountsList = MutableStateFlow<List<BankAccountModel>>(emptyList())
     private val _isSearching = MutableStateFlow(false)
+    private val _isReordering = MutableStateFlow(false)
 
     val state = combine(
         _loadingState,
         _passwordsList,
         _bankAccountsList,
         _isSearching,
+        _isReordering,
         ::mergeSources
     )
 
@@ -40,7 +42,20 @@ class VaultViewModel @Inject constructor(
             is Action.DeletePassword -> deletePassword(action.password)
             is Action.Search -> search(action.query)
             is Action.StopSearching -> stopSearching()
+            is Action.ToggleReordering -> toggleReordering()
+            is Action.Reorder -> reorder(action.from, action.to)
         }
+    }
+
+    private fun toggleReordering() = launch {
+        _isReordering.emit(!_isReordering.value)
+    }
+
+    private fun reorder(from: Int, to: Int) = launch {
+        val newList = _passwordsList.value.toMutableList().apply {
+            add(to, removeAt(from))
+        }
+        handlePasswordsList(newList)
     }
 
     private fun stopSearching() = launch {
@@ -124,26 +139,31 @@ class VaultViewModel @Inject constructor(
         loadingState: LoadingState,
         passwordsList: List<PasswordModel>,
         bankAccountsList: List<BankAccountModel>,
-        isSearching: Boolean
+        isSearching: Boolean,
+        isReordering: Boolean
     ): State = State(
         loadingState,
         passwordsList,
         bankAccountsList,
-        isSearching
+        isSearching,
+        isReordering
     )
 
     sealed class Action {
         object FetchVault : Action()
         class DeletePassword(val password: PasswordModel) : Action()
         class Search(val query: String) : Action()
+        object ToggleReordering: Action()
         object StopSearching : Action()
+        class Reorder(val from: Int, val to: Int): Action()
     }
 
     data class State(
         val loadingState: LoadingState = LoadingState.Loaded,
         val passwordsList: List<PasswordModel> = emptyList(),
         val bankAccountsList: List<BankAccountModel> = emptyList(),
-        val isSearching: Boolean = false
+        val isSearching: Boolean = false,
+        val isReordering: Boolean = false
     )
 
 }
