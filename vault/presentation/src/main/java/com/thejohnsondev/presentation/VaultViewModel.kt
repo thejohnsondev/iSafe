@@ -22,6 +22,7 @@ class VaultViewModel @Inject constructor(
 
     private val _allPasswordsList = MutableStateFlow<List<PasswordModel>>(emptyList())
     private val _allBankAccountsList = MutableStateFlow<List<BankAccountModel>>(emptyList())
+    private val _passwordsListFetched = MutableStateFlow<List<PasswordModel>>(emptyList())
     private val _passwordsList = MutableStateFlow<List<PasswordModel>>(emptyList())
     private val _bankAccountsList = MutableStateFlow<List<BankAccountModel>>(emptyList())
     private val _isSearching = MutableStateFlow(false)
@@ -44,11 +45,20 @@ class VaultViewModel @Inject constructor(
             is Action.StopSearching -> stopSearching()
             is Action.ToggleReordering -> toggleReordering()
             is Action.Reorder -> reorder(action.from, action.to)
+            is Action.SaveNewOrderedList -> saveNewOrderedList()
         }
+    }
+
+    private fun saveNewOrderedList() = launch {
+        _passwordsListFetched.emit(_passwordsList.value)
+        _isReordering.emit(false)
     }
 
     private fun toggleReordering() = launch {
         _isReordering.emit(!_isReordering.value)
+        if (!_isReordering.value) {
+            _passwordsList.emit(_passwordsListFetched.value)
+        }
     }
 
     private fun reorder(from: Int, to: Int) = launch {
@@ -117,7 +127,10 @@ class VaultViewModel @Inject constructor(
         useCases.getAllPasswords(dataStore.getUserData().id.orEmpty()).collect {
             when (it) {
                 is UserPasswordsResponse.ResponseFailure -> handleError(it.exception)
-                is UserPasswordsResponse.ResponseSuccess -> handlePasswordsList(it.passwords)
+                is UserPasswordsResponse.ResponseSuccess -> {
+                    handlePasswordsList(it.passwords)
+                    _passwordsListFetched.emit(it.passwords)
+                }
             }
         }
         _bankAccountsList.emit(
@@ -156,6 +169,7 @@ class VaultViewModel @Inject constructor(
         object ToggleReordering: Action()
         object StopSearching : Action()
         class Reorder(val from: Int, val to: Int): Action()
+        object SaveNewOrderedList: Action()
     }
 
     data class State(
