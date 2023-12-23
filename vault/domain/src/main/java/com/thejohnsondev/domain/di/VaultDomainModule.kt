@@ -28,5 +28,4 @@ object VaultDomainModule {
         passwordsRepository: PasswordsRepository
     ): GetAllPasswordsUseCase = GetAllPasswordsUseCaseImpl(passwordsRepository)
 
-
 }

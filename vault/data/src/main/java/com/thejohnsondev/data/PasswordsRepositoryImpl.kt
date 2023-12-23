@@ -190,6 +190,49 @@ class PasswordsRepositoryImpl @Inject constructor(
                 }
         }
 
+    override fun updatePasswordsList(
+        userId: String,
+        newPasswordList: List<PasswordModel>
+    ): Flow<DatabaseResponse> = awaitChannelFlow {
+        val passwordsRef = firebaseDatabase.getReference(USERS_DB_REF)
+            .child(userId)
+            .child(PASSWORDS_DB_REF)
+        val encryptedPasswordsMap = mutableMapOf<String, PasswordModel>()
+
+        newPasswordList.forEach { password ->
+            encryptedPasswordsMap[password.id] = PasswordModel(
+                id = password.id,
+                organization = password.organization.encrypt(getKey()),
+                organizationLogo = password.organizationLogo?.encrypt(getKey()),
+                title = password.title.encrypt(getKey()),
+                password = password.password.encrypt(getKey()),
+                additionalFields = password.additionalFields.map {
+                    AdditionalField(
+                        id = it.id,
+                        title = it.title.encrypt(getKey()),
+                        value = it.value.encrypt(getKey())
+                    )
+                }
+            )
+        }
+
+        passwordsRef.removeValue()
+
+        passwordsRef
+            .updateChildren(encryptedPasswordsMap.toMap())
+            .addOnSuccessListener {
+                coroutineScope.launch {
+                    sendOrNothing(DatabaseResponse.ResponseSuccess)
+                }
+            }
+            .addOnFailureListener {
+                coroutineScope.launch {
+                    sendOrNothing(DatabaseResponse.ResponseFailure(it))
+                }
+            }
+
+    }
+
     override fun deletePassword(userId: String, passwordId: String): Flow<DatabaseResponse> =
         awaitChannelFlow {
             firebaseDatabase.getReference(USERS_DB_REF)

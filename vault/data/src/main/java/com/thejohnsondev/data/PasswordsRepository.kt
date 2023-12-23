@@ -9,5 +9,6 @@ interface PasswordsRepository {
     fun getUserPasswords(userId: String): Flow<UserPasswordsResponse>
     fun createPassword(userId: String, password: PasswordModel): Flow<DatabaseResponse>
     fun updatePassword(userId: String, password: PasswordModel): Flow<DatabaseResponse>
+    fun updatePasswordsList(userId: String, newPasswordList: List<PasswordModel>): Flow<DatabaseResponse>
     fun deletePassword(userId: String, passwordId: String): Flow<DatabaseResponse>
 }

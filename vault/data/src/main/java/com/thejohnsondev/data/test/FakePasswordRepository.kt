@@ -34,6 +34,13 @@ class FakePasswordRepository: PasswordsRepository {
         emit(DatabaseResponse.ResponseSuccess)
     }
 
+    override fun updatePasswordsList(
+        userId: String,
+        newPasswordList: List<PasswordModel>
+    ): Flow<DatabaseResponse> = flow {
+        // TODO Not yet implemented
+    }
+
     override fun deletePassword(userId: String, passwordId: String): Flow<DatabaseResponse> = flow {
         val currentList = passwords[userId]?.toMutableList()
         currentList?.removeIf { it.id == passwordId }

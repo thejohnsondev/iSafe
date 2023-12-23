@@ -50,8 +50,20 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun saveNewOrderedList() = launch {
+        useCases.updatePasswordsUseCase(dataStore.getUserData().id.orEmpty(), _passwordsList.value)
+            .collect {
+                when (it) {
+                    is DatabaseResponse.ResponseFailure -> handleError(it.exception)
+                    is DatabaseResponse.ResponseSuccess -> handleUpdatePasswordListSuccess()
+                }
+            }
+
+    }
+
+    private fun handleUpdatePasswordListSuccess() = launchLoading {
         _passwordsListFetched.emit(_passwordsList.value)
         _isReordering.emit(false)
+        loaded()
     }
 
     private fun toggleReordering() = launch {
