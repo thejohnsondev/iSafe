@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:network"))
 
     implementation(libs.androidx.ktx)
     implementation(platform(libs.org.jetbrains.kotlin.bom))
@@ -56,7 +57,4 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.com.google.dagger.hilt.compiler)
 
-    // Firebase
-    implementation(platform(libs.com.google.firebase.bom))
-    implementation(libs.com.google.firebase.databasektx)
 }

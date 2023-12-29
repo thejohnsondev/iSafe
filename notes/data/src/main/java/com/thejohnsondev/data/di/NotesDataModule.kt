@@ -1,14 +1,12 @@
 package com.thejohnsondev.data.di
 
-import com.google.firebase.database.FirebaseDatabase
 import com.thejohnsondev.data.NotesRepository
 import com.thejohnsondev.data.NotesRepositoryImpl
-import com.thejohnsondev.datastore.DataStore
+import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
 @Module
@@ -18,13 +16,9 @@ object NotesDataModule {
     @Singleton
     @Provides
     fun provideNotesRepository(
-        firebaseDatabase: FirebaseDatabase,
-        coroutineScope: CoroutineScope,
-        dataStore: DataStore
+        remoteDataSource: RemoteDataSource
     ): NotesRepository = NotesRepositoryImpl(
-        firebaseDatabase,
-        coroutineScope,
-        dataStore
+        remoteDataSource
     )
 
 }
