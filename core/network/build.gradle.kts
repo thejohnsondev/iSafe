@@ -57,4 +57,9 @@ dependencies {
     implementation(platform(libs.com.google.firebase.bom))
     implementation(libs.com.google.firebase.databasektx)
     implementation(libs.com.google.firebase.authktx)
+
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.json)
+    implementation(libs.arrow.core)
 }
