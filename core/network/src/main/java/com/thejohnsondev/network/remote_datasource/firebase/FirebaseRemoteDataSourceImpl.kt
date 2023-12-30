@@ -1,4 +1,4 @@
-package com.thejohnsondev.network.remote_datasource
+package com.thejohnsondev.network.remote_datasource.firebase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -37,6 +37,7 @@ import com.thejohnsondev.model.UserDataResponse
 import com.thejohnsondev.model.UserModel
 import com.thejohnsondev.model.UserNotesResponse
 import com.thejohnsondev.model.UserPasswordsResponse
+import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

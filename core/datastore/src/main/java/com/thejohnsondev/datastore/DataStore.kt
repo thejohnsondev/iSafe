@@ -12,4 +12,7 @@ interface DataStore {
     suspend fun getIsFromLogin(): Boolean
 
     suspend fun clearUserData()
+
+    fun getBaseUrl(): String
+    suspend fun setBaseUrl(baseUrl: String)
 }

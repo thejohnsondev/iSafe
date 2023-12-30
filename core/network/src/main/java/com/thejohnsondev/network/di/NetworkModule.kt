@@ -3,13 +3,17 @@ package com.thejohnsondev.network.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.thejohnsondev.datastore.DataStore
-import com.thejohnsondev.network.remote_datasource.FirebaseRemoteDataSourceImpl
+import com.thejohnsondev.network.remote_datasource.firebase.FirebaseRemoteDataSourceImpl
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
+import com.thejohnsondev.network.remote_datasource.dotnet.ISafeDotNetApi
+import com.thejohnsondev.network.remote_datasource.dotnet.ISafeDotNetRemoteDataSource
+import com.thejohnsondev.network.remote_datasource.dotnet.ISafeDotNetRetrofitService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -22,11 +26,20 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+    fun provideISafeDotNetApi(
+        dataStore: DataStore
+    ): ISafeDotNetApi = ISafeDotNetRetrofitService(
+        dataStore
+    ).invoke()
 
     @Singleton
     @Provides
-    fun provideRemoteDataSource(
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+    @FirebaseRemoteDataSource
+    @Singleton
+    @Provides
+    fun provideFirebaseRemoteDataSource(
         firebaseAuth: FirebaseAuth,
         firebaseDatabase: FirebaseDatabase,
         coroutineScope: CoroutineScope,
@@ -37,4 +50,26 @@ object NetworkModule {
         coroutineScope,
         dataStore
     )
+
+    @DotNetRemoteDataSource
+    @Singleton
+    @Provides
+    fun provideDotNetRemoteDataSource(
+        iSafeDotNetApi: ISafeDotNetApi,
+        coroutineScope: CoroutineScope,
+        dataStore: DataStore
+    ): RemoteDataSource = ISafeDotNetRemoteDataSource(
+        iSafeDotNetApi,
+        coroutineScope,
+        dataStore
+    )
+
 }
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class DotNetRemoteDataSource
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class FirebaseRemoteDataSource

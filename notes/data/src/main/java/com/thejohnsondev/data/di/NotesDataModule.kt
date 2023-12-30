@@ -2,6 +2,7 @@ package com.thejohnsondev.data.di
 
 import com.thejohnsondev.data.NotesRepository
 import com.thejohnsondev.data.NotesRepositoryImpl
+import com.thejohnsondev.network.di.FirebaseRemoteDataSource
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import dagger.Module
 import dagger.Provides
@@ -16,7 +17,7 @@ object NotesDataModule {
     @Singleton
     @Provides
     fun provideNotesRepository(
-        remoteDataSource: RemoteDataSource
+        @FirebaseRemoteDataSource remoteDataSource: RemoteDataSource
     ): NotesRepository = NotesRepositoryImpl(
         remoteDataSource
     )

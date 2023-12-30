@@ -78,9 +78,19 @@ class DataStoreImpl @Inject constructor(
         remove(IS_FROM_LOGIN)
     }
 
+    override fun getBaseUrl(): String {
+        return getString(BASE_URL, DEFAULT_BASE_URL)
+    }
+
+    override suspend fun setBaseUrl(baseUrl: String) {
+        putString(BASE_URL, baseUrl)
+    }
+
     companion object {
         private const val USER_KEY = "user_key"
         private const val USER_DATA = "user_data"
         private const val IS_FROM_LOGIN = "is-from-login"
+        private const val BASE_URL = "base-url"
+        private const val DEFAULT_BASE_URL = "NO-BASE-URL"
     }
 }
