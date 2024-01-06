@@ -66,12 +66,12 @@ import com.thejohnsondev.ui.TextField
 @Composable
 fun SignUpScreen(
     viewModel: SignUpViewModel,
-    goToCreateKey: () -> Unit,
+    goToHome: () -> Unit,
     goToLogin: () -> Unit
 ) {
     SignUpContent(
         viewModel,
-        goToCreateKey,
+        goToHome,
         goToLogin
     )
 }
@@ -81,7 +81,7 @@ fun SignUpScreen(
 @Composable
 fun SignUpContent(
     viewModel: SignUpViewModel,
-    onGoToCreateKeyScreen: () -> Unit,
+    onGoToHome: () -> Unit,
     onGoToLogin: () -> Unit
 ) {
     val context = LocalContext.current
@@ -111,7 +111,7 @@ fun SignUpContent(
                 )
 
                 is OneTimeEvent.SuccessNavigation -> {
-                    onGoToCreateKeyScreen()
+                    onGoToHome()
                 }
 
             }

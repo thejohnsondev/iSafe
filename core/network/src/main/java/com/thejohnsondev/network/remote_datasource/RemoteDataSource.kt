@@ -20,7 +20,6 @@ interface RemoteDataSource {
     fun isUserLoggedIn(): Boolean
 
     fun createUser(userModel: UserModel): Flow<DatabaseResponse>
-    fun updateUserSecret(userId: String, userSecret: String): Flow<DatabaseResponse>
     fun getUserData(userId: String): Flow<UserDataResponse>
 
     fun getUserPasswords(userId: String): Flow<UserPasswordsResponse>

@@ -66,12 +66,12 @@ import com.thejohnsondev.ui.TextField
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-    goToEnterKey: () -> Unit,
+    goToHome: () -> Unit,
     goBack: () -> Unit
 ) {
     LoginContent(
         viewModel = viewModel,
-        onGoToEnterKeyScreen = goToEnterKey,
+        goToHome = goToHome,
         onGoBack = goBack
     )
 }
@@ -81,7 +81,7 @@ fun LoginScreen(
 @Composable
 fun LoginContent(
     viewModel: LoginViewModel,
-    onGoToEnterKeyScreen: () -> Unit,
+    goToHome: () -> Unit,
     onGoBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -108,7 +108,7 @@ fun LoginContent(
                 )
 
                 is OneTimeEvent.SuccessNavigation -> {
-                    onGoToEnterKeyScreen()
+                    goToHome()
                 }
             }
         }

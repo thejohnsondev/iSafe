@@ -6,6 +6,7 @@ import com.thejohnsondev.domain.AuthUseCases
 import com.thejohnsondev.model.AuthResponse
 import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.EmailValidationState
+import com.thejohnsondev.model.KeyGenerateResult
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
@@ -67,7 +68,7 @@ class SignUpViewModel @Inject constructor(
         useCases.signUp(email, password).collect {
             when (it) {
                 is AuthResponse.ResponseSuccess -> {
-                    createUserInRemoteDb(it.userId, name)
+                    createUserInRemoteDb(it.userId, name, password)
                 }
 
                 is AuthResponse.ResponseFailure -> {
@@ -77,12 +78,12 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun handleSignUpSuccess(userModel: UserModel) = launch {
-        saveUserData(userModel)
+    private fun handleSignUpSuccess(userModel: UserModel, password: String) = launch {
+        saveUserData(userModel, password)
         sendEvent(OneTimeEvent.SuccessNavigation)
     }
 
-    private fun createUserInRemoteDb(userUID: String, userName: String) = launch {
+    private fun createUserInRemoteDb(userUID: String, userName: String, password: String) = launch {
         val newUserModel = UserModel(
             id = userUID,
             name = userName,
@@ -90,14 +91,28 @@ class SignUpViewModel @Inject constructor(
         )
         useCases.createUser(newUserModel).collect {
             when (it) {
-                is DatabaseResponse.ResponseSuccess -> handleSignUpSuccess(newUserModel)
+                is DatabaseResponse.ResponseSuccess -> handleSignUpSuccess(newUserModel, password)
                 is DatabaseResponse.ResponseFailure -> handleError(it.exception)
             }
         }
     }
 
-    private suspend fun saveUserData(userModel: UserModel) = launch {
+    private suspend fun saveUserData(userModel: UserModel, password: String) = launch {
         useCases.saveUserData(userModel, false)
+        generateAndSaveEncryptionKey(password)
+    }
+
+    private suspend fun generateAndSaveEncryptionKey(password: String) {
+        useCases.generateUserKey(password).collect {
+            when (it) {
+                is KeyGenerateResult.Failure -> handleError(it.exception)
+                is KeyGenerateResult.Success -> handleGenerateKeySuccess(it.key)
+            }
+        }
+    }
+
+    private suspend fun handleGenerateKeySuccess(generatedKey: ByteArray) {
+        useCases.saveUserKey(generatedKey)
     }
 
 

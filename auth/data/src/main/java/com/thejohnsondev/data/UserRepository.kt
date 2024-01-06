@@ -7,6 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     fun createUser(userModel: UserModel): Flow<DatabaseResponse>
-    fun updateUserSecret(userId: String, userSecret: String): Flow<DatabaseResponse>
     fun getUserData(userId: String): Flow<UserDataResponse>
 }

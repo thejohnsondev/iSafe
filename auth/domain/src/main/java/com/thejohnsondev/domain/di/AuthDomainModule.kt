@@ -1,14 +1,15 @@
 package com.thejohnsondev.domain.di
 
 import com.thejohnsondev.data.AuthRepository
+import com.thejohnsondev.data.GenerateKeyRepository
 import com.thejohnsondev.data.UserRepository
 import com.thejohnsondev.datastore.DataStore
-import com.thejohnsondev.domain.CheckUserKeyCorrectUseCase
-import com.thejohnsondev.domain.CheckUserKeyCorrectUseCaseImpl
 import com.thejohnsondev.domain.CreateUserUseCase
 import com.thejohnsondev.domain.CreateUserUseCaseImpl
 import com.thejohnsondev.domain.EmailValidateUseCase
 import com.thejohnsondev.domain.EmailValidationUseCaseImpl
+import com.thejohnsondev.domain.GenerateUserKeyUseCase
+import com.thejohnsondev.domain.GenerateUserKeyUseCaseImpl
 import com.thejohnsondev.domain.GetFirstScreenRouteUseCase
 import com.thejohnsondev.domain.GetFirstScreenRouteUseCaseImpl
 import com.thejohnsondev.domain.GetLocalUserDataUseCase
@@ -21,8 +22,8 @@ import com.thejohnsondev.domain.PasswordValidationUseCase
 import com.thejohnsondev.domain.PasswordValidationUseCaseImpl
 import com.thejohnsondev.domain.SaveUserDataUseCase
 import com.thejohnsondev.domain.SaveUserDataUseCaseImpl
-import com.thejohnsondev.domain.SaveUserSecretUseCase
-import com.thejohnsondev.domain.SaveUserSecretUseCaseImpl
+import com.thejohnsondev.domain.SaveUserKeyUseCase
+import com.thejohnsondev.domain.SaveUserKeyUseCaseImpl
 import com.thejohnsondev.domain.SignInUseCase
 import com.thejohnsondev.domain.SignInUseCaseImpl
 import com.thejohnsondev.domain.SignUpUseCase
@@ -83,17 +84,22 @@ object AuthDomainModule {
 
     @Singleton
     @Provides
-    fun provideSaveUserSecretUseCase(
-        userRepository: UserRepository
-    ): SaveUserSecretUseCase = SaveUserSecretUseCaseImpl(userRepository)
+    fun provideIsUserLoggedInUseCase(
+        authRepository: AuthRepository
+    ): GetFirstScreenRouteUseCase =
+        GetFirstScreenRouteUseCaseImpl(authRepository)
 
     @Singleton
     @Provides
-    fun provideIsUserLoggedInUseCase(
-        authRepository: AuthRepository,
+    fun provideSaveUserKeyUseCase(
         dataStore: DataStore
-    ): GetFirstScreenRouteUseCase =
-        GetFirstScreenRouteUseCaseImpl(authRepository, dataStore)
+    ): SaveUserKeyUseCase = SaveUserKeyUseCaseImpl(dataStore)
+
+    @Singleton
+    @Provides
+    fun provideGenerateUserKeyUseCase(
+        generateKeyRepository: GenerateKeyRepository
+    ): GenerateUserKeyUseCase = GenerateUserKeyUseCaseImpl(generateKeyRepository)
 
     @Singleton
     @Provides
@@ -105,17 +111,5 @@ object AuthDomainModule {
         authRepository,
         coroutineScope,
         dataStore
-    )
-
-    @Singleton
-    @Provides
-    fun provideCheckKeyCorrectUseCase(
-        localUserDataUseCase: GetLocalUserDataUseCase,
-        remoteUserDataUseCase: GetRemoteUserDataUseCase,
-        coroutineScope: CoroutineScope
-    ): CheckUserKeyCorrectUseCase = CheckUserKeyCorrectUseCaseImpl(
-        localUserDataUseCase,
-        remoteUserDataUseCase,
-        coroutineScope
     )
 }

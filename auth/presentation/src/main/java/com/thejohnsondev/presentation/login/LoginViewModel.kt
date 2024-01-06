@@ -4,6 +4,7 @@ import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.domain.AuthUseCases
 import com.thejohnsondev.model.AuthResponse
 import com.thejohnsondev.model.EmailValidationState
+import com.thejohnsondev.model.KeyGenerateResult
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
@@ -54,24 +55,38 @@ class LoginViewModel @Inject constructor(
                 }
 
                 is AuthResponse.ResponseSuccess -> {
-                    getUserData(it.userId)
+                    getUserData(it.userId, password)
                 }
             }
         }
     }
 
-    private fun getUserData(userId: String) = launch {
+    private fun getUserData(userId: String, password: String) = launch {
         useCases.getUserData(userId).collect {
             when (it) {
                 is UserDataResponse.ResponseFailure -> handleError(it.exception)
-                is UserDataResponse.ResponseSuccess -> saveUserData(it.userModel)
+                is UserDataResponse.ResponseSuccess -> saveUserData(it.userModel, password)
             }
         }
     }
 
-    private fun saveUserData(userModel: UserModel) = launch {
-        useCases.saveUserData(userModel, true)
+    private fun saveUserData(userModel: UserModel, password: String) = launch {
+        useCases.saveUserData.invoke(userModel, true)
+        generateAndSaveEncryptionKey(password)
         sendEvent(OneTimeEvent.SuccessNavigation)
+    }
+
+    private suspend fun generateAndSaveEncryptionKey(password: String) {
+        useCases.generateUserKey(password).collect {
+            when (it) {
+                is KeyGenerateResult.Failure -> handleError(it.exception)
+                is KeyGenerateResult.Success -> handleGenerateKeySuccess(it.key)
+            }
+        }
+    }
+
+    private suspend fun handleGenerateKeySuccess(generatedKey: ByteArray) {
+        useCases.saveUserKey(generatedKey)
     }
 
     private fun validateEmail(email: String) = launch {

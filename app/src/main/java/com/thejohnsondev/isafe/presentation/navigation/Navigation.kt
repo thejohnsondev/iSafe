@@ -10,10 +10,6 @@ import com.thejohnsondev.presentation.nagivation.checkAuthStateScreen
 import com.thejohnsondev.presentation.nagivation.loginScreen
 import com.thejohnsondev.presentation.nagivation.navigateToLogin
 import com.thejohnsondev.presentation.nagivation.signUpScreen
-import com.thejohnsondev.presentation.navigation.createKeyScreen
-import com.thejohnsondev.presentation.navigation.enterKeyScreen
-import com.thejohnsondev.presentation.navigation.navigateToCreateKey
-import com.thejohnsondev.presentation.navigation.navigateToEnterKey
 
 @Composable
 fun Navigation() {
@@ -28,35 +24,19 @@ fun Navigation() {
             }
         )
         loginScreen(
-            goToEnterKey = {
-                navController.navigateToEnterKey()
+            goToHome = {
+                navController.navigate(Screens.HomeScreen.name)
             },
             goBack = {
                 navController.popBackStack()
             }
         )
         signUpScreen(
-            goToCreateKey = {
-                navController.navigateToCreateKey()
+            goToHome = {
+                navController.navigate(Screens.HomeScreen.name)
             },
             goToLogin = {
                 navController.navigateToLogin()
-            }
-        )
-        createKeyScreen(
-            onGoToHomeScreen = {
-                navController.navigate(Screens.HomeScreen.name)
-            },
-            onGoToSignUpScreen = {
-                navController.navigate(Screens.SignUpScreen.name)
-            }
-        )
-        enterKeyScreen(
-            onGoToHomeScreen = {
-                navController.navigate(Screens.HomeScreen.name)
-            },
-            onGoToSignUpScreen = {
-                navController.navigate(Screens.SignUpScreen.name)
             }
         )
         composable(

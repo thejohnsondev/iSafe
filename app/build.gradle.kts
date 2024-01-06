@@ -61,7 +61,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:designsystem"))
     implementation(project(":auth:presentation"))
-    implementation(project(":generatekey:presentation"))
     implementation(project(":vault:presentation"))
     implementation(project(":passwordaddedit:presentation"))
     implementation(project(":notes:presentation"))

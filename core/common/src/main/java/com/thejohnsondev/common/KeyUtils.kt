@@ -4,7 +4,7 @@ import java.io.File
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 
-fun File.generateSecretKey(): ByteArray {
+fun File.generateKeyFBKDF(): ByteArray {
     val bytes = readBytes()
     val step = bytes.size / 64
     val firstSelection = mutableListOf<Byte>()
@@ -17,6 +17,10 @@ fun File.generateSecretKey(): ByteArray {
         result.add((it.sumOf { it.toInt() } / 4).toByte())
     }
     return result.toByteArray()
+}
+
+fun String.generateKeyPBKDF(): ByteArray {
+    return PBKDFUtils.pbkdf2("HmacSHA256", this.toByteArray(), this.toByteArray(), 1000, 16)
 }
 
 fun String.encrypt(key: ByteArray): String {

@@ -15,9 +15,6 @@ class UserRepositoryImpl @Inject constructor(
     override fun createUser(userModel: UserModel): Flow<DatabaseResponse> =
         remoteDataSource.createUser(userModel)
 
-    override fun updateUserSecret(userId: String, userSecret: String): Flow<DatabaseResponse> =
-        remoteDataSource.updateUserSecret(userId, userSecret)
-
     override fun getUserData(userId: String): Flow<UserDataResponse> =
         remoteDataSource.getUserData(userId)
 

@@ -288,27 +288,6 @@ class FirebaseRemoteDataSourceImpl @Inject constructor(
             }
     }
 
-    override fun updateUserSecret(userId: String, userSecret: String): Flow<DatabaseResponse> =
-        awaitChannelFlow {
-            val userRef = firebaseDatabase.getReference(USERS_DB_REF)
-                .child(userId)
-                .child(USERS_DATA_DB_REF)
-
-            val valuesMap = mapOf(
-                PARAM_USER_SECRET to userSecret
-            )
-            userRef.updateChildren(valuesMap)
-                .addOnSuccessListener {
-                    coroutineScope.launch {
-                        sendOrNothing(DatabaseResponse.ResponseSuccess)
-                    }
-                }.addOnFailureListener {
-                    coroutineScope.launch {
-                        sendOrNothing(DatabaseResponse.ResponseFailure(it))
-                    }
-                }
-        }
-
     override fun getUserData(userId: String): Flow<UserDataResponse> = awaitChannelFlow {
         firebaseDatabase.getReference(USERS_DB_REF)
             .child(userId)

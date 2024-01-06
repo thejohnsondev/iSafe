@@ -47,10 +47,6 @@ class ISafeDotNetRemoteDataSource @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun updateUserSecret(userId: String, userSecret: String): Flow<DatabaseResponse> {
-        TODO("Not yet implemented")
-    }
-
     override fun getUserData(userId: String): Flow<UserDataResponse> {
         TODO("Not yet implemented")
     }
