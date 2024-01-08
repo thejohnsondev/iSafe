@@ -12,13 +12,10 @@ class ISafeDotNetRetrofitService @Inject constructor(
 ) {
 
     operator fun invoke(): ISafeDotNetApi {
-        val okHttpBuilder = OkHttpClient.Builder()
-        val okHttpClient = okHttpBuilder.build()
         val baseUrl =
             dataStore.getBaseUrl()
 
         return Retrofit.Builder()
-            .client(okHttpClient)
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(EitherCallAdapterFactory())

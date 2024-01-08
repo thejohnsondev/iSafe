@@ -1,6 +1,7 @@
 package com.thejohnsondev.network.common
 
 import arrow.core.Either
+import com.thejohnsondev.model.ApiError
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Retrofit

@@ -1,6 +1,10 @@
 package com.thejohnsondev.network.common
 
 import arrow.core.Either
+import com.thejohnsondev.model.ApiError
+import com.thejohnsondev.model.HttpError
+import com.thejohnsondev.model.NetworkError
+import com.thejohnsondev.model.UnknownApiError
 import okhttp3.Request
 import okio.Timeout
 import org.json.JSONObject
@@ -9,7 +13,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import java.lang.reflect.Type
-
 class EitherCall<R>(
     private val delegate: Call<R>,
     private val successType: Type
@@ -24,8 +27,8 @@ class EitherCall<R>(
 
             private fun Response<R>.toEither(): Either<ApiError, R> {
                 if (!isSuccessful) {
-                    val errorBody = JSONObject(errorBody()?.string() ?: "")
-                    return Either.Left(HttpError(code(), errorBody.getJSONObject("error").getString("message")))
+                    val errorBody = errorBody()?.string() ?: ""
+                    return Either.Left(HttpError(code(), errorBody))
                 }
 
                 body()?.let { body -> return Either.Right(body) }

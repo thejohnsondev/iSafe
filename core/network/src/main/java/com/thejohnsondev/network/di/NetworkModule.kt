@@ -57,10 +57,14 @@ object NetworkModule {
     fun provideDotNetRemoteDataSource(
         iSafeDotNetApi: ISafeDotNetApi,
         coroutineScope: CoroutineScope,
+        firebaseDatabase: FirebaseDatabase, //todo temporar
+        firebaseAuth: FirebaseAuth, //todo temporar
         dataStore: DataStore
     ): RemoteDataSource = ISafeDotNetRemoteDataSource(
         iSafeDotNetApi,
         coroutineScope,
+        firebaseDatabase, //todo temporar
+        firebaseAuth, //todo temporar
         dataStore
     )
 

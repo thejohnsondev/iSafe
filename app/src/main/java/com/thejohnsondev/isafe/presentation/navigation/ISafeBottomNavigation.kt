@@ -9,6 +9,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.painterResource
@@ -29,7 +30,7 @@ fun ISafeBottomNavigation(navController: NavHostController, bottomBarState: Muta
     ) {
         NavigationBar {
             val selectedItemIndex = rememberSaveable {
-                mutableStateOf(0)
+                mutableIntStateOf(0)
             }
             items.forEachIndexed { index, screen ->
                 NavigationBarItem(
@@ -42,9 +43,9 @@ fun ISafeBottomNavigation(navController: NavHostController, bottomBarState: Muta
                         )
                     },
                     label = { Text(stringResource(screen.titleRes)) },
-                    selected = selectedItemIndex.value == index,
+                    selected = selectedItemIndex.intValue == index,
                     onClick = {
-                        selectedItemIndex.value = index
+                        selectedItemIndex.intValue = index
                         navController.navigate(screen.route)
                     },
                 )

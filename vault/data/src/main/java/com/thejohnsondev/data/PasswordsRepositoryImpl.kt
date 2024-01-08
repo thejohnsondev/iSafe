@@ -3,13 +3,14 @@ package com.thejohnsondev.data
 import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.PasswordModel
 import com.thejohnsondev.model.UserPasswordsResponse
+import com.thejohnsondev.network.di.DotNetRemoteDataSource
 import com.thejohnsondev.network.di.FirebaseRemoteDataSource
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PasswordsRepositoryImpl @Inject constructor(
-    @FirebaseRemoteDataSource private val remoteDataSource: RemoteDataSource
+    @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource
 ) : PasswordsRepository {
 
     override fun getUserPasswords(userId: String): Flow<UserPasswordsResponse> =

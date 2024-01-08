@@ -1,8 +1,8 @@
 package com.thejohnsondev.presentation.login
 
+import android.util.Log
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.domain.AuthUseCases
-import com.thejohnsondev.model.AuthResponse
 import com.thejohnsondev.model.EmailValidationState
 import com.thejohnsondev.model.KeyGenerateResult
 import com.thejohnsondev.model.LoadingState
@@ -10,10 +10,12 @@ import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
 import com.thejohnsondev.model.UserDataResponse
 import com.thejohnsondev.model.UserModel
+import com.thejohnsondev.model.auth.AuthResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,17 +50,16 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun loginWithEmail(email: String, password: String) = launchLoading {
-        useCases.signIn(email, password).collect {
-            when (it) {
-                is AuthResponse.ResponseFailure -> {
-                    handleError(it.exception)
-                }
+        useCases.signIn(email, password).first()
+            .fold(
+                ifLeft = ::handleError,
+                ifRight = ::handleAuthResponse
+            )
+    }
 
-                is AuthResponse.ResponseSuccess -> {
-                    getUserData(it.userId, password)
-                }
-            }
-        }
+    private fun handleAuthResponse(authResponse: AuthResponse) {
+        Log.e("TAG", "-- login response: ${authResponse.token}")
+        sendEvent(OneTimeEvent.InfoSnackbar("Token: ${authResponse.token}"))
     }
 
     private fun getUserData(userId: String, password: String) = launch {

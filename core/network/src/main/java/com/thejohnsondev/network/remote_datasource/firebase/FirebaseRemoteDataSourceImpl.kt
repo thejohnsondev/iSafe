@@ -1,5 +1,6 @@
 package com.thejohnsondev.network.remote_datasource.firebase
 
+import arrow.core.Either
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -29,7 +30,8 @@ import com.thejohnsondev.common.encrypt
 import com.thejohnsondev.common.sendOrNothing
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.AdditionalField
-import com.thejohnsondev.model.AuthResponse
+import com.thejohnsondev.model.ApiError
+import com.thejohnsondev.model.auth.AuthResponse
 import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.PasswordModel
@@ -313,34 +315,14 @@ class FirebaseRemoteDataSourceImpl @Inject constructor(
 
             })
     }
-    override suspend fun signUp(email: String, password: String): Flow<AuthResponse> =
+    override suspend fun signUp(email: String, password: String): Flow<Either<ApiError, AuthResponse>> =
         awaitChannelFlow {
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    coroutineScope.launch {
-                        sendOrNothing(AuthResponse.ResponseSuccess(it.user?.uid.orEmpty()))
-                    }
-                }
-                .addOnFailureListener {
-                    coroutineScope.launch {
-                        sendOrNothing(AuthResponse.ResponseFailure(it))
-                    }
-                }
+
         }
 
-    override suspend fun singIn(email: String, password: String): Flow<AuthResponse> =
+    override suspend fun singIn(email: String, password: String): Flow<Either<ApiError, AuthResponse>> =
         awaitChannelFlow {
-            firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    coroutineScope.launch {
-                        sendOrNothing(AuthResponse.ResponseSuccess(it.user?.uid.orEmpty()))
-                    }
-                }
-                .addOnFailureListener {
-                    coroutineScope.launch {
-                        sendOrNothing(AuthResponse.ResponseFailure(it))
-                    }
-                }
+
         }
 
     override suspend fun signOut() {

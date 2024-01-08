@@ -24,10 +24,6 @@ import com.thejohnsondev.domain.SaveUserDataUseCase
 import com.thejohnsondev.domain.SaveUserDataUseCaseImpl
 import com.thejohnsondev.domain.SaveUserKeyUseCase
 import com.thejohnsondev.domain.SaveUserKeyUseCaseImpl
-import com.thejohnsondev.domain.SignInUseCase
-import com.thejohnsondev.domain.SignInUseCaseImpl
-import com.thejohnsondev.domain.SignUpUseCase
-import com.thejohnsondev.domain.SignUpUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,16 +34,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AuthDomainModule {
-
-    @Singleton
-    @Provides
-    fun provideSignInUseCase(authRepository: AuthRepository): SignInUseCase =
-        SignInUseCaseImpl(authRepository)
-
-    @Singleton
-    @Provides
-    fun provideSignUpUseCase(authRepository: AuthRepository): SignUpUseCase =
-        SignUpUseCaseImpl(authRepository)
 
     @Singleton
     @Provides

@@ -1,9 +1,9 @@
 package com.thejohnsondev.presentation.signup
 
+import android.util.Log
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.domain.AuthUseCases
-import com.thejohnsondev.model.AuthResponse
 import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.EmailValidationState
 import com.thejohnsondev.model.KeyGenerateResult
@@ -11,10 +11,12 @@ import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
 import com.thejohnsondev.model.UserModel
+import com.thejohnsondev.model.auth.AuthResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,30 +59,31 @@ class SignUpViewModel @Inject constructor(
 
     private fun validateEmail(email: String) = launch {
         _emailValidationState.value = useCases.validateEmail(email)
+        _emailValidationState.value = EmailValidationState.EmailCorrectState
 
     }
 
     private fun validatePassword(password: String) = launch {
         _passwordValidationState.value = useCases.validatePassword(password)
+        _passwordValidationState.value = PasswordValidationState.PasswordCorrectState
     }
 
     private fun signUp(name: String, email: String, password: String) = launchLoading {
-        useCases.signUp(email, password).collect {
-            when (it) {
-                is AuthResponse.ResponseSuccess -> {
-                    createUserInRemoteDb(it.userId, name, password)
-                }
-
-                is AuthResponse.ResponseFailure -> {
-                    handleError(it.exception)
-                }
-            }
-        }
+        useCases.signUp(email, password).first()
+            .fold(
+                ifLeft = ::handleError,
+                ifRight = ::handleAuthResponse
+            )
     }
 
     private fun handleSignUpSuccess(userModel: UserModel, password: String) = launch {
         saveUserData(userModel, password)
         sendEvent(OneTimeEvent.SuccessNavigation)
+    }
+
+    private fun handleAuthResponse(authResponse: AuthResponse) {
+        Log.e("TAG", "-- register response: ${authResponse.token}")
+        sendEvent(OneTimeEvent.InfoSnackbar("Token: ${authResponse.token}"))
     }
 
     private fun createUserInRemoteDb(userUID: String, userName: String, password: String) = launch {
