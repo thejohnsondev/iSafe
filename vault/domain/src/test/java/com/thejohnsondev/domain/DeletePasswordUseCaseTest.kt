@@ -7,13 +7,10 @@ import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.UserPasswordsResponse
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.BDDMockito.given
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.junit.MockitoRule
@@ -22,8 +19,8 @@ import org.mockito.junit.MockitoRule
 class DeletePasswordUseCaseTest {
 
     private lateinit var passwordsRepository: PasswordsRepository
-    private lateinit var deletePasswordsUseCase: DeletePasswordUseCaseImpl
-    private lateinit var getAllPasswordsUseCase: GetAllPasswordsUseCaseImpl
+    private lateinit var deletePasswordsUseCase: DeletePasswordUseCase
+    private lateinit var getAllPasswordsUseCase: GetAllPasswordsUseCase
 
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
@@ -31,8 +28,8 @@ class DeletePasswordUseCaseTest {
     @Before
     fun setUp() {
         passwordsRepository = FakePasswordRepository()
-        deletePasswordsUseCase = DeletePasswordUseCaseImpl(passwordsRepository)
-        getAllPasswordsUseCase = GetAllPasswordsUseCaseImpl(passwordsRepository)
+        deletePasswordsUseCase = DeletePasswordUseCase(passwordsRepository)
+        getAllPasswordsUseCase = GetAllPasswordsUseCase(passwordsRepository)
     }
 
     @Test

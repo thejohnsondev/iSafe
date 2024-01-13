@@ -12,6 +12,7 @@ import com.thejohnsondev.model.UserPasswordsResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
@@ -119,13 +120,12 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun deletePassword(passwordModel: PasswordModel) = launch {
-        useCases.deletePassword("", passwordModel.id)
-            .collect {
-                when (it) {
-                    is DatabaseResponse.ResponseFailure -> handleError(it.exception)
-                    is DatabaseResponse.ResponseSuccess -> deletePasswordFromList(passwordModel)
-                }
+        useCases.deletePassword("", passwordModel.id).first().fold(
+            ifLeft = ::handleError,
+            ifRight = {
+                deletePasswordFromList(passwordModel)
             }
+        )
     }
 
     private fun deletePasswordFromList(passwordModel: PasswordModel) = launch {
@@ -136,15 +136,14 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun fetchVault() = launchLoading {
-//        useCases.getAllPasswords(dataStore.getUserData().id.orEmpty()).collect {
-//            when (it) {
-//                is UserPasswordsResponse.ResponseFailure -> handleError(it.exception)
-//                is UserPasswordsResponse.ResponseSuccess -> {
-//                    handlePasswordsList(it.passwords)
-//                    _passwordsListFetched.emit(it.passwords)
-//                }
-//            }
-//        }
+        useCases.getAllPasswords("").first().fold(
+            ifLeft = ::handleError,
+            ifRight = {
+                handlePasswordsList(it)
+                _passwordsListFetched.emit(it)
+            }
+
+        )
         _bankAccountsList.emit(
             emptyList()
         )

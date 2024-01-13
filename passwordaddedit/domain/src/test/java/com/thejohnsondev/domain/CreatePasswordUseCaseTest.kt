@@ -27,7 +27,7 @@ class CreatePasswordUseCaseTest {
     @Before
     fun setUp() {
         passwordsRepository = FakePasswordRepository()
-        createPasswordUseCase = CreatePasswordUseCaseImpl(passwordsRepository)
+        createPasswordUseCase = CreatePasswordUseCase(passwordsRepository)
     }
 
     @Test

@@ -56,72 +56,72 @@ class FirebaseRemoteDataSourceImpl @Inject constructor(
         return dataStore.getUserKey()
     }
 
-    override fun getUserPasswords(userId: String): Flow<UserPasswordsResponse> = awaitChannelFlow {
-        firebaseDatabase.getReference(USERS_DB_REF)
-            .child(userId)
-            .child(PASSWORDS_DB_REF)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    coroutineScope.launch {
-                        val passwordMap = snapshot.value as HashMap<String, Any?>?
-                        val passwordsList = mutableListOf<PasswordModel>()
-                        val additionalFieldsList = mutableListOf<AdditionalField>()
-                        if (passwordMap == null) {
-                            sendOrNothing(UserPasswordsResponse.ResponseSuccess(passwordsList))
-                            close()
-                        }
-                        passwordMap?.values?.forEach {
-                            (it as HashMap<String, Any>).values.forEach {
-                                if (it is List<*>) {
-                                    (it as List<HashMap<String, String>>).forEach {
-                                        additionalFieldsList.add(
-                                            AdditionalField(
-                                                id = it.get(PARAM_ID).orEmpty(),
-                                                title = it.get(PARAM_TITLE)?.decrypt(getKey())
-                                                    .orEmpty(),
-                                                value = it.get(PARAM_VALUE)?.decrypt(getKey())
-                                                    .orEmpty()
-                                            )
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                        passwordMap?.values?.forEach {
-                            (it as HashMap<String, Any?>?).let {
-                                passwordsList.add(
-                                    PasswordModel(
-                                        id = (it as HashMap<String, String>?)?.get(
-                                            PARAM_ID
-                                        ).orEmpty(),
-                                        organization = (it as HashMap<String, String>?)?.get(
-                                            PARAM_ORGANIZATION
-                                        )?.decrypt(getKey()).orEmpty(),
-                                        organizationLogo = (it as HashMap<String, String>?)?.get(
-                                            PARAM_ORGANIZATION_LOGO
-                                        )?.decrypt(getKey()).orEmpty(),
-                                        title = (it as HashMap<String, String>?)?.get(PARAM_TITLE)
-                                            ?.decrypt(getKey()).orEmpty(),
-                                        password = (it as HashMap<String, String>?)?.get(
-                                            PARAM_PASSWORD
-                                        )?.decrypt(getKey()).orEmpty(),
-                                        additionalFields = getAdditionalFields(it)
-                                    )
-                                )
-                            }
-                        }
-
-                        sendOrNothing(UserPasswordsResponse.ResponseSuccess(passwordsList))
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    coroutineScope.launch {
-                        sendOrNothing(UserPasswordsResponse.ResponseFailure(error.toException()))
-                    }
-                }
-
-            })
+    override fun getUserPasswords(userId: String): Flow<Either<ApiError, List<PasswordModel>>> = awaitChannelFlow {
+//        firebaseDatabase.getReference(USERS_DB_REF)
+//            .child(userId)
+//            .child(PASSWORDS_DB_REF)
+//            .addListenerForSingleValueEvent(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    coroutineScope.launch {
+//                        val passwordMap = snapshot.value as HashMap<String, Any?>?
+//                        val passwordsList = mutableListOf<PasswordModel>()
+//                        val additionalFieldsList = mutableListOf<AdditionalField>()
+//                        if (passwordMap == null) {
+//                            sendOrNothing(passwordsList)
+//                            close()
+//                        }
+//                        passwordMap?.values?.forEach {
+//                            (it as HashMap<String, Any>).values.forEach {
+//                                if (it is List<*>) {
+//                                    (it as List<HashMap<String, String>>).forEach {
+//                                        additionalFieldsList.add(
+//                                            AdditionalField(
+//                                                id = it.get(PARAM_ID).orEmpty(),
+//                                                title = it.get(PARAM_TITLE)?.decrypt(getKey())
+//                                                    .orEmpty(),
+//                                                value = it.get(PARAM_VALUE)?.decrypt(getKey())
+//                                                    .orEmpty()
+//                                            )
+//                                        )
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        passwordMap?.values?.forEach {
+//                            (it as HashMap<String, Any?>?).let {
+//                                passwordsList.add(
+//                                    PasswordModel(
+//                                        id = (it as HashMap<String, String>?)?.get(
+//                                            PARAM_ID
+//                                        ).orEmpty(),
+//                                        organization = (it as HashMap<String, String>?)?.get(
+//                                            PARAM_ORGANIZATION
+//                                        )?.decrypt(getKey()).orEmpty(),
+//                                        organizationLogo = (it as HashMap<String, String>?)?.get(
+//                                            PARAM_ORGANIZATION_LOGO
+//                                        )?.decrypt(getKey()).orEmpty(),
+//                                        title = (it as HashMap<String, String>?)?.get(PARAM_TITLE)
+//                                            ?.decrypt(getKey()).orEmpty(),
+//                                        password = (it as HashMap<String, String>?)?.get(
+//                                            PARAM_PASSWORD
+//                                        )?.decrypt(getKey()).orEmpty(),
+//                                        additionalFields = getAdditionalFields(it)
+//                                    )
+//                                )
+//                            }
+//                        }
+//
+//                        sendOrNothing(UserPasswordsResponse.ResponseSuccess(passwordsList))
+//                    }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    coroutineScope.launch {
+//                        sendOrNothing(UserPasswordsResponse.ResponseFailure(error.toException()))
+//                    }
+//                }
+//
+//            })
     }
 
     private suspend fun getAdditionalFields(map: HashMap<String, Any?>?): List<AdditionalField> {
@@ -144,71 +144,71 @@ class FirebaseRemoteDataSourceImpl @Inject constructor(
 
 
 
-    override fun createPassword(userId: String, password: PasswordModel): Flow<DatabaseResponse> =
+    override fun createPassword(userId: String, password: PasswordModel): Flow<Either<ApiError, PasswordModel>> =
         awaitChannelFlow {
-            val encryptedPassword = PasswordModel(
-                id = password.id,
-                organization = password.organization.encrypt(getKey()),
-                organizationLogo = password.organizationLogo?.encrypt(getKey()),
-                title = password.title.encrypt(getKey()),
-                password = password.password.encrypt(getKey()),
-                additionalFields = password.additionalFields.map {
-                    AdditionalField(
-                        id = it.id,
-                        title = it.title.encrypt(getKey()),
-                        value = it.value.encrypt(getKey())
-                    )
-                }
-            )
-            firebaseDatabase.getReference(USERS_DB_REF)
-                .child(userId)
-                .child(PASSWORDS_DB_REF)
-                .child(password.id)
-                .setValue(encryptedPassword)
-                .addOnSuccessListener {
-                    coroutineScope.launch {
-                        sendOrNothing(DatabaseResponse.ResponseSuccess)
-                    }
-                }
-                .addOnFailureListener {
-                    coroutineScope.launch {
-                        sendOrNothing(DatabaseResponse.ResponseFailure(it))
-                    }
-                }
+//            val encryptedPassword = PasswordModel(
+//                id = password.id,
+//                organization = password.organization.encrypt(getKey()),
+//                organizationLogo = password.organizationLogo?.encrypt(getKey()),
+//                title = password.title.encrypt(getKey()),
+//                password = password.password.encrypt(getKey()),
+//                additionalFields = password.additionalFields.map {
+//                    AdditionalField(
+//                        id = it.id,
+//                        title = it.title.encrypt(getKey()),
+//                        value = it.value.encrypt(getKey())
+//                    )
+//                }
+//            )
+//            firebaseDatabase.getReference(USERS_DB_REF)
+//                .child(userId)
+//                .child(PASSWORDS_DB_REF)
+//                .child(password.id)
+//                .setValue(encryptedPassword)
+//                .addOnSuccessListener {
+//                    coroutineScope.launch {
+//                        sendOrNothing(DatabaseResponse.ResponseSuccess)
+//                    }
+//                }
+//                .addOnFailureListener {
+//                    coroutineScope.launch {
+//                        sendOrNothing(DatabaseResponse.ResponseFailure(it))
+//                    }
+//                }
         }
 
-    override fun updatePassword(userId: String, password: PasswordModel): Flow<DatabaseResponse> =
+    override fun updatePassword(userId: String, password: PasswordModel): Flow<Either<ApiError, Unit>> =
         awaitChannelFlow {
-            val passwordRef = firebaseDatabase.getReference(USERS_DB_REF)
-                .child(userId)
-                .child(PASSWORDS_DB_REF)
-                .child(password.id)
-
-            val newPasswordValues = mapOf(
-                PARAM_ID to password.id,
-                PARAM_ORGANIZATION to password.organization.encrypt(getKey()),
-                PARAM_ORGANIZATION_LOGO to password.organizationLogo?.encrypt(getKey()),
-                PARAM_TITLE to password.title.encrypt(getKey()),
-                PARAM_PASSWORD to password.password.encrypt(getKey()),
-                PARAM_ADDITIONAL_FIELDS to password.additionalFields.map {
-                    mapOf(
-                        PARAM_ID to it.id,
-                        PARAM_TITLE to it.title.encrypt(getKey()),
-                        PARAM_VALUE to it.value.encrypt(getKey())
-                    )
-                }
-            )
-            passwordRef.updateChildren(newPasswordValues)
-                .addOnSuccessListener {
-                    coroutineScope.launch {
-                        sendOrNothing(DatabaseResponse.ResponseSuccess)
-                    }
-                }
-                .addOnFailureListener {
-                    coroutineScope.launch {
-                        sendOrNothing(DatabaseResponse.ResponseFailure(it))
-                    }
-                }
+//            val passwordRef = firebaseDatabase.getReference(USERS_DB_REF)
+//                .child(userId)
+//                .child(PASSWORDS_DB_REF)
+//                .child(password.id)
+//
+//            val newPasswordValues = mapOf(
+//                PARAM_ID to password.id,
+//                PARAM_ORGANIZATION to password.organization.encrypt(getKey()),
+//                PARAM_ORGANIZATION_LOGO to password.organizationLogo?.encrypt(getKey()),
+//                PARAM_TITLE to password.title.encrypt(getKey()),
+//                PARAM_PASSWORD to password.password.encrypt(getKey()),
+//                PARAM_ADDITIONAL_FIELDS to password.additionalFields.map {
+//                    mapOf(
+//                        PARAM_ID to it.id,
+//                        PARAM_TITLE to it.title.encrypt(getKey()),
+//                        PARAM_VALUE to it.value.encrypt(getKey())
+//                    )
+//                }
+//            )
+//            passwordRef.updateChildren(newPasswordValues)
+//                .addOnSuccessListener {
+//                    coroutineScope.launch {
+//                        sendOrNothing(DatabaseResponse.ResponseSuccess)
+//                    }
+//                }
+//                .addOnFailureListener {
+//                    coroutineScope.launch {
+//                        sendOrNothing(DatabaseResponse.ResponseFailure(it))
+//                    }
+//                }
         }
 
     override fun updatePasswordsList(
@@ -254,23 +254,23 @@ class FirebaseRemoteDataSourceImpl @Inject constructor(
 
     }
 
-    override fun deletePassword(userId: String, passwordId: String): Flow<DatabaseResponse> =
+    override fun deletePassword(userId: String, passwordId: String): Flow<Either<ApiError, Unit>> =
         awaitChannelFlow {
-            firebaseDatabase.getReference(USERS_DB_REF)
-                .child(userId)
-                .child(PASSWORDS_DB_REF)
-                .child(passwordId)
-                .removeValue()
-                .addOnSuccessListener {
-                    coroutineScope.launch {
-                        sendOrNothing(DatabaseResponse.ResponseSuccess)
-                    }
-                }
-                .addOnFailureListener {
-                    coroutineScope.launch {
-                        sendOrNothing(DatabaseResponse.ResponseFailure(it))
-                    }
-                }
+//            firebaseDatabase.getReference(USERS_DB_REF)
+//                .child(userId)
+//                .child(PASSWORDS_DB_REF)
+//                .child(passwordId)
+//                .removeValue()
+//                .addOnSuccessListener {
+//                    coroutineScope.launch {
+//                        sendOrNothing(DatabaseResponse.ResponseSuccess)
+//                    }
+//                }
+//                .addOnFailureListener {
+//                    coroutineScope.launch {
+//                        sendOrNothing(DatabaseResponse.ResponseFailure(it))
+//                    }
+//                }
         }
 
 

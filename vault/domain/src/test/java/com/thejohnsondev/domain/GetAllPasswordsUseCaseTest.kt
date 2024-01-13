@@ -18,7 +18,7 @@ import org.mockito.junit.MockitoRule
 class GetAllPasswordsUseCaseTest {
 
     private lateinit var passwordsRepository: PasswordsRepository
-    private lateinit var getAllPasswordsUseCase: GetAllPasswordsUseCaseImpl
+    private lateinit var getAllPasswordsUseCase: GetAllPasswordsUseCase
 
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
@@ -26,7 +26,7 @@ class GetAllPasswordsUseCaseTest {
     @Before
     fun setUp() {
         passwordsRepository = FakePasswordRepository()
-        getAllPasswordsUseCase = GetAllPasswordsUseCaseImpl(passwordsRepository)
+        getAllPasswordsUseCase = GetAllPasswordsUseCase(passwordsRepository)
     }
 
     @Test

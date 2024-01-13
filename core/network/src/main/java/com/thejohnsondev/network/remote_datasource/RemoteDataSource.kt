@@ -24,11 +24,11 @@ interface RemoteDataSource {
     fun createUser(userModel: UserModel): Flow<DatabaseResponse>
     fun getUserData(userId: String): Flow<UserDataResponse>
 
-    fun getUserPasswords(userId: String): Flow<UserPasswordsResponse>
-    fun createPassword(userId: String, password: PasswordModel): Flow<DatabaseResponse>
-    fun updatePassword(userId: String, password: PasswordModel): Flow<DatabaseResponse>
+    fun getUserPasswords(userId: String): Flow<Either<ApiError, List<PasswordModel>>>
+    fun createPassword(userId: String, password: PasswordModel): Flow<Either<ApiError, PasswordModel>>
+    fun updatePassword(userId: String, password: PasswordModel): Flow<Either<ApiError, Unit>>
     fun updatePasswordsList(userId: String, newPasswordList: List<PasswordModel>): Flow<DatabaseResponse>
-    fun deletePassword(userId: String, passwordId: String): Flow<DatabaseResponse>
+    fun deletePassword(userId: String, passwordId: String): Flow<Either<ApiError, Unit>>
 
     fun getUserNotes(userId: String): Flow<UserNotesResponse>
     fun createNote(userId: String, note: NoteModel): Flow<DatabaseResponse>

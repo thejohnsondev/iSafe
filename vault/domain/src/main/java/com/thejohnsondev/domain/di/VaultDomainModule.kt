@@ -2,9 +2,7 @@ package com.thejohnsondev.domain.di
 
 import com.thejohnsondev.data.PasswordsRepository
 import com.thejohnsondev.domain.DeletePasswordUseCase
-import com.thejohnsondev.domain.DeletePasswordUseCaseImpl
 import com.thejohnsondev.domain.GetAllPasswordsUseCase
-import com.thejohnsondev.domain.GetAllPasswordsUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,13 +17,13 @@ object VaultDomainModule {
     @Provides
     fun provideDeletePasswordUseCase(
         passwordsRepository: PasswordsRepository
-    ): DeletePasswordUseCase = DeletePasswordUseCaseImpl(passwordsRepository)
+    ): DeletePasswordUseCase = DeletePasswordUseCase(passwordsRepository)
 
 
     @Singleton
     @Provides
     fun provideGetAllPasswordsUseCase(
         passwordsRepository: PasswordsRepository
-    ): GetAllPasswordsUseCase = GetAllPasswordsUseCaseImpl(passwordsRepository)
+    ): GetAllPasswordsUseCase = GetAllPasswordsUseCase(passwordsRepository)
 
 }
