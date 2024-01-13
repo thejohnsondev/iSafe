@@ -8,6 +8,7 @@ import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import com.thejohnsondev.network.remote_datasource.dotnet.ISafeDotNetApi
 import com.thejohnsondev.network.remote_datasource.dotnet.ISafeDotNetRemoteDataSource
 import com.thejohnsondev.network.remote_datasource.dotnet.ISafeDotNetRetrofitService
+import com.thejohnsondev.network.remote_datasource.dotnet.interceptors.AuthTokenInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,10 +27,17 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    fun provideAuthTokenInterceptor(dataStore: DataStore): AuthTokenInterceptor =
+        AuthTokenInterceptor(dataStore)
+
+    @Singleton
+    @Provides
     fun provideISafeDotNetApi(
-        dataStore: DataStore
+        dataStore: DataStore,
+        authTokenInterceptor: AuthTokenInterceptor
     ): ISafeDotNetApi = ISafeDotNetRetrofitService(
-        dataStore
+        dataStore,
+        authTokenInterceptor
     ).invoke()
 
     @Singleton
