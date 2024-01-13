@@ -146,14 +146,14 @@ class AddEditPasswordViewModel @Inject constructor(
             _additionalFields.value
         )
         if (_isEdit.value) {
-            useCases.updatePassword(dataStore.getUserData().id.orEmpty(), passwordModel).collect {
+            useCases.updatePassword("", passwordModel).collect {
                 when (it) {
                     is DatabaseResponse.ResponseFailure -> handleError(it.exception)
                     is DatabaseResponse.ResponseSuccess -> handlePasswordSaved()
                 }
             }
         } else {
-            useCases.createPassword(dataStore.getUserData().id.orEmpty(), passwordModel).collect {
+            useCases.createPassword("", passwordModel).collect {
                 when (it) {
                     is DatabaseResponse.ResponseFailure -> handleError(it.exception)
                     is DatabaseResponse.ResponseSuccess -> handlePasswordSaved()

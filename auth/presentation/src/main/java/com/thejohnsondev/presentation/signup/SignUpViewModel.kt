@@ -83,7 +83,12 @@ class SignUpViewModel @Inject constructor(
 
     private fun handleAuthResponse(authResponse: AuthResponse) {
         Log.e("TAG", "-- register response: ${authResponse.token}")
-        sendEvent(OneTimeEvent.InfoSnackbar("Token: ${authResponse.token}"))
+        saveUserToken(authResponse.token)
+        sendEvent(OneTimeEvent.SuccessNavigation)
+    }
+
+    private fun saveUserToken(token: String) = launch {
+        useCases.saveUserToken.invoke(token)
     }
 
     private fun createUserInRemoteDb(userUID: String, userName: String, password: String) = launch {
@@ -101,7 +106,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     private suspend fun saveUserData(userModel: UserModel, password: String) = launch {
-        useCases.saveUserData(userModel, false)
         generateAndSaveEncryptionKey(password)
     }
 

@@ -1,6 +1,7 @@
 package com.thejohnsondev.data
 
 import arrow.core.Either
+import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.auth.AuthResponse
 import com.thejohnsondev.network.di.DotNetRemoteDataSource
@@ -9,7 +10,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource
+    @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource,
+    private val dataStore: DataStore
 ) : AuthRepository {
     override suspend fun signUp(email: String, password: String): Flow<Either<ApiError, AuthResponse>> =
         remoteDataSource.signUp(email, password)
@@ -27,5 +29,5 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun getCurrentUserId(): Flow<String> =
         remoteDataSource.getCurrentUserId()
 
-    override fun isUserLoggedIn(): Boolean = remoteDataSource.isUserLoggedIn()
+    override fun isUserLoggedIn(): Boolean = dataStore.isUserLoggedIn()
 }

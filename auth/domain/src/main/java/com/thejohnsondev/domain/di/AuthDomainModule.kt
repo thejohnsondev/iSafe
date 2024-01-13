@@ -12,16 +12,12 @@ import com.thejohnsondev.domain.GenerateUserKeyUseCase
 import com.thejohnsondev.domain.GenerateUserKeyUseCaseImpl
 import com.thejohnsondev.domain.GetFirstScreenRouteUseCase
 import com.thejohnsondev.domain.GetFirstScreenRouteUseCaseImpl
-import com.thejohnsondev.domain.GetLocalUserDataUseCase
-import com.thejohnsondev.domain.GetLocalUserDataUseCaseImpl
 import com.thejohnsondev.domain.GetRemoteUserDataUseCase
 import com.thejohnsondev.domain.GetRemoteUserDataUseCaseImpl
 import com.thejohnsondev.domain.LogoutUseCase
 import com.thejohnsondev.domain.LogoutUseCaseImpl
 import com.thejohnsondev.domain.PasswordValidationUseCase
 import com.thejohnsondev.domain.PasswordValidationUseCaseImpl
-import com.thejohnsondev.domain.SaveUserDataUseCase
-import com.thejohnsondev.domain.SaveUserDataUseCaseImpl
 import com.thejohnsondev.domain.SaveUserKeyUseCase
 import com.thejohnsondev.domain.SaveUserKeyUseCaseImpl
 import dagger.Module
@@ -52,21 +48,9 @@ object AuthDomainModule {
 
     @Singleton
     @Provides
-    fun provideSaveUserDataUseCase(
-        dataStore: DataStore
-    ): SaveUserDataUseCase = SaveUserDataUseCaseImpl(dataStore)
-
-    @Singleton
-    @Provides
     fun provideGetUserDataUseCase(
         userRepository: UserRepository
     ): GetRemoteUserDataUseCase = GetRemoteUserDataUseCaseImpl(userRepository)
-
-    @Singleton
-    @Provides
-    fun provideGetLocalUserDataUseCase(
-        dataStore: DataStore
-    ): GetLocalUserDataUseCase = GetLocalUserDataUseCaseImpl(dataStore)
 
     @Singleton
     @Provides
@@ -90,11 +74,9 @@ object AuthDomainModule {
     @Singleton
     @Provides
     fun provideLogoutUseCase(
-        authRepository: AuthRepository,
         coroutineScope: CoroutineScope,
         dataStore: DataStore
     ): LogoutUseCase = LogoutUseCaseImpl(
-        authRepository,
         coroutineScope,
         dataStore
     )

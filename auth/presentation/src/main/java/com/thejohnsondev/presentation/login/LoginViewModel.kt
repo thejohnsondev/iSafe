@@ -59,7 +59,12 @@ class LoginViewModel @Inject constructor(
 
     private fun handleAuthResponse(authResponse: AuthResponse) {
         Log.e("TAG", "-- login response: ${authResponse.token}")
-        sendEvent(OneTimeEvent.InfoSnackbar("Token: ${authResponse.token}"))
+        saveUserToken(authResponse.token)
+        sendEvent(OneTimeEvent.SuccessNavigation)
+    }
+
+    private fun saveUserToken(token: String) = launch {
+        useCases.saveUserToken.invoke(token)
     }
 
     private fun getUserData(userId: String, password: String) = launch {
@@ -72,7 +77,6 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun saveUserData(userModel: UserModel, password: String) = launch {
-        useCases.saveUserData.invoke(userModel, true)
         generateAndSaveEncryptionKey(password)
         sendEvent(OneTimeEvent.SuccessNavigation)
     }

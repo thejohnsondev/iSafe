@@ -50,7 +50,7 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun saveNewOrderedList() = launch {
-        useCases.updatePasswordsUseCase(dataStore.getUserData().id.orEmpty(), _passwordsList.value)
+        useCases.updatePasswordsUseCase("", _passwordsList.value)
             .collect {
                 when (it) {
                     is DatabaseResponse.ResponseFailure -> handleError(it.exception)
@@ -119,7 +119,7 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun deletePassword(passwordModel: PasswordModel) = launch {
-        useCases.deletePassword(dataStore.getUserData().id.orEmpty(), passwordModel.id)
+        useCases.deletePassword("", passwordModel.id)
             .collect {
                 when (it) {
                     is DatabaseResponse.ResponseFailure -> handleError(it.exception)
@@ -136,15 +136,15 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun fetchVault() = launchLoading {
-        useCases.getAllPasswords(dataStore.getUserData().id.orEmpty()).collect {
-            when (it) {
-                is UserPasswordsResponse.ResponseFailure -> handleError(it.exception)
-                is UserPasswordsResponse.ResponseSuccess -> {
-                    handlePasswordsList(it.passwords)
-                    _passwordsListFetched.emit(it.passwords)
-                }
-            }
-        }
+//        useCases.getAllPasswords(dataStore.getUserData().id.orEmpty()).collect {
+//            when (it) {
+//                is UserPasswordsResponse.ResponseFailure -> handleError(it.exception)
+//                is UserPasswordsResponse.ResponseSuccess -> {
+//                    handlePasswordsList(it.passwords)
+//                    _passwordsListFetched.emit(it.passwords)
+//                }
+//            }
+//        }
         _bankAccountsList.emit(
             emptyList()
         )

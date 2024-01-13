@@ -7,14 +7,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class LogoutUseCaseImpl @Inject constructor(
-    private val authRepository: AuthRepository,
     private val coroutineScope: CoroutineScope,
     private val dataStore: DataStore
 ) : LogoutUseCase {
     override suspend fun invoke() {
         coroutineScope.launch {
-            authRepository.signOut()
-            dataStore.clearUserData()
+            dataStore.clearUserToken()
         }
     }
 }

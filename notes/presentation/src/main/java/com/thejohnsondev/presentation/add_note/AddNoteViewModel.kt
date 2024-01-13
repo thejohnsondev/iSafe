@@ -52,7 +52,7 @@ class AddNoteViewModel @Inject constructor(
             description = _descriptionState.value,
             category = ""
         )
-        useCases.createNote(dataStore.getUserData().id.orEmpty(), note)
+        useCases.createNote("", note)
             .collect {
                 when (it) {
                     is DatabaseResponse.ResponseFailure -> it.exception?.message?.let { message ->

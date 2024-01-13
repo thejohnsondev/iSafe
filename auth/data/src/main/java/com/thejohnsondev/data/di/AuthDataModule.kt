@@ -6,6 +6,7 @@ import com.thejohnsondev.data.GenerateKeyRepository
 import com.thejohnsondev.data.GenerateKeyRepositoryImpl
 import com.thejohnsondev.data.UserRepository
 import com.thejohnsondev.data.UserRepositoryImpl
+import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.network.di.DotNetRemoteDataSource
 import com.thejohnsondev.network.di.FirebaseRemoteDataSource
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
@@ -22,8 +23,14 @@ object AuthDataModule {
 
     @Singleton
     @Provides
-    fun provideAuthRepository(@DotNetRemoteDataSource remoteDataSource: RemoteDataSource): AuthRepository =
-        AuthRepositoryImpl(remoteDataSource)
+    fun provideAuthRepository(
+        @DotNetRemoteDataSource remoteDataSource: RemoteDataSource,
+        dataStore: DataStore
+    ): AuthRepository =
+        AuthRepositoryImpl(
+            remoteDataSource,
+            dataStore
+        )
 
     @Singleton
     @Provides
