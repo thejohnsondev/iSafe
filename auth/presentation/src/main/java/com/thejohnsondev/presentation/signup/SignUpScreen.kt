@@ -86,9 +86,6 @@ fun SignUpContent(
 ) {
     val context = LocalContext.current
     val screenState = viewModel.viewState.collectAsState(initial = SignUpViewModel.State())
-    val nameState = rememberSaveable {
-        mutableStateOf(EMPTY)
-    }
     val emailState = rememberSaveable {
         mutableStateOf(EMPTY)
     }
@@ -141,7 +138,6 @@ fun SignUpContent(
                     context = context,
                     viewModel = viewModel,
                     screenState = screenState,
-                    nameState = nameState,
                     emailState = emailState,
                     passwordState = passwordState,
                     emailFocusRequest = emailFocusRequest,
@@ -155,7 +151,6 @@ fun SignUpContent(
                 viewModel = viewModel,
                 emailState = emailState,
                 passwordState = passwordState,
-                nameState = nameState
             )
         }
     }
@@ -179,7 +174,6 @@ fun FieldsSection(
     context: Context,
     viewModel: SignUpViewModel,
     screenState: State<SignUpViewModel.State>,
-    nameState: MutableState<String>,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
     emailFocusRequest: FocusRequester,
@@ -199,18 +193,6 @@ fun FieldsSection(
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            TextField(
-                textState = nameState,
-                onTextChanged = {
-                    nameState.value = it
-                    viewModel.perform(SignUpViewModel.Action.EnterName(it))
-                },
-                label = stringResource(com.thejohnsondev.common.R.string.name),
-                onKeyboardAction = KeyboardActions {
-                    emailFocusRequest.requestFocus()
-                },
-                imeAction = ImeAction.Next
             )
             Spacer(modifier = Modifier.height(Size8))
             TextField(
@@ -281,7 +263,6 @@ fun SignUpButtonSection(
     viewModel: SignUpViewModel,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
-    nameState: MutableState<String>
 ) {
     Column(verticalArrangement = Arrangement.Bottom) {
         RoundedButton(
@@ -291,7 +272,7 @@ fun SignUpButtonSection(
             onClick = {
                 viewModel.perform(
                     SignUpViewModel.Action.SignUpWithEmail(
-                        nameState.value, emailState.value, passwordState.value
+                        emailState.value, passwordState.value
                     )
                 )
             },

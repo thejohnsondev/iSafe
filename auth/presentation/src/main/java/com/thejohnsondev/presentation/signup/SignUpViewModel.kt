@@ -25,11 +25,9 @@ class SignUpViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _isSignUpSuccess = MutableStateFlow<Boolean?>(null)
-    private val _nameState = MutableStateFlow(EMPTY)
     private val _emailValidationState = MutableStateFlow<EmailValidationState?>(null)
     private val _passwordValidationState = MutableStateFlow<PasswordValidationState?>(null)
     private val _signUpReadyState: Flow<Boolean> = combine(
-        _nameState,
         _emailValidationState,
         _passwordValidationState,
         ::isSignUpReady
@@ -46,29 +44,21 @@ class SignUpViewModel @Inject constructor(
 
     fun perform(action: Action) {
         when (action) {
-            is Action.SignUpWithEmail -> signUp(action.name, action.email, action.password)
+            is Action.SignUpWithEmail -> signUp(action.email, action.password)
             is Action.ValidateEmail -> validateEmail(action.email)
             is Action.ValidatePassword -> validatePassword(action.password)
-            is Action.EnterName -> enterName(action.name)
         }
-    }
-
-    private fun enterName(name: String) = launch {
-        _nameState.value = name
     }
 
     private fun validateEmail(email: String) = launch {
         _emailValidationState.value = useCases.validateEmail(email)
-        _emailValidationState.value = EmailValidationState.EmailCorrectState
-
     }
 
     private fun validatePassword(password: String) = launch {
         _passwordValidationState.value = useCases.validatePassword(password)
-        _passwordValidationState.value = PasswordValidationState.PasswordCorrectState
     }
 
-    private fun signUp(name: String, email: String, password: String) = launchLoading {
+    private fun signUp(email: String, password: String) = launchLoading {
         useCases.signUp(email, password).first()
             .fold(
                 ifLeft = ::handleError,
@@ -139,24 +129,19 @@ class SignUpViewModel @Inject constructor(
 
 
     private fun isSignUpReady(
-        name: String,
         emailValidationState: EmailValidationState?,
         passwordValidationState: PasswordValidationState?
-    ): Boolean =
-        name.isNotBlank()
-                && emailValidationState is EmailValidationState.EmailCorrectState
-                && passwordValidationState is PasswordValidationState.PasswordCorrectState
+    ): Boolean = emailValidationState is EmailValidationState.EmailCorrectState
+            && passwordValidationState is PasswordValidationState.PasswordCorrectState
 
     sealed class Action {
         class SignUpWithEmail(
-            val name: String,
             val email: String,
             val password: String
         ) : Action()
 
         class ValidateEmail(val email: String) : Action()
         class ValidatePassword(val password: String) : Action()
-        class EnterName(val name: String) : Action()
     }
 
     data class State(

@@ -253,7 +253,7 @@ fun FieldsSection(
                     modifier = Modifier
                         .padding(start = Size4)
                         .clickable {
-                            onGoBack
+                            onGoBack()
                         },
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
