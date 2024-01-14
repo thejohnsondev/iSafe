@@ -48,7 +48,6 @@ fun HomeNavigation(rootNavController: NavController) {
         }
     }
 
-    StatusBarColor()
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Scaffold(
             bottomBar = {
@@ -94,10 +93,4 @@ fun HomeNavigation(rootNavController: NavController) {
             }
         }
     }
-}
-
-@Composable
-fun StatusBarColor() {
-    val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(MaterialTheme.colorScheme.background)
 }

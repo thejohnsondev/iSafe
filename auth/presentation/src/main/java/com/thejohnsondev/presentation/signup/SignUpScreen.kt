@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -37,6 +37,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
@@ -44,21 +45,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.getEmailErrorMessage
 import com.thejohnsondev.common.getPasswordErrorMessage
 import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.EqualRounded
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
 import com.thejohnsondev.designsystem.Size4
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Size86
-import com.thejohnsondev.designsystem.TopRounded
 import com.thejohnsondev.model.EmailValidationState
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
+import com.thejohnsondev.ui.GlowPulsingBackground
 import com.thejohnsondev.ui.ISafeLogo
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.TextField
@@ -76,7 +77,7 @@ fun SignUpScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SignUpContent(
@@ -114,8 +115,6 @@ fun SignUpContent(
             }
         }
     }
-
-    StatusBarColor()
     Scaffold(snackbarHost = {
         SnackbarHost(snackbarHostState) { data ->
             Snackbar(
@@ -124,42 +123,49 @@ fun SignUpContent(
                 Text(text = data.visuals.message)
             }
         }
-    }) {
+    }) { paddingValues ->
         Surface(
-            modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceVariant
+            modifier = Modifier.fillMaxSize(),
+            color = Color.Black
         ) {
-            Column(
-                modifier = Modifier.padding(top = Size8)
-                    .scrollable(rememberScrollState(), Orientation.Vertical),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LogoSection()
-                FieldsSection(
-                    context = context,
-                    viewModel = viewModel,
-                    screenState = screenState,
-                    emailState = emailState,
-                    passwordState = passwordState,
-                    emailFocusRequest = emailFocusRequest,
-                    passwordFocusRequest = passwordFocusRequest,
-                    keyboardController = keyboardController,
-                    onGoToLogin = onGoToLogin
-                )
+            Box {
+                Box {
+                    GlowPulsingBackground()
+                }
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .scrollable(rememberScrollState(), Orientation.Vertical),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    LogoSection()
+                    FieldsSection(
+                        context = context,
+                        viewModel = viewModel,
+                        screenState = screenState,
+                        emailState = emailState,
+                        passwordState = passwordState,
+                        emailFocusRequest = emailFocusRequest,
+                        passwordFocusRequest = passwordFocusRequest,
+                        keyboardController = keyboardController,
+                        onGoToLogin = onGoToLogin
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = paddingValues.calculateBottomPadding())
+                ) {
+                    SignUpButtonSection(
+                        screenState = screenState,
+                        viewModel = viewModel,
+                        emailState = emailState,
+                        passwordState = passwordState,
+                    )
+                }
             }
-            SignUpButtonSection(
-                screenState = screenState,
-                viewModel = viewModel,
-                emailState = emailState,
-                passwordState = passwordState,
-            )
         }
     }
-}
-
-@Composable
-fun StatusBarColor() {
-    val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surfaceVariant)
 }
 
 @Composable
@@ -182,13 +188,17 @@ fun FieldsSection(
     onGoToLogin: () -> Unit
 ) {
     Surface(
-        modifier = Modifier.fillMaxHeight(),
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(horizontal = Size8),
         color = MaterialTheme.colorScheme.surface,
-        shape = TopRounded.medium
+        shape = EqualRounded.medium
     ) {
         Column {
             Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(Size16),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(Size16),
                 text = stringResource(com.thejohnsondev.common.R.string.sign_up),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
@@ -237,7 +247,9 @@ fun FieldsSection(
             )
             Row(
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(Size16)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(Size16)
             ) {
                 Text(
                     text = stringResource(com.thejohnsondev.common.R.string.already_have_an_account),
@@ -245,9 +257,11 @@ fun FieldsSection(
                 )
                 Text(
                     text = stringResource(com.thejohnsondev.common.R.string.log_in),
-                    modifier = Modifier.padding(start = Size4).clickable {
-                        onGoToLogin()
-                    },
+                    modifier = Modifier
+                        .padding(start = Size4)
+                        .clickable {
+                            onGoToLogin()
+                        },
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface

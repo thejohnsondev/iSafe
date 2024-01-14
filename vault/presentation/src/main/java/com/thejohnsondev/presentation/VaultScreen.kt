@@ -34,6 +34,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -49,7 +50,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.content.ContextCompat.getSystemService
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.R
 import com.thejohnsondev.common.copyData
 import com.thejohnsondev.common.copySensitiveData
@@ -95,7 +95,6 @@ fun VaultScreen(
             listState.firstVisibleItemIndex == 0
         }
     }
-    StatusBarColor()
     LaunchedEffect(true) {
         viewModel.perform(VaultViewModel.Action.FetchVault)
         viewModel.getEventFlow().collect {
@@ -138,7 +137,8 @@ fun VaultScreen(
                             painter = painterResource(id = com.thejohnsondev.designsystem.R.drawable.i_safe_foreground),
                             contentDescription = ""
                         )
-                    }
+                    },
+                    scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
                 )
             }
         },
@@ -549,11 +549,4 @@ fun BankAccountsTitleItem() {
         style = MaterialTheme.typography.headlineMedium,
         color = MaterialTheme.colorScheme.onBackground
     )
-}
-
-
-@Composable
-fun StatusBarColor() {
-    val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(MaterialTheme.colorScheme.background)
 }
