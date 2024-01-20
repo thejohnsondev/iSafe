@@ -44,11 +44,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.R
-import com.thejohnsondev.common.navigation.Screens
 import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
-import com.thejohnsondev.designsystem.Size8
-import com.thejohnsondev.designsystem.Size86
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.OneTimeEvent
@@ -161,18 +159,118 @@ fun StatusBarColor() {
 }
 
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun NotesScreenPreview() {
-    NotesContent(
-        screenState = NotesViewModel.State(
-            loadingState = LoadingState.Loaded,
-            notesList = emptyList()
-        ),
-        state = rememberLazyListState(),
-        onNoteClick = {
+fun NotesScreenPreviewWithNotesLight() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loaded,
+                notesList = listOf(
+                    NoteModel(
+                        id = "1",
+                        title = "Note 1",
+                        description = "Description 1",
+                        category = "Category 1",
+                    )
+                )
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
 
-        }
-    )
+            }
+        )
+    }
 }
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun NotesScreenPreviewWithNotesDark() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loaded,
+                notesList = listOf(
+                    NoteModel(
+                        id = "1",
+                        title = "Note 1",
+                        description = "Description 1",
+                        category = "Category 1",
+                    )
+                )
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
+
+            }
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun NotesScreenPreviewEmptyLight() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loaded,
+                notesList = listOf()
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
+
+            }
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun NotesScreenPreviewEmptyDark() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loaded,
+                notesList = listOf()
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
+
+            }
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun NotesScreenPreviewLoadingLight() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loading
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
+
+            }
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun NotesScreenPreviewLoadingDark() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loading
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
+
+            }
+        )
+    }
+}
+
 

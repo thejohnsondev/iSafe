@@ -1,5 +1,6 @@
 package com.thejohnsondev.presentation.add_note
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,8 +27,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.compose.ui.tooling.preview.Preview
 import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Text18
@@ -57,7 +59,6 @@ fun AddNoteScreen(
     val descriptionFocusRequester = remember {
         FocusRequester()
     }
-    StatusBarColor()
     LaunchedEffect(true) {
         titleFocusRequester.requestFocus()
         viewModel.getEventFlow().collect {
@@ -96,7 +97,6 @@ fun AddNoteScreen(
         is LoadingState.Loading -> FullScreenLoading()
         is LoadingState.Loaded -> AddNoteContent(
             state = state.value,
-            viewModel = viewModel,
             titleFocusRequester = titleFocusRequester,
             descriptionFocusRequester = descriptionFocusRequester
         )
@@ -109,9 +109,10 @@ fun AddNoteScreen(
 @Composable
 fun AddNoteContent(
     state: AddNoteViewModel.State,
-    viewModel: AddNoteViewModel,
     titleFocusRequester: FocusRequester,
     descriptionFocusRequester: FocusRequester,
+    onEnterTitle: (String) -> Unit = {},
+    onEnterDescription: (String) -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -134,8 +135,8 @@ fun AddNoteContent(
                         top = Size16
                     ),
                 value = state.titleState,
-                onValueChanged = {
-                    viewModel.perform(AddNoteViewModel.Action.EnterTitle(it))
+                onValueChanged = { title ->
+                    onEnterTitle(title)
                 },
                 hint = stringResource(com.thejohnsondev.common.R.string.title),
                 focusRequester = titleFocusRequester,
@@ -152,8 +153,8 @@ fun AddNoteContent(
                     .fillMaxHeight()
                     .padding(horizontal = Size16, vertical = Size8),
                 value = state.descriptionState,
-                onValueChanged = {
-                    viewModel.perform(AddNoteViewModel.Action.EnterDescription(it))
+                onValueChanged = { description ->
+                    onEnterDescription(description)
                 },
                 hint = stringResource(com.thejohnsondev.common.R.string.note),
                 textColor = MaterialTheme.colorScheme.onSurface,
@@ -167,11 +168,58 @@ fun AddNoteContent(
 
         }
     }
-
 }
 
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun StatusBarColor() {
-    val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)
+private fun AddNoteScreenPreviewEmptyLight() {
+    ISafeTheme {
+        AddNoteContent(
+            state = AddNoteViewModel.State(),
+            titleFocusRequester = FocusRequester(),
+            descriptionFocusRequester = FocusRequester()
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun AddNoteScreenPreviewEmptyDark() {
+    ISafeTheme {
+        AddNoteContent(
+            state = AddNoteViewModel.State(),
+            titleFocusRequester = FocusRequester(),
+            descriptionFocusRequester = FocusRequester()
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun AddNoteScreenPreviewWithDataLight() {
+    ISafeTheme {
+        AddNoteContent(
+            state = AddNoteViewModel.State(
+                titleState = "Some title",
+                descriptionState = "Some long description lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum"
+            ),
+            titleFocusRequester = FocusRequester(),
+            descriptionFocusRequester = FocusRequester()
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun AddNoteScreenPreviewWithDataDark() {
+    ISafeTheme {
+        AddNoteContent(
+            state = AddNoteViewModel.State(
+                titleState = "Some title",
+                descriptionState = "Some long description lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum"
+            ),
+            titleFocusRequester = FocusRequester(),
+            descriptionFocusRequester = FocusRequester()
+        )
+    }
 }

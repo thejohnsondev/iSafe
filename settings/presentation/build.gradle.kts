@@ -45,6 +45,7 @@ dependencies {
 
     implementation(project(":core:common"))
     implementation(project(":core:ui"))
+    implementation(project(":core:designsystem"))
     implementation(project(":settings:domain"))
     implementation(project(":auth:domain"))
 

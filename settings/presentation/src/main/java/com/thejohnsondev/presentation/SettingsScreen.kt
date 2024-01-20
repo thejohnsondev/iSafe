@@ -1,16 +1,21 @@
 package com.thejohnsondev.presentation
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.thejohnsondev.common.R
+import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.ScaffoldConfig
 
@@ -27,24 +32,67 @@ fun SettingsScreen(
             topAppBarTitle = stringResource(R.string.settings),
         )
     )
+    SettingsContent(onLogout = {
+        viewModel.perform(SettingsViewModel.Action.Logout)
+        goToSignUp()
+    }, onDeleteAccount = {
+        viewModel.perform(SettingsViewModel.Action.DeleteAccount)
+        goToSignUp()
+    })
+}
+
+@Composable
+fun SettingsContent(
+    onLogout: () -> Unit = { },
+    onDeleteAccount: () -> Unit = { }
+) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Bottom
         ) {
-            Button(onClick = {
-                viewModel.perform(SettingsViewModel.Action.Logout)
-                goToSignUp()
-            }) {
-                Text(text = stringResource(id = R.string.logout))
-            }
             RoundedButton(
+                modifier = Modifier
+                    .padding(Size8),
                 text = stringResource(id = R.string.delete_account),
                 onClick = {
-                    viewModel.perform(SettingsViewModel.Action.DeleteAccount)
-                    goToSignUp()
+                    onDeleteAccount()
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
+                )
+            )
+            RoundedButton(
+                modifier = Modifier
+                    .padding(Size8),
+                text = stringResource(id = R.string.logout),
+                onClick = {
+                    onLogout()
                 }
             )
         }
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun SettingsScreenPreviewLight() {
+    ISafeTheme {
+        SettingsContent(
+            onLogout = {},
+            onDeleteAccount = {}
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun SettingsScreenPreviewDark() {
+    ISafeTheme {
+        SettingsContent(
+            onLogout = {},
+            onDeleteAccount = {}
+        )
     }
 }

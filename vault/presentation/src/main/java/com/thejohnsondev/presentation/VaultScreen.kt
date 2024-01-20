@@ -1,6 +1,7 @@
 package com.thejohnsondev.presentation
 
 import android.content.ClipboardManager
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -39,11 +40,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat.getSystemService
 import com.thejohnsondev.common.R
 import com.thejohnsondev.common.copyData
 import com.thejohnsondev.common.copySensitiveData
 import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size32
 import com.thejohnsondev.designsystem.Size72
@@ -76,7 +79,7 @@ fun VaultScreen(
         getSystemService(context, ClipboardManager::class.java) as ClipboardManager
     val keyboardController = LocalSoftwareKeyboardController.current
     val state = viewModel.state.collectAsState(VaultViewModel.State())
-    val snackbarHostState = remember {
+    val snackBarHostState = remember {
         SnackbarHostState()
     }
     val listState = rememberLazyListState()
@@ -91,7 +94,7 @@ fun VaultScreen(
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)
-                is OneTimeEvent.InfoSnackbar -> snackbarHostState.showSnackbar(
+                is OneTimeEvent.InfoSnackbar -> snackBarHostState.showSnackbar(
                     it.message,
                     duration = SnackbarDuration.Short
                 )
@@ -114,18 +117,17 @@ fun VaultScreen(
                 onAddNewPasswordClick()
             },
             isFabExpanded = expandedFab,
-            snackBarHostState = snackbarHostState
+            snackBarHostState = snackBarHostState
         )
     )
     VaultContent(
         state = state.value,
         lazyListState = listState,
-        clipboardManager = clipboardManager,
-        onPasswordClick = {
-
+        onCopyData = { data ->
+            clipboardManager.copyData(data)
         },
-        onBankAccountClick = {
-
+        onCopySensitiveData = { data ->
+            clipboardManager.copySensitiveData(data)
         },
         onDeletePasswordClick = { password ->
             viewModel.perform(VaultViewModel.Action.DeletePassword(password))
@@ -149,7 +151,6 @@ fun VaultScreen(
         onSaveReorderClick = {
             viewModel.perform(VaultViewModel.Action.SaveNewOrderedList)
         })
-//    }
 }
 
 @Composable
@@ -157,9 +158,8 @@ fun VaultContent(
     modifier: Modifier = Modifier,
     state: VaultViewModel.State,
     lazyListState: LazyListState,
-    clipboardManager: ClipboardManager,
-    onPasswordClick: (PasswordModel) -> Unit,
-    onBankAccountClick: (BankAccountModel) -> Unit,
+    onCopyData: (String) -> Unit,
+    onCopySensitiveData: (String) -> Unit,
     onDeletePasswordClick: (PasswordModel) -> Unit,
     onEditPasswordClick: (PasswordModel) -> Unit,
     onSearchQueryEntered: (String) -> Unit,
@@ -169,7 +169,8 @@ fun VaultContent(
     onSaveReorderClick: () -> Unit,
 ) {
     Surface(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         if (state.loadingState is LoadingState.Loading) {
@@ -186,7 +187,8 @@ fun VaultContent(
                     bankAccountsList = state.bankAccountsList,
                     isSearching = state.isSearching,
                     isReordering = state.isReordering,
-                    clipboardManager = clipboardManager,
+                    onCopyData = onCopyData,
+                    onCopySensitiveData = onCopySensitiveData,
                     onDeletePasswordClick = onDeletePasswordClick,
                     onEditPasswordClick = onEditPasswordClick,
                     onSearchQueryEntered = onSearchQueryEntered,
@@ -202,7 +204,8 @@ fun VaultContent(
                     isSearching = state.isSearching,
                     isReordering = state.isReordering,
                     lazyListState = lazyListState,
-                    clipboardManager = clipboardManager,
+                    onCopyData = onCopyData,
+                    onCopySensitiveData = onCopySensitiveData,
                     onDeletePasswordClick = onDeletePasswordClick,
                     onEditPasswordClick = onEditPasswordClick,
                     onSearchQueryEntered = onSearchQueryEntered,
@@ -244,7 +247,8 @@ fun ItemsList(
     passwordsList: List<PasswordModel>,
     bankAccountsList: List<BankAccountModel>,
     lazyListState: LazyListState,
-    clipboardManager: ClipboardManager,
+    onCopyData: (String) -> Unit,
+    onCopySensitiveData: (String) -> Unit,
     onDeletePasswordClick: (PasswordModel) -> Unit,
     onEditPasswordClick: (PasswordModel) -> Unit,
     onSearchQueryEntered: (String) -> Unit,
@@ -254,7 +258,7 @@ fun ItemsList(
     isReordering: Boolean,
     isSearching: Boolean
 ) {
-    LazyColumn(state = lazyListState, modifier = Modifier.fillMaxWidth()) {
+    LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
         item {
             SearchBarItem(onSearchQueryEntered, onStopSearching)
         }
@@ -274,10 +278,10 @@ fun ItemsList(
                     isReordering = isReordering,
                     onClick = {},
                     onCopySensitiveClick = { password ->
-                        clipboardManager.copySensitiveData(password)
+                        onCopySensitiveData(password)
                     },
                     onCopyClick = { title ->
-                        clipboardManager.copyData(title)
+                        onCopyData(title)
                     },
                     onDeleteClick = { password ->
                         onDeletePasswordClick(password)
@@ -298,8 +302,6 @@ fun ItemsList(
         item {
             Spacer(modifier = Modifier.padding(bottom = Size72))
         }
-
-
     }
 }
 
@@ -307,7 +309,8 @@ fun ItemsList(
 fun ReorderingItemsList(
     passwordsList: List<PasswordModel>,
     bankAccountsList: List<BankAccountModel>,
-    clipboardManager: ClipboardManager,
+    onCopyData: (String) -> Unit,
+    onCopySensitiveData: (String) -> Unit,
     onDeletePasswordClick: (PasswordModel) -> Unit,
     onEditPasswordClick: (PasswordModel) -> Unit,
     onSearchQueryEntered: (String) -> Unit,
@@ -356,10 +359,10 @@ fun ReorderingItemsList(
                                 isDragging = isDragging,
                                 onClick = {},
                                 onCopySensitiveClick = { password ->
-                                    clipboardManager.copySensitiveData(password)
+                                    onCopySensitiveData(password)
                                 },
                                 onCopyClick = { title ->
-                                    clipboardManager.copyData(title)
+                                    onCopyData(title)
                                 },
                                 onDeleteClick = { password ->
                                     onDeletePasswordClick(password)
@@ -432,14 +435,11 @@ fun EmptyListPlaceholder(
     passwordsList: List<PasswordModel>,
     bankAccountsList: List<BankAccountModel>
 ) {
-    AnimatedVisibility(
-        visible = passwordsList.isEmpty() && bankAccountsList.isEmpty(),
-    ) {
+    if (passwordsList.isEmpty() && bankAccountsList.isEmpty()) {
         EmptyListPlaceHolder(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(Size32)
-
         )
     }
 }
@@ -501,3 +501,274 @@ fun BankAccountsTitleItem() {
         color = MaterialTheme.colorScheme.onBackground
     )
 }
+
+@Composable
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+fun VaultScreenPreviewWithPasswordsLight() {
+    ISafeTheme {
+        VaultContent(
+            state = VaultViewModel.State(
+                passwordsList = listOf(
+                    PasswordModel(
+                        "11",
+                        "org11",
+                        null,
+                        "title11",
+                        "password11",
+                    ),
+                    PasswordModel(
+                        "12",
+                        "org12",
+                        null,
+                        "title12",
+                        "password12",
+                    ),
+                    PasswordModel(
+                        "13",
+                        "org13",
+                        null,
+                        "title13",
+                        "password13",
+                    )
+                )
+            ),
+            lazyListState = rememberLazyListState(),
+            onCopyData = {},
+            onCopySensitiveData = {},
+            onDeletePasswordClick = {},
+            onEditPasswordClick = {},
+            onSearchQueryEntered = {},
+            onStopSearching = { },
+            reorder = { _, _ -> },
+            onToggleReordering = { }) {
+        }
+    }
+}
+
+@Composable
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+fun VaultScreenPreviewWithPasswordsDark() {
+    ISafeTheme {
+        VaultContent(
+            state = VaultViewModel.State(
+                passwordsList = listOf(
+                    PasswordModel(
+                        "11",
+                        "org11",
+                        null,
+                        "title11",
+                        "password11",
+                    ),
+                    PasswordModel(
+                        "12",
+                        "org12",
+                        null,
+                        "title12",
+                        "password12",
+                    ),
+                    PasswordModel(
+                        "13",
+                        "org13",
+                        null,
+                        "title13",
+                        "password13",
+                    )
+                )
+            ),
+            lazyListState = rememberLazyListState(),
+            onCopyData = {},
+            onCopySensitiveData = {},
+            onDeletePasswordClick = {},
+            onEditPasswordClick = {},
+            onSearchQueryEntered = {},
+            onStopSearching = { },
+            reorder = { _, _ -> },
+            onToggleReordering = { }) {
+        }
+    }
+}
+
+@Composable
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+fun VaultScreenPreviewEmptyLight() {
+    ISafeTheme {
+        VaultContent(
+            state = VaultViewModel.State(),
+            lazyListState = rememberLazyListState(),
+            onCopyData = {},
+            onCopySensitiveData = {},
+            onDeletePasswordClick = {},
+            onEditPasswordClick = {},
+            onSearchQueryEntered = {},
+            onStopSearching = { },
+            reorder = { _, _ -> },
+            onToggleReordering = { }) {
+        }
+    }
+}
+
+@Composable
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+fun VaultScreenPreviewEmptyDark() {
+    ISafeTheme {
+        VaultContent(
+            state = VaultViewModel.State(),
+            lazyListState = rememberLazyListState(),
+            onCopyData = {},
+            onCopySensitiveData = {},
+            onDeletePasswordClick = {},
+            onEditPasswordClick = {},
+            onSearchQueryEntered = {},
+            onStopSearching = { },
+            reorder = { _, _ -> },
+            onToggleReordering = { }) {
+        }
+    }
+}
+
+@Composable
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+fun VaultScreenPreviewLoadingLight() {
+    ISafeTheme {
+        VaultContent(
+            state = VaultViewModel.State(
+                loadingState = LoadingState.Loading
+            ),
+            lazyListState = rememberLazyListState(),
+            onCopyData = {},
+            onCopySensitiveData = {},
+            onDeletePasswordClick = {},
+            onEditPasswordClick = {},
+            onSearchQueryEntered = {},
+            onStopSearching = { },
+            reorder = { _, _ -> },
+            onToggleReordering = { }) {
+        }
+    }
+}
+
+@Composable
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+fun VaultScreenPreviewLoadingDark() {
+    ISafeTheme {
+        VaultContent(
+            state = VaultViewModel.State(
+                loadingState = LoadingState.Loading
+            ),
+            lazyListState = rememberLazyListState(),
+            onCopyData = {},
+            onCopySensitiveData = {},
+            onDeletePasswordClick = {},
+            onEditPasswordClick = {},
+            onSearchQueryEntered = {},
+            onStopSearching = { },
+            reorder = { _, _ -> },
+            onToggleReordering = { }) {
+        }
+    }
+}
+
+@Composable
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+fun VaultScreenPreviewSearchingLight() {
+    ISafeTheme {
+        VaultContent(
+            state = VaultViewModel.State(
+                isSearching = true
+            ),
+            lazyListState = rememberLazyListState(),
+            onCopyData = {},
+            onCopySensitiveData = {},
+            onDeletePasswordClick = {},
+            onEditPasswordClick = {},
+            onSearchQueryEntered = {},
+            onStopSearching = { },
+            reorder = { _, _ -> },
+            onToggleReordering = { }) {
+        }
+    }
+}
+
+@Composable
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+fun VaultScreenPreviewSearchingDark() {
+    ISafeTheme {
+        VaultContent(
+            state = VaultViewModel.State(
+                isSearching = true
+            ),
+            lazyListState = rememberLazyListState(),
+            onCopyData = {},
+            onCopySensitiveData = {},
+            onDeletePasswordClick = {},
+            onEditPasswordClick = {},
+            onSearchQueryEntered = {},
+            onStopSearching = { },
+            reorder = { _, _ -> },
+            onToggleReordering = { }) {
+        }
+    }
+}
+
+@Composable
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+fun VaultScreenPreviewReorderingLight() {
+    ISafeTheme {
+        VaultContent(
+            state = VaultViewModel.State(
+                isReordering = true
+            ),
+            lazyListState = rememberLazyListState(),
+            onCopyData = {},
+            onCopySensitiveData = {},
+            onDeletePasswordClick = {},
+            onEditPasswordClick = {},
+            onSearchQueryEntered = {},
+            onStopSearching = { },
+            reorder = { _, _ -> },
+            onToggleReordering = { }) {
+        }
+    }
+}
+
+@Composable
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
+fun VaultScreenPreviewReorderingDark() {
+    ISafeTheme {
+        VaultContent(
+            state = VaultViewModel.State(
+                isReordering = true
+            ),
+            lazyListState = rememberLazyListState(),
+            onCopyData = {},
+            onCopySensitiveData = {},
+            onDeletePasswordClick = {},
+            onEditPasswordClick = {},
+            onSearchQueryEntered = {},
+            onStopSearching = { },
+            reorder = { _, _ -> },
+            onToggleReordering = { }) {
+        }
+    }
+}
+
