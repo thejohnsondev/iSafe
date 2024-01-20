@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.thejohnsondev.common.R
 import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.ScaffoldConfig
@@ -53,9 +54,10 @@ fun SettingsContent(
         ) {
             RoundedButton(
                 modifier = Modifier
-                    .padding(Size8),
+                    .padding(horizontal = Size8),
                 text = stringResource(id = R.string.delete_account),
                 onClick = {
+                    // TODO: add popup for confirmation
                     onDeleteAccount()
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -65,7 +67,7 @@ fun SettingsContent(
             )
             RoundedButton(
                 modifier = Modifier
-                    .padding(Size8),
+                    .padding(start = Size8, end = Size8, bottom = Size16),
                 text = stringResource(id = R.string.logout),
                 onClick = {
                     onLogout()
