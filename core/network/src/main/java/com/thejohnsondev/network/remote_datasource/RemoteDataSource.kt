@@ -34,4 +34,5 @@ interface RemoteDataSource {
     fun createNote(userId: String, note: NoteModel): Flow<DatabaseResponse>
     fun updateNote(userId: String, note: NoteModel): Flow<DatabaseResponse>
     fun deleteNote(userId: String, noteId: Int): Flow<DatabaseResponse>
+    fun deleteAccount(): Flow<Either<ApiError, Unit>>
 }

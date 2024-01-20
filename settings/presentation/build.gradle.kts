@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ktx)
     implementation(platform(libs.org.jetbrains.kotlin.bom))
     implementation(libs.androidx.appcompat)
+    implementation(project(":core:model"))
 
     // Test
     testImplementation(libs.junit)
@@ -71,4 +72,7 @@ dependencies {
     implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.com.google.dagger.hilt.compiler)
+
+    // Arrow
+    implementation(libs.arrow.core)
 }

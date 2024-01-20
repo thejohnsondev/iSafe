@@ -43,4 +43,7 @@ interface ISafeDotNetApi {
         @Path("id") id: String
     ): Either<ApiError, Unit>
 
+    @DELETE(DELETE_ACCOUNT)
+    suspend fun deleteAccount(): Either<ApiError, Unit>
+
 }

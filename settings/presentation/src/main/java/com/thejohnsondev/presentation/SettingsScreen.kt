@@ -7,16 +7,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.thejohnsondev.common.R
+import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size8
+import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.ScaffoldConfig
 
@@ -26,6 +33,26 @@ fun SettingsScreen(
     goToSignUp: () -> Unit,
     setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
+    val context = LocalContext.current
+    val snackBarHostState = remember {
+        SnackbarHostState()
+    }
+    LaunchedEffect(true) {
+        viewModel.getEventFlow().collect {
+            when (it) {
+                is OneTimeEvent.InfoToast -> context.toast(it.message)
+                is OneTimeEvent.InfoSnackbar -> snackBarHostState.showSnackbar(
+                    it.message,
+                    duration = SnackbarDuration.Short
+                )
+
+                is OneTimeEvent.SuccessNavigation -> {
+                    goToSignUp()
+                }
+
+            }
+        }
+    }
     setScaffoldConfig(
         ScaffoldConfig(
             isTopAppBarVisible = true,
@@ -38,7 +65,6 @@ fun SettingsScreen(
         goToSignUp()
     }, onDeleteAccount = {
         viewModel.perform(SettingsViewModel.Action.DeleteAccount)
-        goToSignUp()
     })
 }
 
