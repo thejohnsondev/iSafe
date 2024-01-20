@@ -11,12 +11,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.thejohnsondev.common.R
+import com.thejohnsondev.ui.RoundedButton
+import com.thejohnsondev.ui.ScaffoldConfig
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,
-    goToSignUp: () -> Unit
+    goToSignUp: () -> Unit,
+    setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
+    setScaffoldConfig(
+        ScaffoldConfig(
+            isTopAppBarVisible = true,
+            isBottomNavBarVisible = true,
+            topAppBarTitle = stringResource(R.string.settings),
+        )
+    )
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -28,6 +38,13 @@ fun SettingsScreen(
             }) {
                 Text(text = stringResource(id = R.string.logout))
             }
+            RoundedButton(
+                text = stringResource(id = R.string.delete_account),
+                onClick = {
+                    viewModel.perform(SettingsViewModel.Action.DeleteAccount)
+                    goToSignUp()
+                }
+            )
         }
     }
 }

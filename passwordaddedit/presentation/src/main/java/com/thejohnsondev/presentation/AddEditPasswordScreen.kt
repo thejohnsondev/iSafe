@@ -3,31 +3,24 @@ package com.thejohnsondev.presentation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -49,10 +42,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.EMPTY
+import com.thejohnsondev.common.R
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.EqualRounded
 import com.thejohnsondev.designsystem.Size12
@@ -66,19 +59,20 @@ import com.thejohnsondev.designsystem.Text22
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordModel
-import com.thejohnsondev.ui.AddEditTopAppBar
 import com.thejohnsondev.ui.AdditionalField
 import com.thejohnsondev.ui.FullScreenLoading
 import com.thejohnsondev.ui.HintTextField
 import com.thejohnsondev.ui.LoadedImage
+import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.bounceClick
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddEditPasswordScreen(
     viewModel: AddEditPasswordViewModel,
     passwordModel: PasswordModel? = null,
-    onGoBackClick: () -> Unit
+    onGoBackClick: () -> Unit,
+    setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState(AddEditPasswordViewModel.State())
@@ -95,12 +89,13 @@ fun AddEditPasswordScreen(
     val passwordFocusRequester = remember {
         FocusRequester()
     }
-    if (passwordModel != null) {
-        viewModel.perform(AddEditPasswordViewModel.Action.SetPasswordModelForEdit(passwordModel))
-    }
+
     StatusBarColor()
     LaunchedEffect(true) {
         organizationFocusRequester.requestFocus()
+        if (passwordModel != null) {
+            viewModel.perform(AddEditPasswordViewModel.Action.SetPasswordModelForEdit(passwordModel))
+        }
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)
@@ -116,33 +111,33 @@ fun AddEditPasswordScreen(
             }
         }
     }
-    Scaffold(topBar = {
-        AddEditTopAppBar(onSaveClick = {
-            viewModel.perform(AddEditPasswordViewModel.Action.SavePassword)
-        }, onNavigateBackClick = {
-            onGoBackClick()
-        })
-    }, snackbarHost = {
-        SnackbarHost(snackbarHostState) { data ->
-            Snackbar(
-                modifier = Modifier.padding(Size8)
-            ) {
-                Text(text = data.visuals.message)
-            }
-        }
-    }) { paddings ->
-        when (state.value.loadingState) {
-            LoadingState.Loading -> FullScreenLoading()
-            LoadingState.Loaded -> {
-                AddEditPasswordContent(
-                    state = state.value,
-                    viewModel = viewModel,
-                    paddings = paddings,
-                    organizationFocusRequester = organizationFocusRequester,
-                    titleFocusRequester = titleFocusRequester,
-                    passwordFocusRequester = passwordFocusRequester
-                )
-            }
+    setScaffoldConfig(
+        ScaffoldConfig(
+            isBottomNavBarVisible = false,
+            isTopAppBarVisible = true,
+            topAppBarIcon = Icons.Default.ArrowBack,
+            isTopAppBarSaveButtonVisible = true,
+            onTopAppBarSaveClick = {
+                viewModel.perform(AddEditPasswordViewModel.Action.SavePassword)
+            },
+            onTopAppBarIconClick = {
+                onGoBackClick()
+            },
+            snackBarHostState = snackbarHostState,
+            snackBarPaddingHorizontal = Size8,
+            snackBarPaddingVertical = Size8,
+        )
+    )
+    when (state.value.loadingState) {
+        LoadingState.Loading -> FullScreenLoading()
+        LoadingState.Loaded -> {
+            AddEditPasswordContent(
+                state = state.value,
+                viewModel = viewModel,
+                organizationFocusRequester = organizationFocusRequester,
+                titleFocusRequester = titleFocusRequester,
+                passwordFocusRequester = passwordFocusRequester
+            )
         }
     }
 }
@@ -151,7 +146,6 @@ fun AddEditPasswordScreen(
 fun AddEditPasswordContent(
     state: AddEditPasswordViewModel.State,
     viewModel: AddEditPasswordViewModel,
-    paddings: PaddingValues,
     organizationFocusRequester: FocusRequester,
     titleFocusRequester: FocusRequester,
     passwordFocusRequester: FocusRequester,
@@ -162,7 +156,6 @@ fun AddEditPasswordContent(
     val eyeImage = if (isPasswordHidden) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
     Surface(
         modifier = Modifier
-            .padding(paddings)
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
@@ -332,7 +325,7 @@ fun AddEditPasswordContent(
                 ),
             ) {
                 Text(
-                    text = stringResource(com.thejohnsondev.common.R.string.add_field),
+                    text = stringResource(R.string.add_field),
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
@@ -351,7 +344,6 @@ fun StatusBarColor() {
 fun AddEditPasswordContentPreview() {
     AddEditPasswordContent(state = AddEditPasswordViewModel.State(),
         viewModel = hiltViewModel(),
-        paddings = PaddingValues(0.dp),
         organizationFocusRequester = remember {
             FocusRequester()
         },

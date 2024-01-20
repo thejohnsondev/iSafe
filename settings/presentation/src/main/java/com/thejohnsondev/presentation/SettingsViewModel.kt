@@ -13,6 +13,7 @@ class SettingsViewModel @Inject constructor(
     fun perform(action: Action) {
         when (action) {
             is Action.Logout -> logout()
+            is Action.DeleteAccount -> deleteAccount()
         }
     }
 
@@ -20,8 +21,13 @@ class SettingsViewModel @Inject constructor(
         useCases.logout.invoke()
     }
 
+    private fun deleteAccount() = launch {
+        useCases.logout.invoke()
+    }
+
     sealed class Action {
         object Logout : Action()
+        object DeleteAccount : Action()
     }
 
 }

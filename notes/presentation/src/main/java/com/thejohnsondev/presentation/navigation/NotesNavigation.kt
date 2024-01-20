@@ -10,6 +10,7 @@ import com.thejohnsondev.presentation.add_note.AddNoteScreen
 import com.thejohnsondev.presentation.add_note.AddNoteViewModel
 import com.thejohnsondev.presentation.list.NotesScreen
 import com.thejohnsondev.presentation.list.NotesViewModel
+import com.thejohnsondev.ui.ScaffoldConfig
 
 val addNoteRoute = Screens.AddNote.name
 val notesRoute = Screens.NotesScreen.name
@@ -23,7 +24,8 @@ fun NavController.navigateToNotes() {
 }
 
 fun NavGraphBuilder.addNoteScreen(
-    goBack: () -> Unit
+    goBack: () -> Unit,
+    setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
     composable(
         route = addNoteRoute
@@ -31,13 +33,15 @@ fun NavGraphBuilder.addNoteScreen(
         val viewModel = hiltViewModel<AddNoteViewModel>()
         AddNoteScreen(
             viewModel = viewModel,
-            goBack = goBack
+            goBack = goBack,
+            setScaffoldConfig = setScaffoldConfig
         )
     }
 }
 
 fun NavGraphBuilder.notesScreen(
-    goToAddNote: () -> Unit
+    goToAddNote: () -> Unit,
+    setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
     composable(
         route = notesRoute
@@ -45,7 +49,8 @@ fun NavGraphBuilder.notesScreen(
         val viewModel = hiltViewModel<NotesViewModel>()
         NotesScreen(
             viewModel = viewModel,
-            goToAddNote = goToAddNote
+            goToAddNote = goToAddNote,
+            setScaffoldConfig = setScaffoldConfig
         )
     }
 }

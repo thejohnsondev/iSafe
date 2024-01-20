@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.navigation
+package com.thejohnsondev.isafe.presentation.navigation.home
 
 import com.thejohnsondev.common.navigation.Screens
 

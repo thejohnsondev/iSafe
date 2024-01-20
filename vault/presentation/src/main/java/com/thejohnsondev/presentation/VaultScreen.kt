@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -19,22 +18,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Reorder
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,9 +38,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.core.content.ContextCompat.getSystemService
 import com.thejohnsondev.common.R
 import com.thejohnsondev.common.copyData
@@ -56,9 +46,7 @@ import com.thejohnsondev.common.copySensitiveData
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size32
-import com.thejohnsondev.designsystem.Size48
 import com.thejohnsondev.designsystem.Size72
-import com.thejohnsondev.designsystem.Size86
 import com.thejohnsondev.model.BankAccountModel
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
@@ -67,6 +55,7 @@ import com.thejohnsondev.ui.EmptyListPlaceHolder
 import com.thejohnsondev.ui.FilterGroup
 import com.thejohnsondev.ui.FullScreenLoading
 import com.thejohnsondev.ui.PasswordItem
+import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.SearchBar
 import com.thejohnsondev.ui.bounceClick
 import org.burnoutcrew.reorderable.ReorderableItem
@@ -74,12 +63,13 @@ import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun VaultScreen(
     viewModel: VaultViewModel,
     onAddNewPasswordClick: () -> Unit,
-    onEditPasswordClick: (PasswordModel) -> Unit
+    onEditPasswordClick: (PasswordModel) -> Unit,
+    setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
     val context = LocalContext.current
     val clipboardManager: ClipboardManager =
@@ -95,6 +85,7 @@ fun VaultScreen(
             listState.firstVisibleItemIndex == 0
         }
     }
+
     LaunchedEffect(true) {
         viewModel.perform(VaultViewModel.Action.FetchVault)
         viewModel.getEventFlow().collect {
@@ -110,95 +101,55 @@ fun VaultScreen(
             }
         }
     }
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(snackbarHostState) { data ->
-                Snackbar(
-                    modifier = Modifier
-                        .padding(bottom = Size86, start = Size16, end = Size16),
-                ) {
-                    Text(text = data.visuals.message)
-                }
-            }
-        },
-        topBar = {
-            AnimatedVisibility(visible = !state.value.isSearching) {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(R.string.your_vault),
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    },
-                    navigationIcon = {
-                        Icon(
-                            modifier = Modifier.size(Size48),
-                            painter = painterResource(id = com.thejohnsondev.designsystem.R.drawable.i_safe_foreground),
-                            contentDescription = ""
-                        )
-                    },
-                    scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
-                )
-            }
-        },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                modifier = Modifier
-                    .bounceClick(),
-                onClick = {
-                    onAddNewPasswordClick()
-                },
-                expanded = expandedFab,
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.add)
-                    )
-                },
-                text = {
-                    Text(text = stringResource(R.string.add))
-                },
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
-        },
-        floatingActionButtonPosition = FabPosition.End,
-    ) {
-        VaultContent(
-            modifier = Modifier.padding(it),
-            state = state.value,
-            lazyListState = listState,
-            clipboardManager = clipboardManager,
-            onPasswordClick = {
+    setScaffoldConfig(
+        ScaffoldConfig(
+            isTopAppBarVisible = true,
+            isBottomNavBarVisible = true,
+            topAppBarTitle = stringResource(R.string.your_vault),
+            topAppBarIcon = Icons.Default.Security,
+            isFabVisible = true,
+            fabTitle = stringResource(R.string.add),
+            fabIcon = Icons.Default.Add,
+            onFabClick = {
+                onAddNewPasswordClick()
+            },
+            isFabExpanded = expandedFab,
+            snackBarHostState = snackbarHostState
+        )
+    )
+    VaultContent(
+        state = state.value,
+        lazyListState = listState,
+        clipboardManager = clipboardManager,
+        onPasswordClick = {
 
-            },
-            onBankAccountClick = {
+        },
+        onBankAccountClick = {
 
-            },
-            onDeletePasswordClick = { password ->
-                viewModel.perform(VaultViewModel.Action.DeletePassword(password))
-            },
-            onEditPasswordClick = { password ->
-                onEditPasswordClick(password)
-            },
-            onSearchQueryEntered = { query ->
-                viewModel.perform(VaultViewModel.Action.Search(query))
-            },
-            onStopSearching = {
-                keyboardController?.hide()
-                viewModel.perform(VaultViewModel.Action.StopSearching)
-            },
-            reorder = { from, to ->
-                viewModel.perform(VaultViewModel.Action.Reorder(from, to))
-            },
-            onToggleReordering = {
-                viewModel.perform(VaultViewModel.Action.ToggleReordering)
-            },
-            onSaveReorderClick = {
-                viewModel.perform(VaultViewModel.Action.SaveNewOrderedList)
-            })
-    }
+        },
+        onDeletePasswordClick = { password ->
+            viewModel.perform(VaultViewModel.Action.DeletePassword(password))
+        },
+        onEditPasswordClick = { password ->
+            onEditPasswordClick(password)
+        },
+        onSearchQueryEntered = { query ->
+            viewModel.perform(VaultViewModel.Action.Search(query))
+        },
+        onStopSearching = {
+            keyboardController?.hide()
+            viewModel.perform(VaultViewModel.Action.StopSearching)
+        },
+        reorder = { from, to ->
+            viewModel.perform(VaultViewModel.Action.Reorder(from, to))
+        },
+        onToggleReordering = {
+            viewModel.perform(VaultViewModel.Action.ToggleReordering)
+        },
+        onSaveReorderClick = {
+            viewModel.perform(VaultViewModel.Action.SaveNewOrderedList)
+        })
+//    }
 }
 
 @Composable
