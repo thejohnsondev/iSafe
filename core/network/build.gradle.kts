@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
+    id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
 
@@ -57,6 +58,8 @@ dependencies {
     implementation(platform(libs.com.google.firebase.bom))
     implementation(libs.com.google.firebase.databasektx)
     implementation(libs.com.google.firebase.authktx)
+    implementation(libs.com.google.firebase.analyticsktx)
+    implementation(libs.com.google.firebase.crashlyticsktx)
 
     //Retrofit
     implementation(libs.retrofit)

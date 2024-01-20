@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
+    id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
 
@@ -56,6 +57,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
+
+    // Firebase
+    implementation(platform(libs.com.google.firebase.bom))
+    implementation(libs.com.google.firebase.analyticsktx)
+    implementation(libs.com.google.firebase.crashlyticsktx)
 
     // Compose
     implementation(libs.androidx.activity.compose)

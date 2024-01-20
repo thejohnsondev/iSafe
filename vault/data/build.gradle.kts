@@ -4,6 +4,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
+    id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
 
@@ -42,6 +43,11 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
     implementation(project(":core:network"))
+
+    // Firebase
+    implementation(platform(libs.com.google.firebase.bom))
+    implementation(libs.com.google.firebase.analyticsktx)
+    implementation(libs.com.google.firebase.crashlyticsktx)
 
     implementation(libs.androidx.ktx)
     implementation(platform(libs.org.jetbrains.kotlin.bom))

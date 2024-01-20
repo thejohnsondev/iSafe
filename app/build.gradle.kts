@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("dagger.hilt.android.plugin")
+    id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
 
@@ -85,6 +86,7 @@ dependencies {
     implementation(libs.com.google.firebase.databasektx)
     implementation(libs.com.google.firebase.authktx)
     implementation(libs.com.google.firebase.analyticsktx)
+    implementation(libs.com.google.firebase.crashlyticsktx)
 
     // Splash screen api
     implementation(libs.androidx.core.splashscreen)
