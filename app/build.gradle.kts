@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("dagger.hilt.android.plugin")
+    id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
 
@@ -16,8 +17,8 @@ android {
         applicationId = "com.thejohnsondev.isafe"
         minSdk = 29
         targetSdk = 34
-        versionCode = 3
-        versionName = "0.0.3"
+        versionCode = 5
+        versionName = "0.0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -58,6 +59,7 @@ android {
 dependencies {
 
     implementation(project(":core:model"))
+    implementation(project(":core:ui"))
     implementation(project(":core:common"))
     implementation(project(":core:designsystem"))
     implementation(project(":auth:presentation"))
@@ -84,6 +86,7 @@ dependencies {
     implementation(libs.com.google.firebase.databasektx)
     implementation(libs.com.google.firebase.authktx)
     implementation(libs.com.google.firebase.analyticsktx)
+    implementation(libs.com.google.firebase.crashlyticsktx)
 
     // Splash screen api
     implementation(libs.androidx.core.splashscreen)

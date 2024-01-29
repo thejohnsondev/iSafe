@@ -10,6 +10,7 @@ import com.thejohnsondev.common.navigation.Screens
 import com.thejohnsondev.model.PasswordModel
 import com.thejohnsondev.presentation.VaultScreen
 import com.thejohnsondev.presentation.VaultViewModel
+import com.thejohnsondev.ui.ScaffoldConfig
 
 val vaultRoute = Screens.VaultScreen.name
 
@@ -19,7 +20,8 @@ fun NavController.navigateToVault(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.vaultScreen(
     onAddNewPasswordClick: () -> Unit,
-    onEditPasswordClick: (PasswordModel) -> Unit
+    onEditPasswordClick: (PasswordModel) -> Unit,
+    setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
     composable(
         route = vaultRoute
@@ -28,7 +30,8 @@ fun NavGraphBuilder.vaultScreen(
         VaultScreen(
             viewModel = viewModel,
             onAddNewPasswordClick = onAddNewPasswordClick,
-            onEditPasswordClick = onEditPasswordClick
+            onEditPasswordClick = onEditPasswordClick,
+            setScaffoldConfig = setScaffoldConfig
         )
     }
 }

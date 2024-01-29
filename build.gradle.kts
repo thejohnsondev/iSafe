@@ -14,5 +14,6 @@ plugins {
     id("com.android.library") version "8.1.0-rc01" apply false
     id("com.google.gms.google-services") version "4.3.15" apply false
     id("com.google.dagger.hilt.android") version "2.44" apply false
+    id("com.google.firebase.crashlytics") version "2.9.9" apply false
     kotlin("kapt") version "1.7.20"
 }

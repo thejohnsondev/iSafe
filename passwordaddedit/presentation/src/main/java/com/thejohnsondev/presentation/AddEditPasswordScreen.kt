@@ -1,33 +1,27 @@
 package com.thejohnsondev.presentation
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -49,12 +43,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.EMPTY
+import com.thejohnsondev.common.R
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.EqualRounded
+import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
@@ -66,23 +59,24 @@ import com.thejohnsondev.designsystem.Text22
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordModel
-import com.thejohnsondev.ui.AddEditTopAppBar
 import com.thejohnsondev.ui.AdditionalField
 import com.thejohnsondev.ui.FullScreenLoading
 import com.thejohnsondev.ui.HintTextField
 import com.thejohnsondev.ui.LoadedImage
+import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.bounceClick
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddEditPasswordScreen(
     viewModel: AddEditPasswordViewModel,
     passwordModel: PasswordModel? = null,
-    onGoBackClick: () -> Unit
+    onGoBackClick: () -> Unit,
+    setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState(AddEditPasswordViewModel.State())
-    val snackbarHostState = remember {
+    val snackBarHostState = remember {
         SnackbarHostState()
     }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -95,16 +89,16 @@ fun AddEditPasswordScreen(
     val passwordFocusRequester = remember {
         FocusRequester()
     }
-    if (passwordModel != null) {
-        viewModel.perform(AddEditPasswordViewModel.Action.SetPasswordModelForEdit(passwordModel))
-    }
-    StatusBarColor()
+
     LaunchedEffect(true) {
         organizationFocusRequester.requestFocus()
+        if (passwordModel != null) {
+            viewModel.perform(AddEditPasswordViewModel.Action.SetPasswordModelForEdit(passwordModel))
+        }
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)
-                is OneTimeEvent.InfoSnackbar -> snackbarHostState.showSnackbar(
+                is OneTimeEvent.InfoSnackbar -> snackBarHostState.showSnackbar(
                     it.message, duration = SnackbarDuration.Short
                 )
 
@@ -116,33 +110,69 @@ fun AddEditPasswordScreen(
             }
         }
     }
-    Scaffold(topBar = {
-        AddEditTopAppBar(onSaveClick = {
-            viewModel.perform(AddEditPasswordViewModel.Action.SavePassword)
-        }, onNavigateBackClick = {
-            onGoBackClick()
-        })
-    }, snackbarHost = {
-        SnackbarHost(snackbarHostState) { data ->
-            Snackbar(
-                modifier = Modifier.padding(Size8)
-            ) {
-                Text(text = data.visuals.message)
-            }
-        }
-    }) { paddings ->
-        when (state.value.loadingState) {
-            LoadingState.Loading -> FullScreenLoading()
-            LoadingState.Loaded -> {
-                AddEditPasswordContent(
-                    state = state.value,
-                    viewModel = viewModel,
-                    paddings = paddings,
-                    organizationFocusRequester = organizationFocusRequester,
-                    titleFocusRequester = titleFocusRequester,
-                    passwordFocusRequester = passwordFocusRequester
-                )
-            }
+    setScaffoldConfig(
+        ScaffoldConfig(
+            isBottomNavBarVisible = false,
+            isTopAppBarVisible = true,
+            topAppBarIcon = Icons.Default.ArrowBack,
+            isTopAppBarSaveButtonVisible = true,
+            onTopAppBarSaveClick = {
+                viewModel.perform(AddEditPasswordViewModel.Action.SavePassword)
+            },
+            onTopAppBarIconClick = {
+                onGoBackClick()
+            },
+            snackBarHostState = snackBarHostState,
+            snackBarPaddingHorizontal = Size8,
+            snackBarPaddingVertical = Size8,
+        )
+    )
+    when (state.value.loadingState) {
+        LoadingState.Loading -> FullScreenLoading()
+        LoadingState.Loaded -> {
+            AddEditPasswordContent(
+                state = state.value,
+                organizationFocusRequester = organizationFocusRequester,
+                titleFocusRequester = titleFocusRequester,
+                passwordFocusRequester = passwordFocusRequester,
+                onEnterOrganization = {
+                    viewModel.perform(AddEditPasswordViewModel.Action.EnterOrganization(it))
+                },
+                onEnterTitle = {
+                    viewModel.perform(AddEditPasswordViewModel.Action.EnterTitle(it))
+                },
+                onEnterPassword = {
+                    viewModel.perform(AddEditPasswordViewModel.Action.EnterPassword(it))
+                },
+                onEnterAdditionalFieldTitle = { id, title ->
+                    viewModel.perform(
+                        AddEditPasswordViewModel.Action.EnterAdditionalFieldTitle(
+                            id,
+                            title
+                        )
+                    )
+                },
+                onEnterAdditionalFieldValue = { id, value ->
+                    viewModel.perform(
+                        AddEditPasswordViewModel.Action.EnterAdditionalFieldValue(
+                            id,
+                            value
+                        )
+                    )
+                },
+                onDeleteAdditionalField = {
+                    viewModel.perform(AddEditPasswordViewModel.Action.RemoveAdditionalField(it))
+                },
+                onAddAdditionalField = {
+                    viewModel.perform(AddEditPasswordViewModel.Action.AddAdditionalField(it))
+                },
+                onTitleRequestFocus = {
+                    titleFocusRequester.requestFocus()
+                },
+                onPasswordRequestFocus = {
+                    passwordFocusRequester.requestFocus()
+                },
+            )
         }
     }
 }
@@ -150,11 +180,18 @@ fun AddEditPasswordScreen(
 @Composable
 fun AddEditPasswordContent(
     state: AddEditPasswordViewModel.State,
-    viewModel: AddEditPasswordViewModel,
-    paddings: PaddingValues,
     organizationFocusRequester: FocusRequester,
     titleFocusRequester: FocusRequester,
     passwordFocusRequester: FocusRequester,
+    onTitleRequestFocus: () -> Unit,
+    onPasswordRequestFocus: () -> Unit,
+    onEnterOrganization: (String) -> Unit,
+    onEnterTitle: (String) -> Unit,
+    onEnterPassword: (String) -> Unit,
+    onEnterAdditionalFieldTitle: (String, String) -> Unit,
+    onEnterAdditionalFieldValue: (String, String) -> Unit,
+    onDeleteAdditionalField: (String) -> Unit,
+    onAddAdditionalField: (String) -> Unit,
 ) {
     var isPasswordHidden by remember {
         mutableStateOf(false)
@@ -162,7 +199,6 @@ fun AddEditPasswordContent(
     val eyeImage = if (isPasswordHidden) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
     Surface(
         modifier = Modifier
-            .padding(paddings)
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
@@ -198,17 +234,17 @@ fun AddEditPasswordContent(
                         .wrapContentHeight()
                         .fillMaxWidth()
                         .padding(start = Size16),
-                    onValueChanged = {
-                        viewModel.perform(AddEditPasswordViewModel.Action.EnterOrganization(it))
+                    onValueChanged = { organization ->
+                        onEnterOrganization(organization)
                     },
                     value = state.organization,
-                    hint = stringResource(id = com.thejohnsondev.common.R.string.organization),
                     focusRequester = organizationFocusRequester,
+                    hint = stringResource(id = R.string.organization),
                     textColor = MaterialTheme.colorScheme.onSurface,
                     fontSize = Text22,
                     maxLines = 2,
                     onKeyboardAction = {
-                        titleFocusRequester.requestFocus()
+                        onTitleRequestFocus()
                     },
                     imeAction = ImeAction.Next
                 )
@@ -226,17 +262,17 @@ fun AddEditPasswordContent(
                         .fillMaxWidth()
                         .wrapContentHeight()
                         .padding(Size12),
-                    onValueChanged = {
-                        viewModel.perform(AddEditPasswordViewModel.Action.EnterTitle(it))
+                    onValueChanged = { title ->
+                        onEnterTitle(title)
                     },
                     value = state.title,
-                    hint = stringResource(id = com.thejohnsondev.common.R.string.title),
+                    hint = stringResource(id = R.string.title),
                     focusRequester = titleFocusRequester,
                     textColor = MaterialTheme.colorScheme.onSurface,
                     fontSize = Text20,
                     maxLines = 2,
                     onKeyboardAction = {
-                        passwordFocusRequester.requestFocus()
+                        onPasswordRequestFocus()
                     },
                     imeAction = ImeAction.Next
                 )
@@ -259,11 +295,11 @@ fun AddEditPasswordContent(
                             .wrapContentHeight()
                             .fillMaxWidth(0.9f)
                             .padding(Size12),
-                        onValueChanged = {
-                            viewModel.perform(AddEditPasswordViewModel.Action.EnterPassword(it))
+                        onValueChanged = { password ->
+                            onEnterPassword(password)
                         },
                         value = state.password,
-                        hint = stringResource(id = com.thejohnsondev.common.R.string.password),
+                        hint = stringResource(id = R.string.password),
                         focusRequester = passwordFocusRequester,
                         textColor = MaterialTheme.colorScheme.onSurface,
                         fontSize = Text20,
@@ -281,7 +317,7 @@ fun AddEditPasswordContent(
                         Icon(
                             modifier = Modifier.padding(end = Size8),
                             imageVector = eyeImage,
-                            contentDescription = stringResource(com.thejohnsondev.common.R.string.visibility),
+                            contentDescription = stringResource(R.string.visibility),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -293,25 +329,13 @@ fun AddEditPasswordContent(
                         .padding(start = Size16, end = Size16, top = Size8),
                     title = additionalField.title,
                     value = additionalField.value,
-                    onTitleChanged = {
-                        viewModel.perform(
-                            AddEditPasswordViewModel.Action.EnterAdditionalFieldTitle(
-                                additionalField.id, it
-                            )
-                        )
+                    onTitleChanged = { title ->
+                        onEnterAdditionalFieldTitle(additionalField.id, title)
                     },
-                    onValueChanged = {
-                        viewModel.perform(
-                            AddEditPasswordViewModel.Action.EnterAdditionalFieldValue(
-                                additionalField.id, it
-                            )
-                        )
+                    onValueChanged = { value ->
+                        onEnterAdditionalFieldValue(additionalField.id, value)
                     }, onDeleteClick = {
-                        viewModel.perform(
-                            AddEditPasswordViewModel.Action.RemoveAdditionalField(
-                                additionalField.id
-                            )
-                        )
+                        onDeleteAdditionalField(additionalField.id)
                     })
             }
             Button(
@@ -320,10 +344,8 @@ fun AddEditPasswordContent(
                     .padding(Size16)
                     .bounceClick(),
                 onClick = {
-                    viewModel.perform(
-                        AddEditPasswordViewModel.Action.AddAdditionalField(
-                            System.currentTimeMillis().toString()
-                        )
+                    onAddAdditionalField(
+                        System.currentTimeMillis().toString()
                     )
                 },
                 shape = EqualRounded.medium,
@@ -332,7 +354,7 @@ fun AddEditPasswordContent(
                 ),
             ) {
                 Text(
-                    text = stringResource(com.thejohnsondev.common.R.string.add_field),
+                    text = stringResource(R.string.add_field),
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
@@ -340,25 +362,164 @@ fun AddEditPasswordContent(
     }
 }
 
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun StatusBarColor() {
-    val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surface)
+fun AddEditPasswordPreviewEmptyLight() {
+    ISafeTheme {
+        AddEditPasswordContent(
+            state = AddEditPasswordViewModel.State(),
+            titleFocusRequester = FocusRequester(),
+            passwordFocusRequester = FocusRequester(),
+            organizationFocusRequester = FocusRequester(),
+            onTitleRequestFocus = {},
+            onPasswordRequestFocus = {},
+            onEnterOrganization = {},
+            onEnterTitle = {},
+            onEnterPassword = {},
+            onEnterAdditionalFieldTitle = { _, _ -> },
+            onEnterAdditionalFieldValue = { _, _ -> },
+            onDeleteAdditionalField = {},
+            onAddAdditionalField = {}
+        )
+    }
 }
 
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun AddEditPasswordContentPreview() {
-    AddEditPasswordContent(state = AddEditPasswordViewModel.State(),
-        viewModel = hiltViewModel(),
-        paddings = PaddingValues(0.dp),
-        organizationFocusRequester = remember {
-            FocusRequester()
-        },
-        titleFocusRequester = remember {
-            FocusRequester()
-        },
-        passwordFocusRequester = remember {
-            FocusRequester()
-        })
+fun AddEditPasswordPreviewEmptyDark() {
+    ISafeTheme {
+        AddEditPasswordContent(
+            state = AddEditPasswordViewModel.State(),
+            titleFocusRequester = FocusRequester(),
+            passwordFocusRequester = FocusRequester(),
+            organizationFocusRequester = FocusRequester(),
+            onTitleRequestFocus = {},
+            onPasswordRequestFocus = {},
+            onEnterOrganization = {},
+            onEnterTitle = {},
+            onEnterPassword = {},
+            onEnterAdditionalFieldTitle = { _, _ -> },
+            onEnterAdditionalFieldValue = { _, _ -> },
+            onDeleteAdditionalField = {},
+            onAddAdditionalField = {}
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun AddEditPasswordPreviewWithDataLight() {
+    ISafeTheme {
+        AddEditPasswordContent(
+            state = AddEditPasswordViewModel.State(
+                organization = "Google",
+                title = "Test",
+                password = "Pass123$"
+            ),
+            titleFocusRequester = FocusRequester(),
+            passwordFocusRequester = FocusRequester(),
+            organizationFocusRequester = FocusRequester(),
+            onTitleRequestFocus = {},
+            onPasswordRequestFocus = {},
+            onEnterOrganization = {},
+            onEnterTitle = {},
+            onEnterPassword = {},
+            onEnterAdditionalFieldTitle = { _, _ -> },
+            onEnterAdditionalFieldValue = { _, _ -> },
+            onDeleteAdditionalField = {},
+            onAddAdditionalField = {}
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun AddEditPasswordPreviewWithDataDark() {
+    ISafeTheme {
+        AddEditPasswordContent(
+            state = AddEditPasswordViewModel.State(
+                organization = "Google",
+                title = "Test",
+                password = "Pass123$"
+            ),
+            titleFocusRequester = FocusRequester(),
+            passwordFocusRequester = FocusRequester(),
+            organizationFocusRequester = FocusRequester(),
+            onTitleRequestFocus = {},
+            onPasswordRequestFocus = {},
+            onEnterOrganization = {},
+            onEnterTitle = {},
+            onEnterPassword = {},
+            onEnterAdditionalFieldTitle = { _, _ -> },
+            onEnterAdditionalFieldValue = { _, _ -> },
+            onDeleteAdditionalField = {},
+            onAddAdditionalField = {}
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun AddEditPasswordPreviewWithAdditionalFieldsLight() {
+    ISafeTheme {
+        AddEditPasswordContent(
+            state = AddEditPasswordViewModel.State(
+                organization = "Google",
+                title = "Test",
+                password = "Pass123$",
+                additionalFields = listOf(
+                    com.thejohnsondev.model.AdditionalField(
+                        id = "1",
+                        title = "Test",
+                        value = "Test"
+                    ),
+                )
+            ),
+            titleFocusRequester = FocusRequester(),
+            passwordFocusRequester = FocusRequester(),
+            organizationFocusRequester = FocusRequester(),
+            onTitleRequestFocus = {},
+            onPasswordRequestFocus = {},
+            onEnterOrganization = {},
+            onEnterTitle = {},
+            onEnterPassword = {},
+            onEnterAdditionalFieldTitle = { _, _ -> },
+            onEnterAdditionalFieldValue = { _, _ -> },
+            onDeleteAdditionalField = {},
+            onAddAdditionalField = {}
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun AddEditPasswordPreviewWithAdditionalFieldsDark() {
+    ISafeTheme {
+        AddEditPasswordContent(
+            state = AddEditPasswordViewModel.State(
+                organization = "Google",
+                title = "Test",
+                password = "Pass123$",
+                additionalFields = listOf(
+                    com.thejohnsondev.model.AdditionalField(
+                        id = "1",
+                        title = "Test",
+                        value = "Test"
+                    ),
+                )
+            ),
+            titleFocusRequester = FocusRequester(),
+            passwordFocusRequester = FocusRequester(),
+            organizationFocusRequester = FocusRequester(),
+            onTitleRequestFocus = {},
+            onPasswordRequestFocus = {},
+            onEnterOrganization = {},
+            onEnterTitle = {},
+            onEnterPassword = {},
+            onEnterAdditionalFieldTitle = { _, _ -> },
+            onEnterAdditionalFieldValue = { _, _ -> },
+            onDeleteAdditionalField = {},
+            onAddAdditionalField = {}
+        )
+    }
 }

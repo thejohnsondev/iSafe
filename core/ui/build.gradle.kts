@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -45,6 +46,11 @@ dependencies {
     implementation(platform(libs.org.jetbrains.kotlin.bom))
     implementation(libs.androidx.appcompat)
 
+    // Firebase
+    implementation(platform(libs.com.google.firebase.bom))
+    implementation(libs.com.google.firebase.analyticsktx)
+    implementation(libs.com.google.firebase.crashlyticsktx)
+
     // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
@@ -59,6 +65,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
+
 
     // Coil
     implementation(libs.io.coil.compose)

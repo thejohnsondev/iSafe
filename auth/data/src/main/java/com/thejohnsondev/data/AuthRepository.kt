@@ -13,5 +13,6 @@ interface AuthRepository {
     suspend fun getCurrentUserName(): Flow<String>
     suspend fun getCurrentUserId(): Flow<String>
     fun isUserLoggedIn(): Boolean
+    fun deleteAccount(): Flow<Either<ApiError, Unit>>
 
 }

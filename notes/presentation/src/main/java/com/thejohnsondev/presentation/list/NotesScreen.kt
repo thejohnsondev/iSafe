@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
@@ -42,22 +43,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.thejohnsondev.common.navigation.Screens
+import com.thejohnsondev.common.R
 import com.thejohnsondev.common.toast
+import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
-import com.thejohnsondev.designsystem.Size86
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.ui.FullScreenLoading
 import com.thejohnsondev.ui.NoteItem
+import com.thejohnsondev.ui.ScaffoldConfig
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NotesScreen(
     viewModel: NotesViewModel,
-    goToAddNote: () -> Unit
+    goToAddNote: () -> Unit,
+    setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState(NotesViewModel.State())
@@ -72,7 +74,7 @@ fun NotesScreen(
     }
     StatusBarColor()
     LaunchedEffect(true) {
-        viewModel.perform(NotesViewModel.Action.FetchNotes)
+//        viewModel.perform(NotesViewModel.Action.FetchNotes)       todo uncomment it when api is ready
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)
@@ -86,59 +88,27 @@ fun NotesScreen(
             }
         }
     }
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(snackbarHostState) { data ->
-                Snackbar(
-                    modifier = Modifier
-                        .padding(bottom = Size86, start = Size16, end = Size16),
-                ) {
-                    Text(text = data.visuals.message)
-                }
-            }
-        },
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(com.thejohnsondev.common.R.string.your_notes),
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
-            )
-        },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    goToAddNote()
-                },
-                expanded = expandedFab,
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(com.thejohnsondev.common.R.string.add)
-                    )
-                },
-                text = {
-                    Text(text = stringResource(com.thejohnsondev.common.R.string.add_note))
-                },
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            )
-        },
-        floatingActionButtonPosition = FabPosition.End,
-    ) { paddingValues ->
-        NotesContent(
-            modifier = Modifier.padding(paddingValues),
-            screenState = state.value,
-            state = listState
-        ) { note ->
+    setScaffoldConfig(
+        ScaffoldConfig(
+            isTopAppBarVisible = true,
+            isBottomNavBarVisible = true,
+            topAppBarTitle = stringResource(R.string.your_notes),
+            isFabVisible = true,
+            fabTitle = stringResource(R.string.add_note),
+            fabIcon = Icons.Default.Add,
+            onFabClick = {
+                goToAddNote()
+            },
+            isFabExpanded = expandedFab,
+            snackBarHostState = snackbarHostState,
+        )
+    )
+    NotesContent(
+        screenState = state.value,
+        state = listState
+    ) { note ->
 
-        }
     }
-
-
 }
 
 
@@ -189,18 +159,118 @@ fun StatusBarColor() {
 }
 
 
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun NotesScreenPreview() {
-    NotesContent(
-        screenState = NotesViewModel.State(
-            loadingState = LoadingState.Loaded,
-            notesList = emptyList()
-        ),
-        state = rememberLazyListState(),
-        onNoteClick = {
+fun NotesScreenPreviewWithNotesLight() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loaded,
+                notesList = listOf(
+                    NoteModel(
+                        id = "1",
+                        title = "Note 1",
+                        description = "Description 1",
+                        category = "Category 1",
+                    )
+                )
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
 
-        }
-    )
+            }
+        )
+    }
 }
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun NotesScreenPreviewWithNotesDark() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loaded,
+                notesList = listOf(
+                    NoteModel(
+                        id = "1",
+                        title = "Note 1",
+                        description = "Description 1",
+                        category = "Category 1",
+                    )
+                )
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
+
+            }
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun NotesScreenPreviewEmptyLight() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loaded,
+                notesList = listOf()
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
+
+            }
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun NotesScreenPreviewEmptyDark() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loaded,
+                notesList = listOf()
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
+
+            }
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun NotesScreenPreviewLoadingLight() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loading
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
+
+            }
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun NotesScreenPreviewLoadingDark() {
+    ISafeTheme {
+        NotesContent(
+            screenState = NotesViewModel.State(
+                loadingState = LoadingState.Loading
+            ),
+            state = rememberLazyListState(),
+            onNoteClick = {
+
+            }
+        )
+    }
+}
+
 

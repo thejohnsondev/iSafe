@@ -150,4 +150,9 @@ class ISafeDotNetRemoteDataSource @Inject constructor(
         awaitChannelFlow {
 
         }
+
+    override fun deleteAccount(): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
+        sendOrNothing(api.deleteAccount())
+    }
+
 }

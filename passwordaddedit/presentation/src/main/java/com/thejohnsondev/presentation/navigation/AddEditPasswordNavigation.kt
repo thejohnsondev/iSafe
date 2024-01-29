@@ -10,6 +10,7 @@ import com.thejohnsondev.common.navigation.Screens
 import com.thejohnsondev.model.PasswordModel
 import com.thejohnsondev.presentation.AddEditPasswordScreen
 import com.thejohnsondev.presentation.AddEditPasswordViewModel
+import com.thejohnsondev.ui.ScaffoldConfig
 
 val addEditPasswordRoute = Screens.AddEditPassword.name
 
@@ -18,7 +19,8 @@ fun NavController.navigateToAddEditPassword(password: String?, navOptions: NavOp
 }
 
 fun NavGraphBuilder.addEditPasswordScreen(
-    onGoBackClick: () -> Unit
+    onGoBackClick: () -> Unit,
+    setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
     composable(
         route = "$addEditPasswordRoute/{password}"
@@ -29,7 +31,8 @@ fun NavGraphBuilder.addEditPasswordScreen(
         AddEditPasswordScreen(
             viewModel = viewModel,
             passwordModel = passwordModel,
-            onGoBackClick = onGoBackClick
+            onGoBackClick = onGoBackClick,
+            setScaffoldConfig = setScaffoldConfig
         )
     }
 }

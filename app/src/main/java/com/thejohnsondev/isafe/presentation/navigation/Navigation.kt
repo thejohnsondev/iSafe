@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.thejohnsondev.common.navigation.Screens
+import com.thejohnsondev.isafe.presentation.navigation.home.HomeNavigation
 import com.thejohnsondev.presentation.nagivation.checkAuthStateRoute
 import com.thejohnsondev.presentation.nagivation.checkAuthStateScreen
 import com.thejohnsondev.presentation.nagivation.loginScreen

@@ -463,4 +463,8 @@ class FirebaseRemoteDataSourceImpl @Inject constructor(
                 }
         }
 
+    override fun deleteAccount(): Flow<Either<ApiError, Unit>> {
+        TODO("Not yet implemented")
+    }
+
 }

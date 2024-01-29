@@ -84,6 +84,7 @@ com-google-firebase-bom = { module = "com.google.firebase:firebase-bom", version
 com-google-firebase-databasektx = { module = "com.google.firebase:firebase-database-ktx" }
 com-google-firebase-authktx = { module = "com.google.firebase:firebase-auth-ktx" }
 com-google-firebase-analyticsktx = { module = "com.google.firebase:firebase-analytics-ktx" }
+com-google-firebase-crashlyticsktx = { module = "com.google.firebase:firebase-crashlytics-ktx" }
 
 #Secure datastore
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "security-crypto" }

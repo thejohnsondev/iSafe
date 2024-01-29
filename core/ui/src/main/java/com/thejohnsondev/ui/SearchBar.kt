@@ -64,6 +64,7 @@ fun SearchBar(
                     searchQuery = it
                     onQueryEntered(searchQuery)
                 },
+                maxLines = 1,
                 value = searchQuery,
                 hint = if (searchQuery.isBlank()) stringResource(com.thejohnsondev.common.R.string.search) else EMPTY,
                 textColor = MaterialTheme.colorScheme.onSurfaceVariant,
