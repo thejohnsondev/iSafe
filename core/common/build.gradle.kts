@@ -57,7 +57,4 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.com.google.dagger.hilt.compiler)
 
-    // Firebase
-    implementation(platform(libs.com.google.firebase.bom))
-    implementation(libs.com.google.firebase.databasektx)
 }

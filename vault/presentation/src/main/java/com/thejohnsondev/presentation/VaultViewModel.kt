@@ -12,6 +12,7 @@ import com.thejohnsondev.model.UserPasswordsResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,6 +23,7 @@ class VaultViewModel @Inject constructor(
 
     private val _allPasswordsList = MutableStateFlow<List<PasswordModel>>(emptyList())
     private val _allBankAccountsList = MutableStateFlow<List<BankAccountModel>>(emptyList())
+    private val _passwordsListFetched = MutableStateFlow<List<PasswordModel>>(emptyList())
     private val _passwordsList = MutableStateFlow<List<PasswordModel>>(emptyList())
     private val _bankAccountsList = MutableStateFlow<List<BankAccountModel>>(emptyList())
     private val _isSearching = MutableStateFlow(false)
@@ -44,11 +46,32 @@ class VaultViewModel @Inject constructor(
             is Action.StopSearching -> stopSearching()
             is Action.ToggleReordering -> toggleReordering()
             is Action.Reorder -> reorder(action.from, action.to)
+            is Action.SaveNewOrderedList -> saveNewOrderedList()
         }
+    }
+
+    private fun saveNewOrderedList() = launch {
+        useCases.updatePasswordsUseCase("", _passwordsList.value)
+            .collect {
+                when (it) {
+                    is DatabaseResponse.ResponseFailure -> handleError(it.exception)
+                    is DatabaseResponse.ResponseSuccess -> handleUpdatePasswordListSuccess()
+                }
+            }
+
+    }
+
+    private fun handleUpdatePasswordListSuccess() = launchLoading {
+        _passwordsListFetched.emit(_passwordsList.value)
+        _isReordering.emit(false)
+        loaded()
     }
 
     private fun toggleReordering() = launch {
         _isReordering.emit(!_isReordering.value)
+        if (!_isReordering.value) {
+            _passwordsList.emit(_passwordsListFetched.value)
+        }
     }
 
     private fun reorder(from: Int, to: Int) = launch {
@@ -97,13 +120,12 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun deletePassword(passwordModel: PasswordModel) = launch {
-        useCases.deletePassword(dataStore.getUserData().id.orEmpty(), passwordModel.id)
-            .collect {
-                when (it) {
-                    is DatabaseResponse.ResponseFailure -> handleError(it.exception)
-                    is DatabaseResponse.ResponseSuccess -> deletePasswordFromList(passwordModel)
-                }
+        useCases.deletePassword("", passwordModel.id).first().fold(
+            ifLeft = ::handleError,
+            ifRight = {
+                deletePasswordFromList(passwordModel)
             }
+        )
     }
 
     private fun deletePasswordFromList(passwordModel: PasswordModel) = launch {
@@ -114,12 +136,14 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun fetchVault() = launchLoading {
-        useCases.getAllPasswords(dataStore.getUserData().id.orEmpty()).collect {
-            when (it) {
-                is UserPasswordsResponse.ResponseFailure -> handleError(it.exception)
-                is UserPasswordsResponse.ResponseSuccess -> handlePasswordsList(it.passwords)
+        useCases.getAllPasswords("").first().fold(
+            ifLeft = ::handleError,
+            ifRight = {
+                handlePasswordsList(it)
+                _passwordsListFetched.emit(it)
             }
-        }
+
+        )
         _bankAccountsList.emit(
             emptyList()
         )
@@ -156,6 +180,7 @@ class VaultViewModel @Inject constructor(
         object ToggleReordering: Action()
         object StopSearching : Action()
         class Reorder(val from: Int, val to: Int): Action()
+        object SaveNewOrderedList: Action()
     }
 
     data class State(

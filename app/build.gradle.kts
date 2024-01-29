@@ -16,8 +16,8 @@ android {
         applicationId = "com.thejohnsondev.isafe"
         minSdk = 29
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "0.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -61,7 +61,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:designsystem"))
     implementation(project(":auth:presentation"))
-    implementation(project(":generatekey:presentation"))
     implementation(project(":vault:presentation"))
     implementation(project(":passwordaddedit:presentation"))
     implementation(project(":notes:presentation"))
@@ -72,8 +71,6 @@ dependencies {
 
     // Test
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit)

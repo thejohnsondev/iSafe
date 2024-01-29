@@ -49,7 +49,7 @@ fun NavGraphBuilder.checkAuthStateScreen(
 }
 
 fun NavGraphBuilder.loginScreen(
-    goToEnterKey: () -> Unit,
+    goToHome: () -> Unit,
     goBack: () -> Unit
 ) {
     composable(
@@ -58,14 +58,14 @@ fun NavGraphBuilder.loginScreen(
         val viewModel = hiltViewModel<LoginViewModel>()
         LoginScreen(
             viewModel = viewModel,
-            goToEnterKey = goToEnterKey,
+            goToHome = goToHome,
             goBack = goBack
         )
     }
 }
 
 fun NavGraphBuilder.signUpScreen(
-    goToCreateKey: () -> Unit,
+    goToHome: () -> Unit,
     goToLogin: () -> Unit
 ) {
     composable(
@@ -74,7 +74,7 @@ fun NavGraphBuilder.signUpScreen(
         val viewModel = hiltViewModel<SignUpViewModel>()
         SignUpScreen(
             viewModel = viewModel,
-            goToCreateKey = goToCreateKey,
+            goToHome = goToHome,
             goToLogin = goToLogin
         )
     }

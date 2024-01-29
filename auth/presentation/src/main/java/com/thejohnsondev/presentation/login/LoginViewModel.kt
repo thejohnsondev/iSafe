@@ -1,18 +1,21 @@
 package com.thejohnsondev.presentation.login
 
+import android.util.Log
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.domain.AuthUseCases
-import com.thejohnsondev.model.AuthResponse
 import com.thejohnsondev.model.EmailValidationState
+import com.thejohnsondev.model.KeyGenerateResult
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
 import com.thejohnsondev.model.UserDataResponse
 import com.thejohnsondev.model.UserModel
+import com.thejohnsondev.model.auth.AuthResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,31 +50,48 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun loginWithEmail(email: String, password: String) = launchLoading {
-        useCases.signIn(email, password).collect {
-            when (it) {
-                is AuthResponse.ResponseFailure -> {
-                    handleError(it.exception)
-                }
-
-                is AuthResponse.ResponseSuccess -> {
-                    getUserData(it.userId)
-                }
-            }
-        }
+        useCases.signIn(email, password).first()
+            .fold(
+                ifLeft = ::handleError,
+                ifRight = ::handleAuthResponse
+            )
     }
 
-    private fun getUserData(userId: String) = launch {
+    private fun handleAuthResponse(authResponse: AuthResponse) {
+        Log.e("TAG", "-- login response: ${authResponse.token}")
+        saveUserToken(authResponse.token)
+        sendEvent(OneTimeEvent.SuccessNavigation)
+    }
+
+    private fun saveUserToken(token: String) = launch {
+        useCases.saveUserToken.invoke(token)
+    }
+
+    private fun getUserData(userId: String, password: String) = launch {
         useCases.getUserData(userId).collect {
             when (it) {
                 is UserDataResponse.ResponseFailure -> handleError(it.exception)
-                is UserDataResponse.ResponseSuccess -> saveUserData(it.userModel)
+                is UserDataResponse.ResponseSuccess -> saveUserData(it.userModel, password)
             }
         }
     }
 
-    private fun saveUserData(userModel: UserModel) = launch {
-        useCases.saveUserData(userModel, true)
+    private fun saveUserData(userModel: UserModel, password: String) = launch {
+        generateAndSaveEncryptionKey(password)
         sendEvent(OneTimeEvent.SuccessNavigation)
+    }
+
+    private suspend fun generateAndSaveEncryptionKey(password: String) {
+        useCases.generateUserKey(password).collect {
+            when (it) {
+                is KeyGenerateResult.Failure -> handleError(it.exception)
+                is KeyGenerateResult.Success -> handleGenerateKeySuccess(it.key)
+            }
+        }
+    }
+
+    private suspend fun handleGenerateKeySuccess(generatedKey: ByteArray) {
+        useCases.saveUserKey(generatedKey)
     }
 
     private fun validateEmail(email: String) = launch {

@@ -24,6 +24,8 @@ coroutines = "1.7.1"
 firebase-bom = "32.2.0"
 security-crypto = "1.0.0"
 gson = "2.10.1"
+retrofit = "2.9.0"
+arrow = "1.1.2"
 splashscreen = "1.0.1"
 agp = "8.1.0-rc01"
 org-jetbrains-kotlin-android = "1.7.20"
@@ -86,6 +88,11 @@ com-google-firebase-analyticsktx = { module = "com.google.firebase:firebase-anal
 #Secure datastore
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "security-crypto" }
 com-google-code-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
+#Retrofit
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-converter-json = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 
 
 [plugins]

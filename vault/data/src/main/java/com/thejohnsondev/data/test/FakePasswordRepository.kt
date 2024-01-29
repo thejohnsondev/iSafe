@@ -1,6 +1,8 @@
 package com.thejohnsondev.data.test
 
+import arrow.core.Either
 import com.thejohnsondev.data.PasswordsRepository
+import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.PasswordModel
 import com.thejohnsondev.model.UserPasswordsResponse
@@ -15,30 +17,37 @@ class FakePasswordRepository: PasswordsRepository {
         passwords["1"] = user1TestPasswords
         passwords["2"] = user2TestPasswords
     }
-    override fun getUserPasswords(userId: String): Flow<UserPasswordsResponse> = flow {
-        emit(UserPasswordsResponse.ResponseSuccess(passwords[userId].orEmpty()))
+    override fun getUserPasswords(userId: String): Flow<Either<ApiError, List<PasswordModel>>> = flow {
+//        emit(UserPasswordsResponse.ResponseSuccess(passwords[userId].orEmpty()))
     }
 
-    override fun createPassword(userId: String, password: PasswordModel): Flow<DatabaseResponse> = flow {
+    override fun createPassword(userId: String, password: PasswordModel): Flow<Either<ApiError, PasswordModel>> = flow {
         val currentList = passwords[userId]?.toMutableList()
         currentList?.add(password)
         passwords[userId] = currentList?.toList().orEmpty()
-        emit(DatabaseResponse.ResponseSuccess)
+//        emit(DatabaseResponse.ResponseSuccess)
     }
 
-    override fun updatePassword(userId: String, password: PasswordModel): Flow<DatabaseResponse> = flow {
+    override fun updatePassword(userId: String, password: PasswordModel): Flow<Either<ApiError, Unit>> = flow {
         val currentList = passwords[userId]?.toMutableList()
         currentList?.removeIf { it.id == password.id }
         currentList?.add(password)
         passwords[userId] = currentList?.toList().orEmpty()
-        emit(DatabaseResponse.ResponseSuccess)
+//        emit(DatabaseResponse.ResponseSuccess)
     }
 
-    override fun deletePassword(userId: String, passwordId: String): Flow<DatabaseResponse> = flow {
+    override fun updatePasswordsList(
+        userId: String,
+        newPasswordList: List<PasswordModel>
+    ): Flow<DatabaseResponse> = flow {
+        // TODO Not yet implemented
+    }
+
+    override fun deletePassword(userId: String, passwordId: String): Flow<Either<ApiError, Unit>> = flow {
         val currentList = passwords[userId]?.toMutableList()
         currentList?.removeIf { it.id == passwordId }
         passwords[userId] = currentList?.toList().orEmpty()
-        emit(DatabaseResponse.ResponseSuccess)
+//        emit(DatabaseResponse.ResponseSuccess)
     }
 
     companion object {

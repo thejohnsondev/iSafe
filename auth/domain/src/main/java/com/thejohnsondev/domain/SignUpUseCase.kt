@@ -1,10 +1,21 @@
 package com.thejohnsondev.domain
 
-import com.thejohnsondev.model.AuthResponse
+import arrow.core.Either
+import com.thejohnsondev.data.AuthRepository
+import com.thejohnsondev.model.ApiError
+import com.thejohnsondev.model.auth.AuthResponse
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-interface SignUpUseCase {
+class SignUpUseCase @Inject constructor(
+    private val authRepository: AuthRepository
+) {
 
-    suspend operator fun invoke(email: String, password: String): Flow<AuthResponse>
+    suspend operator fun invoke(
+        email: String,
+        password: String
+    ): Flow<Either<ApiError, AuthResponse>> {
+        return authRepository.signUp(email, password)
+    }
 
 }

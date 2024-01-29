@@ -46,21 +46,9 @@ class DataStoreImpl @Inject constructor(
         sharedPreferences.edit().remove(key).apply()
     }
 
-    override suspend fun saveUserData(userModel: UserModel) {
-        putString(USER_DATA, userModel.toJson())
-    }
-
     override suspend fun saveUserKey(byteArray: ByteArray) {
         val encodedKey = Base64.encodeToString(byteArray, Base64.NO_WRAP)
         putString(USER_KEY, encodedKey)
-    }
-
-    override suspend fun setIsFromLogin(isFromLogin: Boolean) {
-        putBoolean(IS_FROM_LOGIN, isFromLogin)
-    }
-
-    override suspend fun getUserData(): UserModel {
-        return getString(USER_DATA, EMPTY).fromJson()
     }
 
     override suspend fun getUserKey(): ByteArray {
@@ -68,19 +56,36 @@ class DataStoreImpl @Inject constructor(
         return Base64.decode(encodedKey, Base64.NO_WRAP)
     }
 
-    override suspend fun getIsFromLogin(): Boolean {
-        return getBoolean(IS_FROM_LOGIN)
+    override fun getBaseUrl(): String {
+        return getString(BASE_URL, DEFAULT_BASE_URL)
     }
 
-    override suspend fun clearUserData() {
-        remove(USER_KEY)
-        remove(USER_DATA)
-        remove(IS_FROM_LOGIN)
+    override suspend fun setBaseUrl(baseUrl: String) {
+        putString(BASE_URL, baseUrl)
+    }
+
+    override fun getUserToken(): String {
+        return getString(USER_TOKEN, EMPTY)
+    }
+
+    override suspend fun saveUserToken(token: String) {
+        putString(USER_TOKEN, token)
+    }
+
+    override suspend fun clearUserToken() {
+        remove(USER_TOKEN)
+    }
+
+    override fun isUserLoggedIn(): Boolean {
+        return getUserToken().isNotEmpty()
     }
 
     companion object {
         private const val USER_KEY = "user_key"
         private const val USER_DATA = "user_data"
         private const val IS_FROM_LOGIN = "is-from-login"
+        private const val USER_TOKEN = "user-token"
+        private const val BASE_URL = "base-url"
+        private const val DEFAULT_BASE_URL = "https://isafeapi1.azurewebsites.net/"
     }
 }

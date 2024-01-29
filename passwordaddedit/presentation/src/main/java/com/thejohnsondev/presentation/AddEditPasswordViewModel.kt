@@ -12,6 +12,8 @@ import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.fold
 import javax.inject.Inject
 
 @HiltViewModel
@@ -146,19 +148,15 @@ class AddEditPasswordViewModel @Inject constructor(
             _additionalFields.value
         )
         if (_isEdit.value) {
-            useCases.updatePassword(dataStore.getUserData().id.orEmpty(), passwordModel).collect {
-                when (it) {
-                    is DatabaseResponse.ResponseFailure -> handleError(it.exception)
-                    is DatabaseResponse.ResponseSuccess -> handlePasswordSaved()
-                }
-            }
+            useCases.updatePassword("", passwordModel).first().fold(
+                ifLeft = { handleError(it) },
+                ifRight = { handlePasswordSaved() }
+            )
         } else {
-            useCases.createPassword(dataStore.getUserData().id.orEmpty(), passwordModel).collect {
-                when (it) {
-                    is DatabaseResponse.ResponseFailure -> handleError(it.exception)
-                    is DatabaseResponse.ResponseSuccess -> handlePasswordSaved()
-                }
-            }
+            useCases.createPassword("", passwordModel).first().fold(
+                ifLeft = { handleError(it) },
+                ifRight = { handlePasswordSaved() }
+            )
         }
     }
 

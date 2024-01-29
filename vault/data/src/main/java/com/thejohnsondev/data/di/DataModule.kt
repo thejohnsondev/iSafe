@@ -1,14 +1,14 @@
 package com.thejohnsondev.data.di
 
-import com.google.firebase.database.FirebaseDatabase
 import com.thejohnsondev.data.PasswordsRepository
 import com.thejohnsondev.data.PasswordsRepositoryImpl
-import com.thejohnsondev.datastore.DataStore
+import com.thejohnsondev.network.di.DotNetRemoteDataSource
+import com.thejohnsondev.network.di.FirebaseRemoteDataSource
+import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
 @Module
@@ -18,13 +18,9 @@ object DataModule {
     @Singleton
     @Provides
     fun providePasswordsRepository(
-        firebaseDatabase: FirebaseDatabase,
-        coroutineScope: CoroutineScope,
-        dataStore: DataStore
+        @DotNetRemoteDataSource remoteDataSource: RemoteDataSource
     ): PasswordsRepository = PasswordsRepositoryImpl(
-        firebaseDatabase,
-        coroutineScope,
-        dataStore
+        remoteDataSource
     )
 
 }

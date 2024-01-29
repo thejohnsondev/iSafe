@@ -83,4 +83,7 @@ dependencies {
     implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.com.google.dagger.hilt.compiler)
+
+    // Arrow
+    implementation(libs.arrow.core)
 }

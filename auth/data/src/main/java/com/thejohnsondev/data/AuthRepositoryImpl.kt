@@ -1,72 +1,33 @@
 package com.thejohnsondev.data
 
-import com.google.firebase.auth.FirebaseAuth
-import com.thejohnsondev.common.DEFAULT_USER_ID
-import com.thejohnsondev.common.DEFAULT_USER_NAME
-import com.thejohnsondev.common.awaitChannelFlow
-import com.thejohnsondev.common.sendOrNothing
-import com.thejohnsondev.model.AuthResponse
-import kotlinx.coroutines.CoroutineScope
+import arrow.core.Either
+import com.thejohnsondev.datastore.DataStore
+import com.thejohnsondev.model.ApiError
+import com.thejohnsondev.model.auth.AuthResponse
+import com.thejohnsondev.network.di.DotNetRemoteDataSource
+import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val coroutineScope: CoroutineScope
+    @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource,
+    private val dataStore: DataStore
 ) : AuthRepository {
-    override suspend fun signUp(email: String, password: String): Flow<AuthResponse> =
-        awaitChannelFlow {
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    coroutineScope.launch {
-                        sendOrNothing(AuthResponse.ResponseSuccess(it.user?.uid.orEmpty()))
-                    }
-                }
-                .addOnFailureListener {
-                    coroutineScope.launch {
-                        sendOrNothing(AuthResponse.ResponseFailure(it))
-                    }
-                }
-        }
+    override suspend fun signUp(email: String, password: String): Flow<Either<ApiError, AuthResponse>> =
+        remoteDataSource.signUp(email, password)
 
-    override suspend fun singIn(email: String, password: String): Flow<AuthResponse> =
-        awaitChannelFlow {
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    coroutineScope.launch {
-                        sendOrNothing(AuthResponse.ResponseSuccess(it.user?.uid.orEmpty()))
-                    }
-                }
-                .addOnFailureListener {
-                    coroutineScope.launch {
-                        sendOrNothing(AuthResponse.ResponseFailure(it))
-                    }
-                }
-        }
+    override suspend fun singIn(email: String, password: String): Flow<Either<ApiError, AuthResponse>> =
+        remoteDataSource.singIn(email, password)
 
     override suspend fun signOut() {
-        FirebaseAuth.getInstance().signOut()
+        remoteDataSource.signOut()
     }
 
-    override suspend fun getCurrentUserName(): Flow<String> = awaitChannelFlow {
-        val currentUserEmail = FirebaseAuth.getInstance().currentUser?.email
-        if (!currentUserEmail.isNullOrEmpty()) {
-            sendOrNothing(currentUserEmail.split("@").first())
-        } else {
-            sendOrNothing(DEFAULT_USER_NAME)
-        }
-    }
+    override suspend fun getCurrentUserName(): Flow<String> =
+        remoteDataSource.getCurrentUserName()
 
-    override suspend fun getCurrentUserId(): Flow<String> = awaitChannelFlow {
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
-        if (!currentUserId.isNullOrEmpty()) {
-            sendOrNothing(currentUserId)
-        } else {
-            sendOrNothing(DEFAULT_USER_ID)
-        }
-    }
+    override suspend fun getCurrentUserId(): Flow<String> =
+        remoteDataSource.getCurrentUserId()
 
-    override fun isUserLoggedIn(): Boolean {
-        return !FirebaseAuth.getInstance().currentUser?.email.isNullOrBlank()
-    }
+    override fun isUserLoggedIn(): Boolean = dataStore.isUserLoggedIn()
 }

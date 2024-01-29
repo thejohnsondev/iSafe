@@ -73,4 +73,8 @@ dependencies {
 
     // Accompanist
     implementation(libs.com.google.accompanist.systemuicontroller)
+
+    // Arrow
+    implementation(libs.arrow.core)
+
 }

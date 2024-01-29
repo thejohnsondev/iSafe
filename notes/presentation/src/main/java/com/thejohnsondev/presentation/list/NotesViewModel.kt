@@ -32,7 +32,7 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun fetchNotes() = launchLoading {
-        useCases.getAllNotes(dataStore.getUserData().id.orEmpty()).collect {
+        useCases.getAllNotes("").collect {
             when (it) {
                 is UserNotesResponse.ResponseFailure -> handleError(it.exception)
                 is UserNotesResponse.ResponseSuccess -> handleNotesList(it.notes)

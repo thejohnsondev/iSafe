@@ -38,7 +38,7 @@ abstract class BaseViewModel : ViewModel() {
         _loadingState.emit(LoadingState.Loaded)
     }
 
-    protected fun BaseViewModel.handleError(error: ApiError) {
+    protected fun handleError(error: ApiError) {
         loaded()
         val errorMessage = when (error) {
             is HttpError -> error.message

@@ -30,7 +30,6 @@ import com.thejohnsondev.presentation.navigation.vaultRoute
 import com.thejohnsondev.presentation.navigation.vaultScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeNavigation(rootNavController: NavController) {
     val navController = rememberNavController()
