@@ -86,6 +86,6 @@ class DataStoreImpl @Inject constructor(
         private const val IS_FROM_LOGIN = "is-from-login"
         private const val USER_TOKEN = "user-token"
         private const val BASE_URL = "base-url"
-        private const val DEFAULT_BASE_URL = "https://isafeapi1.azurewebsites.net/"
+        private const val DEFAULT_BASE_URL = "https://isafeapi2.azurewebsites.net/"
     }
 }
