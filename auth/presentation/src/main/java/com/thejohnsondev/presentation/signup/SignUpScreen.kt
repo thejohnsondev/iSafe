@@ -45,16 +45,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.getEmailErrorMessage
 import com.thejohnsondev.common.getPasswordErrorMessage
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.EqualRounded
+import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
 import com.thejohnsondev.designsystem.Size4
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Size86
+import com.thejohnsondev.designsystem.isLight
 import com.thejohnsondev.model.EmailValidationState
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
@@ -70,23 +73,8 @@ fun SignUpScreen(
     goToHome: () -> Unit,
     goToLogin: () -> Unit
 ) {
-    SignUpContent(
-        viewModel,
-        goToHome,
-        goToLogin
-    )
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun SignUpContent(
-    viewModel: SignUpViewModel,
-    onGoToHome: () -> Unit,
-    onGoToLogin: () -> Unit
-) {
-    val context = LocalContext.current
     val screenState = viewModel.viewState.collectAsState(initial = SignUpViewModel.State())
+    val context = LocalContext.current
     val emailState = rememberSaveable {
         mutableStateOf(EMPTY)
     }
@@ -99,7 +87,6 @@ fun SignUpContent(
     val snackbarHostState = remember {
         SnackbarHostState()
     }
-
     LaunchedEffect(true) {
         viewModel.getEventFlow().collect {
             when (it) {
@@ -109,12 +96,51 @@ fun SignUpContent(
                 )
 
                 is OneTimeEvent.SuccessNavigation -> {
-                    onGoToHome()
+                    goToHome()
                 }
 
             }
         }
     }
+    SignUpContent(
+        screenState.value,
+        emailState,
+        passwordState,
+        emailFocusRequest,
+        passwordFocusRequest,
+        snackbarHostState,
+        goToLogin,
+        validateEmail = {
+            viewModel.perform(SignUpViewModel.Action.ValidateEmail(it))
+        },
+        validatePassword = {
+            viewModel.perform(SignUpViewModel.Action.ValidatePassword(it))
+        },
+        hideKeyboard = {
+            keyboardController?.hide()
+        },
+        sigUpWithEmail = { email, password ->
+            viewModel.perform(SignUpViewModel.Action.SignUpWithEmail(email, password))
+        }
+    )
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun SignUpContent(
+    state: SignUpViewModel.State,
+    emailState: MutableState<String>,
+    passwordState: MutableState<String>,
+    emailFocusRequest: FocusRequester,
+    passwordFocusRequest: FocusRequester,
+    snackbarHostState: SnackbarHostState,
+    onGoToLogin: () -> Unit,
+    validateEmail: (String) -> Unit,
+    validatePassword: (String) -> Unit,
+    hideKeyboard: () -> Unit,
+    sigUpWithEmail: (String, String) -> Unit
+) {
+
     Scaffold(snackbarHost = {
         SnackbarHost(snackbarHostState) { data ->
             Snackbar(
@@ -126,7 +152,11 @@ fun SignUpContent(
     }) { paddingValues ->
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = Color.Black
+            color = if (MaterialTheme.colorScheme.isLight()) {
+                Color.White
+            } else {
+                Color.Black
+            }
         ) {
             Box {
                 Box {
@@ -140,15 +170,15 @@ fun SignUpContent(
                 ) {
                     LogoSection()
                     FieldsSection(
-                        context = context,
-                        viewModel = viewModel,
-                        screenState = screenState,
+                        screenState = state,
                         emailState = emailState,
                         passwordState = passwordState,
                         emailFocusRequest = emailFocusRequest,
                         passwordFocusRequest = passwordFocusRequest,
-                        keyboardController = keyboardController,
-                        onGoToLogin = onGoToLogin
+                        onGoToLogin = onGoToLogin,
+                        validateEmail = validateEmail,
+                        validatePassword = validatePassword,
+                        hideKeyboard = hideKeyboard
                     )
                 }
                 Box(
@@ -157,10 +187,10 @@ fun SignUpContent(
                         .padding(bottom = paddingValues.calculateBottomPadding())
                 ) {
                     SignUpButtonSection(
-                        screenState = screenState,
-                        viewModel = viewModel,
+                        screenState = state,
                         emailState = emailState,
                         passwordState = passwordState,
+                        sigUpWithEmail = sigUpWithEmail
                     )
                 }
             }
@@ -174,19 +204,19 @@ fun LogoSection() {
     Spacer(modifier = Modifier.height(Size24))
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FieldsSection(
-    context: Context,
-    viewModel: SignUpViewModel,
-    screenState: State<SignUpViewModel.State>,
+    screenState: SignUpViewModel.State,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
     emailFocusRequest: FocusRequester,
     passwordFocusRequest: FocusRequester,
-    keyboardController: SoftwareKeyboardController?,
-    onGoToLogin: () -> Unit
+    onGoToLogin: () -> Unit,
+    validateEmail: (String) -> Unit,
+    validatePassword: (String) -> Unit,
+    hideKeyboard: () -> Unit
 ) {
+    val context = LocalContext.current
     Surface(
         modifier = Modifier
             .fillMaxHeight()
@@ -210,7 +240,8 @@ fun FieldsSection(
                 textState = emailState,
                 onTextChanged = {
                     emailState.value = it
-                    viewModel.perform(SignUpViewModel.Action.ValidateEmail(it))
+                    validateEmail(it)
+
                 },
                 label = stringResource(com.thejohnsondev.common.R.string.email),
                 onKeyboardAction = KeyboardActions {
@@ -219,9 +250,9 @@ fun FieldsSection(
                 },
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email,
-                isError = screenState.value.emailValidationState !is EmailValidationState.EmailCorrectState,
-                errorText = if (screenState.value.emailValidationState is EmailValidationState.EmailIncorrectState) context.getEmailErrorMessage(
-                    (screenState.value.emailValidationState as EmailValidationState.EmailIncorrectState).reason
+                isError = screenState.emailValidationState !is EmailValidationState.EmailCorrectState,
+                errorText = if (screenState.emailValidationState is EmailValidationState.EmailIncorrectState) context.getEmailErrorMessage(
+                    screenState.emailValidationState.reason
                 )
                 else null
             )
@@ -231,17 +262,17 @@ fun FieldsSection(
                 textState = passwordState,
                 onTextChanged = {
                     passwordState.value = it
-                    viewModel.perform(SignUpViewModel.Action.ValidatePassword(it))
+                    validatePassword(it)
                 },
                 label = stringResource(com.thejohnsondev.common.R.string.password),
                 imeAction = ImeAction.Done,
                 onKeyboardAction = KeyboardActions {
-                    keyboardController?.hide()
+                    hideKeyboard()
                 },
                 keyboardType = KeyboardType.Password,
-                isError = screenState.value.passwordValidationState !is PasswordValidationState.PasswordCorrectState,
-                errorText = if (screenState.value.passwordValidationState is PasswordValidationState.PasswordIncorrectState) context.getPasswordErrorMessage(
-                    (screenState.value.passwordValidationState as PasswordValidationState.PasswordIncorrectState).reason
+                isError = screenState.passwordValidationState !is PasswordValidationState.PasswordCorrectState,
+                errorText = if (screenState.passwordValidationState is PasswordValidationState.PasswordIncorrectState) context.getPasswordErrorMessage(
+                    screenState.passwordValidationState.reason
                 )
                 else null
             )
@@ -273,24 +304,42 @@ fun FieldsSection(
 
 @Composable
 fun SignUpButtonSection(
-    screenState: State<SignUpViewModel.State>,
-    viewModel: SignUpViewModel,
+    screenState: SignUpViewModel.State,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
+    sigUpWithEmail: (String, String) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.Bottom) {
         RoundedButton(
             text = stringResource(id = com.thejohnsondev.common.R.string.sign_up),
             modifier = Modifier.padding(Size8),
-            enabled = screenState.value.signUpReady,
+            enabled = screenState.signUpReady,
             onClick = {
-                viewModel.perform(
-                    SignUpViewModel.Action.SignUpWithEmail(
-                        emailState.value, passwordState.value
-                    )
+                sigUpWithEmail(
+                    emailState.value, passwordState.value
                 )
             },
-            loading = screenState.value.loadingState is LoadingState.Loading
+            loading = screenState.loadingState is LoadingState.Loading
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun SignUpScreenPreviewEmpty() {
+    ISafeTheme {
+        SignUpContent(
+            state = SignUpViewModel.State(),
+            emailState = rememberSaveable { mutableStateOf(EMPTY) },
+            passwordState = rememberSaveable { mutableStateOf(EMPTY) },
+            emailFocusRequest = remember { FocusRequester() },
+            passwordFocusRequest = remember { FocusRequester() },
+            snackbarHostState = remember { SnackbarHostState() },
+            onGoToLogin = {},
+            validateEmail = {},
+            validatePassword = {},
+            hideKeyboard = {},
+            sigUpWithEmail = { _, _ -> }
         )
     }
 }

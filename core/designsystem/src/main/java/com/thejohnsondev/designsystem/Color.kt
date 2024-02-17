@@ -1,5 +1,8 @@
 package com.thejohnsondev.designsystem
+import androidx.compose.material3.ColorScheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 
 val md_theme_light_primary = Color(0xFF3C5BA9)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
@@ -63,5 +66,5 @@ val md_theme_dark_surfaceTint = Color(0xFFB3C5FF)
 val md_theme_dark_outlineVariant = Color(0xFF45464F)
 val md_theme_dark_scrim = Color(0xFF000000)
 
-
-val seed = Color(0xFF5C5E68)
+@Composable
+fun ColorScheme.isLight() = this.background.luminance() > 0.5
