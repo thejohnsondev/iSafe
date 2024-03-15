@@ -20,8 +20,10 @@ import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.designsystem.Size48
 
 @Composable
-fun FullScreenLoading() {
-    Box(modifier = Modifier.fillMaxSize()) {
+fun ISafeLoading(
+    modifier: Modifier = Modifier.fillMaxSize()
+) {
+    Box(modifier = modifier) {
         val infiniteTransition = rememberInfiniteTransition(label = EMPTY)
 
         val scale by infiniteTransition.animateFloat(

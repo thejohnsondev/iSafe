@@ -60,7 +60,7 @@ import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordModel
 import com.thejohnsondev.ui.AdditionalField
-import com.thejohnsondev.ui.FullScreenLoading
+import com.thejohnsondev.ui.ISafeLoading
 import com.thejohnsondev.ui.HintTextField
 import com.thejohnsondev.ui.LoadedImage
 import com.thejohnsondev.ui.ScaffoldConfig
@@ -128,7 +128,7 @@ fun AddEditPasswordScreen(
         )
     )
     when (state.value.loadingState) {
-        LoadingState.Loading -> FullScreenLoading()
+        LoadingState.Loading -> ISafeLoading()
         LoadingState.Loaded -> {
             AddEditPasswordContent(
                 state = state.value,

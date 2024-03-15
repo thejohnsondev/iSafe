@@ -56,7 +56,7 @@ import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordModel
 import com.thejohnsondev.ui.EmptyListPlaceHolder
 import com.thejohnsondev.ui.FilterGroup
-import com.thejohnsondev.ui.FullScreenLoading
+import com.thejohnsondev.ui.ISafeLoading
 import com.thejohnsondev.ui.PasswordItem
 import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.SearchBar
@@ -174,7 +174,7 @@ fun VaultContent(
         color = MaterialTheme.colorScheme.background
     ) {
         if (state.loadingState is LoadingState.Loading) {
-            FullScreenLoading()
+            ISafeLoading()
             return@Surface
         }
         Column(

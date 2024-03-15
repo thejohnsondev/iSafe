@@ -36,7 +36,7 @@ import com.thejohnsondev.designsystem.Text18
 import com.thejohnsondev.designsystem.Text22
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
-import com.thejohnsondev.ui.FullScreenLoading
+import com.thejohnsondev.ui.ISafeLoading
 import com.thejohnsondev.ui.HintTextField
 import com.thejohnsondev.ui.ScaffoldConfig
 
@@ -94,7 +94,7 @@ fun AddNoteScreen(
     )
 
     when (state.value.loadingState) {
-        is LoadingState.Loading -> FullScreenLoading()
+        is LoadingState.Loading -> ISafeLoading()
         is LoadingState.Loaded -> AddNoteContent(
             state = state.value,
             titleFocusRequester = titleFocusRequester,

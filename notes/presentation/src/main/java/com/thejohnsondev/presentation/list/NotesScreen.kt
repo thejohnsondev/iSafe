@@ -8,27 +8,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Security
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,9 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.R
 import com.thejohnsondev.common.toast
@@ -50,7 +37,7 @@ import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.OneTimeEvent
-import com.thejohnsondev.ui.FullScreenLoading
+import com.thejohnsondev.ui.ISafeLoading
 import com.thejohnsondev.ui.NoteItem
 import com.thejohnsondev.ui.ScaffoldConfig
 
@@ -125,7 +112,7 @@ fun NotesContent(
         color = MaterialTheme.colorScheme.background
     ) {
         if (screenState.loadingState is LoadingState.Loading) {
-            FullScreenLoading()
+            ISafeLoading()
             return@Surface
         }
         Column(

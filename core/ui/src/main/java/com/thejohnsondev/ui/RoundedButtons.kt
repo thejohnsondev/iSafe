@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,9 +47,8 @@ fun RoundedButton(
         colors = colors
     ) {
         if (loading)
-            CircularProgressIndicator(
-                modifier = Modifier.size(Size24),
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+            ISafeLoading(
+                modifier = Modifier.size(Size24)
             )
         else
             Text(text = text)
