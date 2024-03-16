@@ -53,13 +53,15 @@ class LoginViewModel @Inject constructor(
         useCases.signIn(email, password).first()
             .fold(
                 ifLeft = ::handleError,
-                ifRight = ::handleAuthResponse
+                ifRight = {
+                    handleAuthResponse(it, password)
+                }
             )
     }
 
-    private fun handleAuthResponse(authResponse: AuthResponse) {
-        Log.e("TAG", "-- login response: ${authResponse.token}")
+    private fun handleAuthResponse(authResponse: AuthResponse, password: String) = launch {
         saveUserToken(authResponse.token)
+        generateAndSaveEncryptionKey(password)
         sendEvent(OneTimeEvent.SuccessNavigation)
     }
 

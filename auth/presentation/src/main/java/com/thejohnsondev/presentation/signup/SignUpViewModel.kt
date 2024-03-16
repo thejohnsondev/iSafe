@@ -60,7 +60,9 @@ class SignUpViewModel @Inject constructor(
         useCases.signUp(email, password).first()
             .fold(
                 ifLeft = ::handleError,
-                ifRight = ::handleAuthResponse
+                ifRight = {
+                    handleAuthResponse(it, password)
+                }
             )
     }
 
@@ -69,9 +71,9 @@ class SignUpViewModel @Inject constructor(
         sendEvent(OneTimeEvent.SuccessNavigation)
     }
 
-    private fun handleAuthResponse(authResponse: AuthResponse) {
-        // TODO: add generating key
+    private fun handleAuthResponse(authResponse: AuthResponse, password: String) = launch {
         saveUserToken(authResponse.token)
+        generateAndSaveEncryptionKey(password)
         sendEvent(OneTimeEvent.SuccessNavigation)
     }
 
