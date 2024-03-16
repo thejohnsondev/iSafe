@@ -11,6 +11,7 @@ import com.thejohnsondev.model.OneTimeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,25 +51,14 @@ class AddNoteViewModel @Inject constructor(
             id = System.currentTimeMillis().toString(),
             title = _titleState.value,
             description = _descriptionState.value,
-            category = ""
         )
-        useCases.createNote("", note)
-            .collect {
-                when (it) {
-                    is DatabaseResponse.ResponseFailure -> it.exception?.message?.let { message ->
-                        sendEvent(
-                            OneTimeEvent.InfoToast(
-                                message
-                            )
-                        )
-                    }
-
-                    is DatabaseResponse.ResponseSuccess -> {
-                        sendEvent(OneTimeEvent.InfoToast("Note added"))
-                        sendEvent(OneTimeEvent.SuccessNavigation)
-                    }
-                }
+        useCases.createNote(note).first().fold(
+            ifLeft = ::handleError,
+            ifRight = {
+                sendEvent(OneTimeEvent.InfoToast("Note added"))
+                sendEvent(OneTimeEvent.SuccessNavigation)
             }
+        )
     }
 
     private fun mergeSources(

@@ -1,8 +1,16 @@
 package com.thejohnsondev.domain
 
-import com.thejohnsondev.model.UserNotesResponse
+import arrow.core.Either
+import com.thejohnsondev.data.NotesRepository
+import com.thejohnsondev.model.ApiError
+import com.thejohnsondev.model.NoteModel
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-interface GetAllNotesUseCase {
-    suspend operator fun invoke(userId: String): Flow<UserNotesResponse>
+class GetAllNotesUseCase @Inject constructor(
+    private val notesRepository: NotesRepository
+) {
+    suspend operator fun invoke(): Flow<Either<ApiError, List<NoteModel>>> {
+        return notesRepository.getNotes()
+    }
 }

@@ -93,7 +93,6 @@ fun NoteItemPreview() {
             "1",
             "Note 1 title",
             "Note 1 description (long), Note 1 description (long) Note 1 description (long) Note 1 description (long) Note 1 description (long), Note 1 description (long), Note 1 description (long) Note 1 description (long) Note 1 description (long) Note 1 description (long)",
-            "Note"
         )
     )
 }

@@ -61,7 +61,7 @@ fun NotesScreen(
     }
     StatusBarColor()
     LaunchedEffect(true) {
-//        viewModel.perform(NotesViewModel.Action.FetchNotes)       todo uncomment it when api is ready
+        viewModel.perform(NotesViewModel.Action.FetchNotes)
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)
@@ -158,7 +158,6 @@ fun NotesScreenPreviewWithNotesLight() {
                         id = "1",
                         title = "Note 1",
                         description = "Description 1",
-                        category = "Category 1",
                     )
                 )
             ),
@@ -182,7 +181,6 @@ fun NotesScreenPreviewWithNotesDark() {
                         id = "1",
                         title = "Note 1",
                         description = "Description 1",
-                        category = "Category 1",
                     )
                 )
             ),

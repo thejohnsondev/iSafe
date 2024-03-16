@@ -1,13 +1,18 @@
 package com.thejohnsondev.data
 
-import com.thejohnsondev.model.DatabaseResponse
+import arrow.core.Either
+import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.NoteModel
-import com.thejohnsondev.model.UserNotesResponse
 import kotlinx.coroutines.flow.Flow
 
 interface NotesRepository {
-    fun getUserNotes(userId: String): Flow<UserNotesResponse>
-    fun createNote(userId: String, note: NoteModel): Flow<DatabaseResponse>
-    fun updateNote(userId: String, note: NoteModel): Flow<DatabaseResponse>
-    fun deleteNote(userId: String, noteId: Int): Flow<DatabaseResponse>
+    fun getNotes(): Flow<Either<ApiError, List<NoteModel>>>
+    fun createNote(noteModel: NoteModel): Flow<Either<ApiError, NoteModel>>
+    fun updateNote(
+        id: String,
+        noteModel: NoteModel
+    ): Flow<Either<ApiError, Unit>>
+    fun deleteNote(
+        id: String
+    ): Flow<Either<ApiError, Unit>>
 }

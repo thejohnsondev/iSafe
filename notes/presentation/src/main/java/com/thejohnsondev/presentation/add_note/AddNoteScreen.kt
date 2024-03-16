@@ -59,6 +59,7 @@ fun AddNoteScreen(
     val descriptionFocusRequester = remember {
         FocusRequester()
     }
+    // TODO: add update and delete functionality
     LaunchedEffect(true) {
         titleFocusRequester.requestFocus()
         viewModel.getEventFlow().collect {
@@ -98,7 +99,13 @@ fun AddNoteScreen(
         is LoadingState.Loaded -> AddNoteContent(
             state = state.value,
             titleFocusRequester = titleFocusRequester,
-            descriptionFocusRequester = descriptionFocusRequester
+            descriptionFocusRequester = descriptionFocusRequester,
+            onEnterTitle = { title ->
+                viewModel.perform(AddNoteViewModel.Action.EnterTitle(title))
+            },
+            onEnterDescription = { description ->
+                viewModel.perform(AddNoteViewModel.Action.EnterDescription(description))
+            }
         )
     }
 
@@ -111,8 +118,8 @@ fun AddNoteContent(
     state: AddNoteViewModel.State,
     titleFocusRequester: FocusRequester,
     descriptionFocusRequester: FocusRequester,
-    onEnterTitle: (String) -> Unit = {},
-    onEnterDescription: (String) -> Unit = {},
+    onEnterTitle: (String) -> Unit,
+    onEnterDescription: (String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -177,7 +184,9 @@ private fun AddNoteScreenPreviewEmptyLight() {
         AddNoteContent(
             state = AddNoteViewModel.State(),
             titleFocusRequester = FocusRequester(),
-            descriptionFocusRequester = FocusRequester()
+            descriptionFocusRequester = FocusRequester(),
+            onEnterTitle = {},
+            onEnterDescription = {}
         )
     }
 }
@@ -189,7 +198,9 @@ private fun AddNoteScreenPreviewEmptyDark() {
         AddNoteContent(
             state = AddNoteViewModel.State(),
             titleFocusRequester = FocusRequester(),
-            descriptionFocusRequester = FocusRequester()
+            descriptionFocusRequester = FocusRequester(),
+            onEnterTitle = {},
+            onEnterDescription = {}
         )
     }
 }
@@ -204,7 +215,9 @@ private fun AddNoteScreenPreviewWithDataLight() {
                 descriptionState = "Some long description lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum"
             ),
             titleFocusRequester = FocusRequester(),
-            descriptionFocusRequester = FocusRequester()
+            descriptionFocusRequester = FocusRequester(),
+            onEnterTitle = {},
+            onEnterDescription = {}
         )
     }
 }
@@ -219,7 +232,9 @@ private fun AddNoteScreenPreviewWithDataDark() {
                 descriptionState = "Some long description lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum"
             ),
             titleFocusRequester = FocusRequester(),
-            descriptionFocusRequester = FocusRequester()
+            descriptionFocusRequester = FocusRequester(),
+            onEnterTitle = {},
+            onEnterDescription = {}
         )
     }
 }

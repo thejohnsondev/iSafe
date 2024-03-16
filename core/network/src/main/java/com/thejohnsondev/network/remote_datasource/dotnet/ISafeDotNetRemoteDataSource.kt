@@ -132,27 +132,24 @@ class ISafeDotNetRemoteDataSource @Inject constructor(
         return false
     }
 
-    override fun getUserNotes(userId: String): Flow<UserNotesResponse> = awaitChannelFlow {
-
-    }
-
-    override fun createNote(userId: String, note: NoteModel): Flow<DatabaseResponse> =
-        awaitChannelFlow {
-
-        }
-
-    override fun updateNote(userId: String, note: NoteModel): Flow<DatabaseResponse> =
-        awaitChannelFlow {
-
-        }
-
-    override fun deleteNote(userId: String, noteId: Int): Flow<DatabaseResponse> =
-        awaitChannelFlow {
-
-        }
-
     override fun deleteAccount(): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
         sendOrNothing(api.deleteAccount())
+    }
+
+    override fun getNotes(): Flow<Either<ApiError, List<NoteModel>>> = awaitChannelFlow {
+        sendOrNothing(api.getNotes())
+    }
+
+    override fun createNote(noteModel: NoteModel): Flow<Either<ApiError, NoteModel>> = awaitChannelFlow {
+        sendOrNothing(api.createNote(noteModel))
+    }
+
+    override fun updateNote(id: String, noteModel: NoteModel): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
+        sendOrNothing(api.updateNote(id, noteModel))
+    }
+
+    override fun deleteNote(id: String): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
+        sendOrNothing(api.deleteNote(id))
     }
 
 }

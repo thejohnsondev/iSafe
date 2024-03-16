@@ -9,6 +9,7 @@ import com.thejohnsondev.model.UserNotesResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,12 +33,10 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun fetchNotes() = launchLoading {
-        useCases.getAllNotes("").collect {
-            when (it) {
-                is UserNotesResponse.ResponseFailure -> handleError(it.exception)
-                is UserNotesResponse.ResponseSuccess -> handleNotesList(it.notes)
-            }
-        }
+        useCases.getAllNotes().first().fold(
+            ifLeft = ::handleError,
+            ifRight = ::handleNotesList
+        )
 
     }
 

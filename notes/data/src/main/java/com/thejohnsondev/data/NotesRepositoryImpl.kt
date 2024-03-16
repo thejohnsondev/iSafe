@@ -1,25 +1,27 @@
 package com.thejohnsondev.data
 
-import com.thejohnsondev.model.DatabaseResponse
+import arrow.core.Either
+import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.NoteModel
-import com.thejohnsondev.model.UserNotesResponse
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
 
 class NotesRepositoryImpl(
     private val remoteDataSource: RemoteDataSource
 ) : NotesRepository {
+    override fun getNotes(): Flow<Either<ApiError, List<NoteModel>>> = remoteDataSource.getNotes()
 
-    override fun getUserNotes(userId: String): Flow<UserNotesResponse> =
-        remoteDataSource.getUserNotes(userId)
+    override fun createNote(noteModel: NoteModel): Flow<Either<ApiError, NoteModel>> =
+        remoteDataSource.createNote(noteModel)
 
-    override fun createNote(userId: String, note: NoteModel): Flow<DatabaseResponse> =
-        remoteDataSource.createNote(userId, note)
+    override fun updateNote(id: String, noteModel: NoteModel): Flow<Either<ApiError, Unit>> =
+        remoteDataSource.updateNote(
+            id,
+            noteModel
+        )
 
-    override fun updateNote(userId: String, note: NoteModel): Flow<DatabaseResponse> =
-        remoteDataSource.updateNote(userId, note)
+    override fun deleteNote(id: String): Flow<Either<ApiError, Unit>> =
+        remoteDataSource.deleteNote(id)
 
-    override fun deleteNote(userId: String, noteId: Int): Flow<DatabaseResponse> =
-        remoteDataSource.deleteNote(userId, noteId)
 
 }

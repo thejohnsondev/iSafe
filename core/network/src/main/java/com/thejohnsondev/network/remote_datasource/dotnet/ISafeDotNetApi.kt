@@ -2,6 +2,7 @@ package com.thejohnsondev.network.remote_datasource.dotnet
 
 import arrow.core.Either
 import com.thejohnsondev.model.ApiError
+import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.PasswordModel
 import com.thejohnsondev.model.auth.AuthBody
 import com.thejohnsondev.model.auth.AuthResponse
@@ -45,5 +46,24 @@ interface ISafeDotNetApi {
 
     @DELETE(DELETE_ACCOUNT)
     suspend fun deleteAccount(): Either<ApiError, Unit>
+
+    @GET(GET_NOTES)
+    suspend fun getNotes(): Either<ApiError, List<NoteModel>>
+
+    @POST(CREATE_NOTE)
+    suspend fun createNote(
+        @Body noteModel: NoteModel
+    ): Either<ApiError, NoteModel>
+
+    @PUT("$UPDATE_NOTE/{id}")
+    suspend fun updateNote(
+        @Path("id") id: String,
+        @Body noteModel: NoteModel
+    ): Either<ApiError, Unit>
+
+    @DELETE("$DELETE_NOTE/{id}")
+    suspend fun deleteNote(
+        @Path("id") id: String
+    ): Either<ApiError, Unit>
 
 }
