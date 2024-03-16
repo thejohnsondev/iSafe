@@ -19,7 +19,7 @@ import androidx.navigation.NavHostController
 fun ISafeBottomNavigation(navController: NavHostController, bottomBarState: MutableState<Boolean>) {
     val items = listOf(
         BottomNavItem.Passwords,
-        BottomNavItem.Notes,
+        BottomNavItem.Tools,
         BottomNavItem.Settings
     )
     AnimatedVisibility(

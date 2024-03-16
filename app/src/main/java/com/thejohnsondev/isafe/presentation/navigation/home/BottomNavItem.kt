@@ -13,6 +13,13 @@ sealed class BottomNavItem(
         imgResId = com.thejohnsondev.designsystem.R.drawable.ic_notes
     )
 
+    object Tools :
+        BottomNavItem(
+            route = Screens.Tools.name,
+            titleRes = com.thejohnsondev.common.R.string.tools,
+            imgResId = com.thejohnsondev.designsystem.R.drawable.ic_tools
+        )
+
     object Passwords :
         BottomNavItem(
             route = Screens.VaultScreen.name,

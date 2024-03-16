@@ -11,5 +11,6 @@ enum class Screens {
     VaultScreen,
     Settings,
     AddNote,
-    AddEditPassword
+    AddEditPassword,
+    Tools
 }

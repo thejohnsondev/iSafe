@@ -24,6 +24,7 @@ import com.thejohnsondev.presentation.navigation.navigateToAddEditPassword
 import com.thejohnsondev.presentation.navigation.navigateToAddNote
 import com.thejohnsondev.presentation.navigation.notesScreen
 import com.thejohnsondev.presentation.navigation.settingsScreen
+import com.thejohnsondev.presentation.navigation.toolsScreen
 import com.thejohnsondev.presentation.navigation.vaultRoute
 import com.thejohnsondev.presentation.navigation.vaultScreen
 import com.thejohnsondev.ui.ScaffoldConfig
@@ -94,6 +95,14 @@ fun HomeNavigation(rootNavController: NavController) {
                 settingsScreen(
                     goToSignUp = {
                         rootNavController.navigateToSignUp()
+                    },
+                    setScaffoldConfig = { scaffold ->
+                        scaffoldState.value = scaffold
+                    }
+                )
+                toolsScreen(
+                    onNavigateToTool = {
+                        navController.navigate(it)
                     },
                     setScaffoldConfig = { scaffold ->
                         scaffoldState.value = scaffold

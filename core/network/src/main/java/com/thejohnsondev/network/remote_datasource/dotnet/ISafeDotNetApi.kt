@@ -5,6 +5,7 @@ import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.PasswordModel
 import com.thejohnsondev.model.auth.AuthBody
 import com.thejohnsondev.model.auth.AuthResponse
+import com.thejohnsondev.model.tools.ToolModel
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -45,5 +46,8 @@ interface ISafeDotNetApi {
 
     @DELETE(DELETE_ACCOUNT)
     suspend fun deleteAccount(): Either<ApiError, Unit>
+
+    @GET(GET_TOOLS)
+    suspend fun getTools(): Either<ApiError, List<ToolModel>>
 
 }

@@ -39,6 +39,7 @@ import com.thejohnsondev.model.UserDataResponse
 import com.thejohnsondev.model.UserModel
 import com.thejohnsondev.model.UserNotesResponse
 import com.thejohnsondev.model.UserPasswordsResponse
+import com.thejohnsondev.model.tools.ToolModel
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -464,6 +465,10 @@ class FirebaseRemoteDataSourceImpl @Inject constructor(
         }
 
     override fun deleteAccount(): Flow<Either<ApiError, Unit>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getTools(): Flow<Either<ApiError, List<ToolModel>>> {
         TODO("Not yet implemented")
     }
 

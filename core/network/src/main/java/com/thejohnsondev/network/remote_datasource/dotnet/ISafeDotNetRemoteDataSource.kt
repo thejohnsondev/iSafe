@@ -40,6 +40,7 @@ import com.thejohnsondev.model.UserNotesResponse
 import com.thejohnsondev.model.UserPasswordsResponse
 import com.thejohnsondev.model.auth.AuthBody
 import com.thejohnsondev.model.auth.AuthResponse
+import com.thejohnsondev.model.tools.ToolModel
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -153,6 +154,10 @@ class ISafeDotNetRemoteDataSource @Inject constructor(
 
     override fun deleteAccount(): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
         sendOrNothing(api.deleteAccount())
+    }
+
+    override fun getTools(): Flow<Either<ApiError, List<ToolModel>>> = awaitChannelFlow {
+        sendOrNothing(api.getTools())
     }
 
 }

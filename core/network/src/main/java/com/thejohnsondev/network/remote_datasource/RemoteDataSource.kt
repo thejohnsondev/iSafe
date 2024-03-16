@@ -10,6 +10,7 @@ import com.thejohnsondev.model.UserModel
 import com.thejohnsondev.model.UserNotesResponse
 import com.thejohnsondev.model.UserPasswordsResponse
 import com.thejohnsondev.model.auth.AuthResponse
+import com.thejohnsondev.model.tools.ToolModel
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteDataSource {
@@ -35,4 +36,5 @@ interface RemoteDataSource {
     fun updateNote(userId: String, note: NoteModel): Flow<DatabaseResponse>
     fun deleteNote(userId: String, noteId: Int): Flow<DatabaseResponse>
     fun deleteAccount(): Flow<Either<ApiError, Unit>>
+    fun getTools(): Flow<Either<ApiError, List<ToolModel>>>
 }
