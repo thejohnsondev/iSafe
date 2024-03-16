@@ -2,6 +2,7 @@ package com.thejohnsondev.presentation
 
 
 import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.common.decryptModel
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.domain.VaultUseCases
 import com.thejohnsondev.model.BankAccountModel
@@ -139,8 +140,11 @@ class VaultViewModel @Inject constructor(
         useCases.getAllPasswords("").first().fold(
             ifLeft = ::handleError,
             ifRight = {
-                handlePasswordsList(it)
-                _passwordsListFetched.emit(it)
+                val decryptedPasswordList = it.map {
+                    it.decryptModel(dataStore.getUserKey())
+                }
+                handlePasswordsList(decryptedPasswordList)
+                _passwordsListFetched.emit(decryptedPasswordList)
             }
 
         )

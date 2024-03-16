@@ -3,6 +3,7 @@ package com.thejohnsondev.presentation
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.common.combine
+import com.thejohnsondev.common.encryptModel
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.domain.AddEditPasswordUseCases
 import com.thejohnsondev.model.AdditionalField
@@ -147,13 +148,14 @@ class AddEditPasswordViewModel @Inject constructor(
             _password.value,
             _additionalFields.value
         )
+        val encryptedPasswordModel = passwordModel.encryptModel(dataStore.getUserKey())
         if (_isEdit.value) {
-            useCases.updatePassword("", passwordModel).first().fold(
+            useCases.updatePassword("", encryptedPasswordModel).first().fold(
                 ifLeft = { handleError(it) },
                 ifRight = { handlePasswordSaved() }
             )
         } else {
-            useCases.createPassword("", passwordModel).first().fold(
+            useCases.createPassword("", encryptedPasswordModel).first().fold(
                 ifLeft = { handleError(it) },
                 ifRight = { handlePasswordSaved() }
             )

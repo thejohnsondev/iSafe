@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PasswordsRepositoryImpl @Inject constructor(
-    @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource
+    @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource,
 ) : PasswordsRepository {
 
     override fun getUserPasswords(userId: String): Flow<Either<ApiError, List<PasswordModel>>> =

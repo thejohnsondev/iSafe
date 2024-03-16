@@ -1,7 +1,5 @@
 package com.thejohnsondev.presentation.signup
 
-import android.util.Log
-import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.domain.AuthUseCases
 import com.thejohnsondev.model.DatabaseResponse
@@ -72,7 +70,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun handleAuthResponse(authResponse: AuthResponse) {
-        Log.e("TAG", "-- register response: ${authResponse.token}")
+        // TODO: add generating key
         saveUserToken(authResponse.token)
         sendEvent(OneTimeEvent.SuccessNavigation)
     }
