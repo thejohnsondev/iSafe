@@ -34,7 +34,6 @@ interface RemoteDataSource {
     fun getNotes(): Flow<Either<ApiError, List<NoteModel>>>
     fun createNote(noteModel: NoteModel): Flow<Either<ApiError, NoteModel>>
     fun updateNote(
-        id: String,
         noteModel: NoteModel
     ): Flow<Either<ApiError, Unit>>
     fun deleteNote(

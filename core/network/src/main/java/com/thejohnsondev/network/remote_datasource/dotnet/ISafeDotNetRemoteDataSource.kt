@@ -144,8 +144,8 @@ class ISafeDotNetRemoteDataSource @Inject constructor(
         sendOrNothing(api.createNote(noteModel))
     }
 
-    override fun updateNote(id: String, noteModel: NoteModel): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
-        sendOrNothing(api.updateNote(id, noteModel))
+    override fun updateNote(noteModel: NoteModel): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
+        sendOrNothing(api.updateNote(noteModel.id, noteModel))
     }
 
     override fun deleteNote(id: String): Flow<Either<ApiError, Unit>> = awaitChannelFlow {

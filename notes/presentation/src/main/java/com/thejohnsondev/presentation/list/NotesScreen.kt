@@ -46,7 +46,8 @@ import com.thejohnsondev.ui.ScaffoldConfig
 fun NotesScreen(
     viewModel: NotesViewModel,
     goToAddNote: () -> Unit,
-    setScaffoldConfig: (ScaffoldConfig) -> Unit
+    setScaffoldConfig: (ScaffoldConfig) -> Unit,
+    onNoteClick: (NoteModel) -> Unit
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState(NotesViewModel.State())
@@ -92,10 +93,9 @@ fun NotesScreen(
     )
     NotesContent(
         screenState = state.value,
-        state = listState
-    ) { note ->
-
-    }
+        state = listState,
+        onNoteClick = onNoteClick
+    )
 }
 
 
@@ -120,7 +120,11 @@ fun NotesContent(
             verticalArrangement = Arrangement.Top
         ) {
             Spacer(modifier = Modifier.height(Size16))
-            NotesList(notesList = screenState.notesList, state = state)
+            NotesList(
+                notesList = screenState.notesList,
+                onNoteClick = onNoteClick,
+                state = state
+            )
         }
     }
 }
@@ -128,13 +132,12 @@ fun NotesContent(
 @Composable
 fun NotesList(
     notesList: List<NoteModel>,
-    state: LazyListState
+    state: LazyListState,
+    onNoteClick: (NoteModel) -> Unit
 ) {
     LazyColumn(state = state, modifier = Modifier.fillMaxWidth()) {
         items(notesList) { note ->
-            NoteItem(note = note) { clickedNote ->
-                // handle click
-            }
+            NoteItem(note = note, onNoteClicked = onNoteClick)
         }
     }
 }

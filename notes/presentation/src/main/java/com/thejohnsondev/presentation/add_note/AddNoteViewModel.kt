@@ -20,13 +20,16 @@ class AddNoteViewModel @Inject constructor(
     private val dataStore: DataStore
 ) : BaseViewModel() {
 
+    private val _noteId = MutableStateFlow(EMPTY)
     private val _titleState = MutableStateFlow("")
     private val _descriptionState = MutableStateFlow("")
+    private val _isEdit = MutableStateFlow(false)
 
     val state = combine(
         _loadingState,
         _titleState,
         _descriptionState,
+        _isEdit,
         ::mergeSources
     )
 
@@ -35,7 +38,26 @@ class AddNoteViewModel @Inject constructor(
             is Action.EnterDescription -> enterDescription(action.description)
             is Action.EnterTitle -> enterTitle(action.title)
             is Action.SaveNote -> saveNote()
+            is Action.SetNoteModelForEdit -> setNoteModelForEdit(action.noteModel)
+            is Action.DeleteNote -> deleteNote()
         }
+    }
+
+    private fun deleteNote() = launchLoading {
+        useCases.deleteNote(_noteId.value).first().fold(
+            ifLeft = ::handleError,
+            ifRight = {
+                sendEvent(OneTimeEvent.InfoToast("Note deleted"))
+                sendEvent(OneTimeEvent.SuccessNavigation)
+            }
+        )
+    }
+
+    private fun setNoteModelForEdit(noteModel: NoteModel) = launch {
+        enterTitle(noteModel.title)
+        enterDescription(noteModel.description)
+        _noteId.emit(noteModel.id)
+        _isEdit.emit(true)
     }
 
     private fun enterTitle(title: String) = launch {
@@ -52,35 +74,51 @@ class AddNoteViewModel @Inject constructor(
             title = _titleState.value,
             description = _descriptionState.value,
         )
-        useCases.createNote(note).first().fold(
-            ifLeft = ::handleError,
-            ifRight = {
-                sendEvent(OneTimeEvent.InfoToast("Note added"))
-                sendEvent(OneTimeEvent.SuccessNavigation)
-            }
-        )
+        if (_isEdit.value) {
+            useCases.updateNote(note).first().fold(
+                ifLeft = ::handleError,
+                ifRight = {
+                    sendEvent(OneTimeEvent.InfoToast("Note updated"))
+                    sendEvent(OneTimeEvent.SuccessNavigation)
+                }
+            )
+            return@launchLoading
+        } else {
+            useCases.createNote(note).first().fold(
+                ifLeft = ::handleError,
+                ifRight = {
+                    sendEvent(OneTimeEvent.InfoToast("Note added"))
+                    sendEvent(OneTimeEvent.SuccessNavigation)
+                }
+            )
+        }
     }
 
     private fun mergeSources(
         loadingState: LoadingState,
         titleState: String,
-        descriptionState: String
+        descriptionState: String,
+        isEdit: Boolean
     ): State = State(
         loadingState,
         titleState,
-        descriptionState
+        descriptionState,
+        isEdit
     )
 
     sealed class Action {
         class EnterTitle(val title: String) : Action()
         class EnterDescription(val description: String) : Action()
+        class SetNoteModelForEdit(val noteModel: NoteModel) : Action()
         object SaveNote : Action()
+        object DeleteNote : Action()
     }
 
     data class State(
         val loadingState: LoadingState = LoadingState.Loaded,
         val titleState: String = EMPTY,
-        val descriptionState: String = EMPTY
+        val descriptionState: String = EMPTY,
+        val isEdit: Boolean = false
     )
 
 }

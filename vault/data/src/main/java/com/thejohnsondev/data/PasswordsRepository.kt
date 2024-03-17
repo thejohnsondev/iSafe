@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface PasswordsRepository {
     fun getUserPasswords(userId: String): Flow<Either<ApiError, List<PasswordModel>>>
-    fun createPassword(userId: String, password: PasswordModel): Flow<Either<ApiError, PasswordModel>>
-    fun updatePassword(userId: String, password: PasswordModel): Flow<Either<ApiError, Unit>>
+    fun createPassword(passwordId: String, password: PasswordModel): Flow<Either<ApiError, PasswordModel>>
+    fun updatePassword(passwordId: String, password: PasswordModel): Flow<Either<ApiError, Unit>>
     fun updatePasswordsList(userId: String, newPasswordList: List<PasswordModel>): Flow<DatabaseResponse>
     fun deletePassword(userId: String, passwordId: String): Flow<Either<ApiError, Unit>>
 }

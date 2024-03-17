@@ -10,7 +10,7 @@ import javax.inject.Inject
 class UpdateNoteUseCase @Inject constructor(
     private val notesRepository: NotesRepository
 ) {
-    suspend operator fun invoke(userId: String, note: NoteModel): Flow<Either<ApiError, Unit>> {
-        return notesRepository.updateNote(userId, note)
+    suspend operator fun invoke(note: NoteModel): Flow<Either<ApiError, Unit>> {
+        return notesRepository.updateNote(note)
     }
 }

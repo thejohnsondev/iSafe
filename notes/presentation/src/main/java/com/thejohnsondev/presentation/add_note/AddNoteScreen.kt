@@ -35,15 +35,16 @@ import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Text18
 import com.thejohnsondev.designsystem.Text22
 import com.thejohnsondev.model.LoadingState
+import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.OneTimeEvent
-import com.thejohnsondev.ui.ISafeLoading
 import com.thejohnsondev.ui.HintTextField
+import com.thejohnsondev.ui.ISafeLoading
 import com.thejohnsondev.ui.ScaffoldConfig
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddNoteScreen(
     viewModel: AddNoteViewModel,
+    noteModel: NoteModel? = null,
     goBack: () -> Unit,
     setScaffoldConfig: (ScaffoldConfig) -> Unit
 ) {
@@ -62,6 +63,9 @@ fun AddNoteScreen(
     // TODO: add update and delete functionality
     LaunchedEffect(true) {
         titleFocusRequester.requestFocus()
+        noteModel?.let {
+            viewModel.perform(AddNoteViewModel.Action.SetNoteModelForEdit(it))
+        }
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)
@@ -84,11 +88,16 @@ fun AddNoteScreen(
             isTopAppBarVisible = true,
             topAppBarIcon = Icons.Default.ArrowBack,
             isTopAppBarSaveButtonVisible = true,
+            isTopAppBarDeleteButtonVisible = state.value.isEdit,
             onTopAppBarSaveClick = {
                 viewModel.perform(AddNoteViewModel.Action.SaveNote)
             },
             onTopAppBarIconClick = {
+                keyboardController?.hide()
                 goBack()
+            },
+            onTopAppBarDeleteClick = {
+                viewModel.perform(AddNoteViewModel.Action.DeleteNote)
             },
             snackBarHostState = snackbarHostState,
         )

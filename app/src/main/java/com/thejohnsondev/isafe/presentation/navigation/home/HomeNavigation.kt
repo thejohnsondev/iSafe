@@ -85,7 +85,10 @@ fun HomeNavigation(rootNavController: NavController) {
                 )
                 notesScreen(
                     goToAddNote = {
-                        navController.navigateToAddNote()
+                        navController.navigateToAddNote(note = null)
+                    },
+                    onNoteClick = {
+                        navController.navigateToAddNote(note = it.toJson())
                     },
                     setScaffoldConfig = { scaffold ->
                         scaffoldState.value = scaffold

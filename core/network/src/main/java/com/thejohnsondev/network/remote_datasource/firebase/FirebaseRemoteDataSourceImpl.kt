@@ -363,7 +363,7 @@ class FirebaseRemoteDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun updateNote(id: String, noteModel: NoteModel): Flow<Either<ApiError, Unit>> {
+    override fun updateNote(noteModel: NoteModel): Flow<Either<ApiError, Unit>> {
         TODO("Not yet implemented")
     }
 

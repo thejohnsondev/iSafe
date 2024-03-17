@@ -66,7 +66,6 @@ import com.thejohnsondev.ui.LoadedImage
 import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.bounceClick
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddEditPasswordScreen(
     viewModel: AddEditPasswordViewModel,

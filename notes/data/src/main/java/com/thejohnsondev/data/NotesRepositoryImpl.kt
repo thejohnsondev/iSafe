@@ -14,9 +14,8 @@ class NotesRepositoryImpl(
     override fun createNote(noteModel: NoteModel): Flow<Either<ApiError, NoteModel>> =
         remoteDataSource.createNote(noteModel)
 
-    override fun updateNote(id: String, noteModel: NoteModel): Flow<Either<ApiError, Unit>> =
+    override fun updateNote(noteModel: NoteModel): Flow<Either<ApiError, Unit>> =
         remoteDataSource.updateNote(
-            id,
             noteModel
         )
 
