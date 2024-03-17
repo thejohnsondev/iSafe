@@ -1,6 +1,7 @@
 package com.thejohnsondev.presentation.list
 
 import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.common.decryptModel
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.domain.NotesUseCases
 import com.thejohnsondev.model.LoadingState
@@ -41,8 +42,9 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun handleNotesList(notesList: List<NoteModel>) = launch {
+        val decryptedNotes = notesList.map { it.decryptModel(dataStore.getUserKey()) }
         _notesList.emit(
-            notesList
+            decryptedNotes
         )
         loaded()
     }

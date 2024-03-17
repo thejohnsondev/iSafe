@@ -2,6 +2,7 @@ package com.thejohnsondev.presentation.add_note
 
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.common.encryptModel
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.domain.AddNoteUseCases
 import com.thejohnsondev.model.DatabaseResponse
@@ -74,8 +75,9 @@ class AddNoteViewModel @Inject constructor(
             title = _titleState.value,
             description = _descriptionState.value,
         )
+        val encryptedNote = note.encryptModel(dataStore.getUserKey())
         if (_isEdit.value) {
-            useCases.updateNote(note).first().fold(
+            useCases.updateNote(encryptedNote).first().fold(
                 ifLeft = ::handleError,
                 ifRight = {
                     sendEvent(OneTimeEvent.InfoToast("Note updated"))
@@ -84,7 +86,7 @@ class AddNoteViewModel @Inject constructor(
             )
             return@launchLoading
         } else {
-            useCases.createNote(note).first().fold(
+            useCases.createNote(encryptedNote).first().fold(
                 ifLeft = ::handleError,
                 ifRight = {
                     sendEvent(OneTimeEvent.InfoToast("Note added"))

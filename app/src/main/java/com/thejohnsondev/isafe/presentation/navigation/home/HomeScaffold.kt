@@ -44,6 +44,7 @@ fun HomeScaffold(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>,
     scrollBehavior: TopAppBarScrollBehavior,
+    selectedItemIndex: MutableState<Int>,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
@@ -137,7 +138,8 @@ fun HomeScaffold(
             if (scaffoldState.value.isBottomNavBarVisible) {
                 ISafeBottomNavigation(
                     navController = navController,
-                    bottomBarState = bottomBarState
+                    bottomBarState = bottomBarState,
+                    selectedItemIndex = selectedItemIndex
                 )
             }
         },

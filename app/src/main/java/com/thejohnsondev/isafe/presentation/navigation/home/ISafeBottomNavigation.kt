@@ -16,7 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 
 @Composable
-fun ISafeBottomNavigation(navController: NavHostController, bottomBarState: MutableState<Boolean>) {
+fun ISafeBottomNavigation(
+    navController: NavHostController,
+    bottomBarState: MutableState<Boolean>,
+    selectedItemIndex: MutableState<Int>
+) {
     val items = listOf(
         BottomNavItem.Passwords,
         BottomNavItem.Notes,
@@ -28,9 +32,6 @@ fun ISafeBottomNavigation(navController: NavHostController, bottomBarState: Muta
         exit = slideOutVertically(targetOffsetY = { it }),
     ) {
         NavigationBar {
-            val selectedItemIndex = rememberSaveable {
-                mutableIntStateOf(0)
-            }
             items.forEachIndexed { index, screen ->
                 NavigationBarItem(
                     icon = {
@@ -42,9 +43,9 @@ fun ISafeBottomNavigation(navController: NavHostController, bottomBarState: Muta
                         )
                     },
                     label = { Text(stringResource(screen.titleRes)) },
-                    selected = selectedItemIndex.intValue == index,
+                    selected = selectedItemIndex.value == index,
                     onClick = {
-                        selectedItemIndex.intValue = index
+                        selectedItemIndex.value = index
                         navController.navigate(screen.route)
                     },
                 )

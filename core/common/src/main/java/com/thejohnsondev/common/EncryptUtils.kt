@@ -1,6 +1,7 @@
 package com.thejohnsondev.common
 
 import com.thejohnsondev.model.AdditionalField
+import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.PasswordModel
 
 
@@ -35,5 +36,19 @@ fun PasswordModel.decryptModel(key: ByteArray): PasswordModel {
         title = this.title.decrypt(key),
         password = this.password.decrypt(key),
         additionalFields = this.additionalFields.map { it.decryptModel(key) }
+    )
+}
+
+fun NoteModel.encryptModel(key: ByteArray): NoteModel {
+    return this.copy(
+        title = this.title.encrypt(key),
+        description = this.description.encrypt(key)
+    )
+}
+
+fun NoteModel.decryptModel(key: ByteArray): NoteModel {
+    return this.copy(
+        title = this.title.decrypt(key),
+        description = this.description.decrypt(key)
     )
 }

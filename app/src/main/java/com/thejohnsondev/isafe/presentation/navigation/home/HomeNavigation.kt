@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -39,6 +40,9 @@ fun HomeNavigation(rootNavController: NavController) {
     val scaffoldState = remember {
         mutableStateOf(ScaffoldConfig())
     }
+    val selectedItemIndex = rememberSaveable {
+        mutableIntStateOf(0)
+    }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Surface(modifier = Modifier
@@ -49,7 +53,8 @@ fun HomeNavigation(rootNavController: NavController) {
             scaffoldState = scaffoldState,
             navController = navController,
             bottomBarState = bottomBarState,
-            scrollBehavior = scrollBehavior
+            scrollBehavior = scrollBehavior,
+            selectedItemIndex = selectedItemIndex
         ) { paddingValues ->
             NavHost(
                 navController = navController,
