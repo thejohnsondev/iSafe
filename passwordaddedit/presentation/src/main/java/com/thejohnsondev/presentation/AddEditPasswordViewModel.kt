@@ -7,14 +7,12 @@ import com.thejohnsondev.common.encryptModel
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.domain.AddEditPasswordUseCases
 import com.thejohnsondev.model.AdditionalField
-import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.fold
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +24,7 @@ class AddEditPasswordViewModel @Inject constructor(
     private val _organization = MutableStateFlow(EMPTY)
     private val _title = MutableStateFlow(EMPTY)
     private val _password = MutableStateFlow(EMPTY)
-    private val _timeStamp = MutableStateFlow(EMPTY)
+    private val _passwordId = MutableStateFlow<String?>(null)
     private val _additionalFields = MutableStateFlow<List<AdditionalField>>(emptyList())
     private val _isEdit = MutableStateFlow(false)
 
@@ -73,7 +71,7 @@ class AddEditPasswordViewModel @Inject constructor(
         _title.emit(passwordModel.title)
         _password.emit(passwordModel.password)
         _additionalFields.emit(passwordModel.additionalFields)
-        _timeStamp.emit(passwordModel.id)
+        _passwordId.emit(passwordModel.id)
         _isEdit.emit(true)
     }
 
@@ -138,10 +136,8 @@ class AddEditPasswordViewModel @Inject constructor(
     }
 
     private fun savePassword() = launchLoading {
-        val timeStamp =
-            if (_isEdit.value) _timeStamp.value else System.currentTimeMillis().toString()
         val passwordModel = PasswordModel(
-            id = timeStamp,
+            id = _passwordId.value,
             _organization.value,
             null,
             _title.value,

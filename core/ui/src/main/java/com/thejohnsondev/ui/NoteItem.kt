@@ -74,7 +74,7 @@ fun NoteItem(
                     modifier = Modifier.padding(Size16),
                     text = stringResource(
                         id = com.thejohnsondev.common.R.string.last_edit,
-                        note.id.toLong().getTimeFormatted(NOTE_TIME_FORMAT)
+                        0L.toLong().getTimeFormatted(NOTE_TIME_FORMAT) // TODO: replace with lastEdit param
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSecondary

@@ -121,12 +121,14 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun deletePassword(passwordModel: PasswordModel) = launch {
-        useCases.deletePassword("", passwordModel.id).first().fold(
-            ifLeft = ::handleError,
-            ifRight = {
-                deletePasswordFromList(passwordModel)
-            }
-        )
+        passwordModel.id?.let {
+            useCases.deletePassword("", it).first().fold(
+                ifLeft = ::handleError,
+                ifRight = {
+                    deletePasswordFromList(passwordModel)
+                }
+            )
+        }
     }
 
     private fun deletePasswordFromList(passwordModel: PasswordModel) = launch {

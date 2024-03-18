@@ -377,7 +377,7 @@ fun ExpandedContent(
             color = MaterialTheme.colorScheme.onPrimary,
             text = stringResource(
                 id = R.string.created_on,
-                passwordModel.id.toLongOrNull()?.getTimeFormatted(NOTE_TIME_FORMAT).orEmpty()
+                0L.getTimeFormatted(NOTE_TIME_FORMAT).orEmpty() // TODO: replace with lastEdit param
             )
         )
     }

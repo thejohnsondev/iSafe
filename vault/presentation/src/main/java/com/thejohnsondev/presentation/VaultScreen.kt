@@ -351,7 +351,7 @@ fun ReorderingItemsList(
                         .reorderable(state)
                         .detectReorderAfterLongPress(state)
                 ) {
-                    items(passwordsList, key = { it.id }) {
+                    items(passwordsList, key = { it.id.orEmpty() }) {
                         ReorderableItem(reorderableState = state, key = it.id) { isDragging ->
                             PasswordItem(
                                 item = it,

@@ -35,7 +35,7 @@ interface ISafeDotNetApi {
 
     @PUT("$UPDATE_PASSWORD/{id}")
     suspend fun updatePassword(
-        @Path("id") id: String,
+        @Path("id") id: String?,
         @Body passwordModel: PasswordModel
     ): Either<ApiError, Unit>
 
@@ -57,7 +57,7 @@ interface ISafeDotNetApi {
 
     @PUT("$UPDATE_NOTE/{id}")
     suspend fun updateNote(
-        @Path("id") id: String,
+        @Path("id") id: String?,
         @Body noteModel: NoteModel
     ): Either<ApiError, Unit>
 

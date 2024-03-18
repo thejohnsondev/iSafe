@@ -221,7 +221,7 @@ class FirebaseRemoteDataSourceImpl @Inject constructor(
         val encryptedPasswordsMap = mutableMapOf<String, PasswordModel>()
 
         newPasswordList.forEach { password ->
-            encryptedPasswordsMap[password.id] = PasswordModel(
+            encryptedPasswordsMap[password.id.orEmpty()] = PasswordModel(
                 id = password.id,
                 organization = password.organization.encrypt(getKey()),
                 organizationLogo = password.organizationLogo?.encrypt(getKey()),

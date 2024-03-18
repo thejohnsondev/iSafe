@@ -21,7 +21,7 @@ class AddNoteViewModel @Inject constructor(
     private val dataStore: DataStore
 ) : BaseViewModel() {
 
-    private val _noteId = MutableStateFlow(EMPTY)
+    private val _noteId = MutableStateFlow<String?>(null)
     private val _titleState = MutableStateFlow("")
     private val _descriptionState = MutableStateFlow("")
     private val _isEdit = MutableStateFlow(false)
@@ -45,13 +45,15 @@ class AddNoteViewModel @Inject constructor(
     }
 
     private fun deleteNote() = launchLoading {
-        useCases.deleteNote(_noteId.value).first().fold(
-            ifLeft = ::handleError,
-            ifRight = {
-                sendEvent(OneTimeEvent.InfoToast("Note deleted"))
-                sendEvent(OneTimeEvent.SuccessNavigation)
-            }
-        )
+        _noteId.value?.let {
+            useCases.deleteNote(it).first().fold(
+                ifLeft = ::handleError,
+                ifRight = {
+                    sendEvent(OneTimeEvent.InfoToast("Note deleted"))
+                    sendEvent(OneTimeEvent.SuccessNavigation)
+                }
+            )
+        }
     }
 
     private fun setNoteModelForEdit(noteModel: NoteModel) = launch {
@@ -71,7 +73,7 @@ class AddNoteViewModel @Inject constructor(
 
     private fun saveNote() = launchLoading {
         val note = NoteModel(
-            id = System.currentTimeMillis().toString(),
+            id = _noteId.value,
             title = _titleState.value,
             description = _descriptionState.value,
         )
