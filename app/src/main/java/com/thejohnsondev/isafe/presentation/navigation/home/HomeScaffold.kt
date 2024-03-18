@@ -1,6 +1,5 @@
 package com.thejohnsondev.isafe.presentation.navigation.home
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -50,7 +49,7 @@ fun HomeScaffold(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            AnimatedVisibility(visible = scaffoldState.value.isTopAppBarVisible) {
+            if (scaffoldState.value.isTopAppBarVisible) {
                 TopAppBar(
                     title = {
                         scaffoldState.value.topAppBarTitle?.let {

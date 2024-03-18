@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -34,9 +35,11 @@ import com.thejohnsondev.common.R
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
+import com.thejohnsondev.designsystem.Size32
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.ui.EmptyListPlaceHolder
 import com.thejohnsondev.ui.ISafeLoading
 import com.thejohnsondev.ui.NoteItem
 import com.thejohnsondev.ui.ScaffoldConfig
@@ -136,6 +139,15 @@ fun NotesList(
     onNoteClick: (NoteModel) -> Unit
 ) {
     LazyColumn(state = state, modifier = Modifier.fillMaxWidth()) {
+        item {
+            if (notesList.isEmpty()) {
+                EmptyListPlaceHolder(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(Size32)
+                )
+            }
+        }
         items(notesList) { note ->
             NoteItem(note = note, onNoteClicked = onNoteClick)
         }

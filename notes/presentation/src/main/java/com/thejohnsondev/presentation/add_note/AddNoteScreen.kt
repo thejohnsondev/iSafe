@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
@@ -60,11 +61,11 @@ fun AddNoteScreen(
     val descriptionFocusRequester = remember {
         FocusRequester()
     }
-    // TODO: add update and delete functionality
     LaunchedEffect(true) {
-        titleFocusRequester.requestFocus()
         noteModel?.let {
             viewModel.perform(AddNoteViewModel.Action.SetNoteModelForEdit(it))
+        } ?: run {
+            titleFocusRequester.requestFocus()
         }
         viewModel.getEventFlow().collect {
             when (it) {
@@ -167,7 +168,8 @@ fun AddNoteContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .padding(horizontal = Size16, vertical = Size8),
+                    .padding(start = Size16, end = Size16, bottom = Size8, top = Size16)
+                    .imePadding(),
                 value = state.descriptionState,
                 onValueChanged = { description ->
                     onEnterDescription(description)
