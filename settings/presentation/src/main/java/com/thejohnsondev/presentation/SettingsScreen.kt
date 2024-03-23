@@ -3,6 +3,7 @@ package com.thejohnsondev.presentation
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
@@ -10,8 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +26,7 @@ import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size8
+import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.ScaffoldConfig
@@ -37,7 +41,9 @@ fun SettingsScreen(
     val snackBarHostState = remember {
         SnackbarHostState()
     }
+    val state = viewModel.viewState.collectAsState(SettingsViewModel.State())
     LaunchedEffect(true) {
+        viewModel.perform(SettingsViewModel.Action.FetchData)
         viewModel.getEventFlow().collect {
             when (it) {
                 is OneTimeEvent.InfoToast -> context.toast(it.message)
@@ -60,7 +66,9 @@ fun SettingsScreen(
             topAppBarTitle = stringResource(R.string.settings),
         )
     )
-    SettingsContent(onLogout = {
+    SettingsContent(
+        state = state.value,
+        onLogout = {
         viewModel.perform(SettingsViewModel.Action.Logout)
         goToSignUp()
     }, onDeleteAccount = {
@@ -70,10 +78,18 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsContent(
+    state: SettingsViewModel.State,
     onLogout: () -> Unit = { },
     onDeleteAccount: () -> Unit = { }
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
+        Row {
+            Text(
+                text = state.userEmail ?: "",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(Size8)
+            )
+        }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
@@ -103,24 +119,32 @@ fun SettingsContent(
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun SettingsScreenPreviewLight() {
-    ISafeTheme {
-        SettingsContent(
-            onLogout = {},
-            onDeleteAccount = {}
-        )
-    }
-}
-
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun SettingsScreenPreviewDark() {
     ISafeTheme {
         SettingsContent(
             onLogout = {},
-            onDeleteAccount = {}
+            onDeleteAccount = {},
+            state = SettingsViewModel.State(
+                loadingState = LoadingState.Loaded,
+                userEmail = "email@email.com"
+            )
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun SettingsScreenPreviewLight() {
+    ISafeTheme {
+        SettingsContent(
+            onLogout = {},
+            onDeleteAccount = {},
+            state = SettingsViewModel.State(
+                loadingState = LoadingState.Loaded,
+                userEmail = "email@email.com"
+            )
         )
     }
 }

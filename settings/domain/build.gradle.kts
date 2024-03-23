@@ -40,6 +40,7 @@ dependencies {
 
     implementation(project(":core:common"))
     implementation(project(":auth:domain"))
+    implementation(project(":core:datastore"))
 
     implementation(libs.androidx.ktx)
     implementation(platform(libs.org.jetbrains.kotlin.bom))

@@ -54,15 +54,24 @@ class LoginViewModel @Inject constructor(
             .fold(
                 ifLeft = ::handleError,
                 ifRight = {
-                    handleAuthResponse(it, password)
+                    handleAuthResponse(it, email, password)
                 }
             )
     }
 
-    private fun handleAuthResponse(authResponse: AuthResponse, password: String) = launch {
+    private fun handleAuthResponse(
+        authResponse: AuthResponse,
+        email: String,
+        password: String
+    ) = launch {
         saveUserToken(authResponse.token)
+        saveUserEmail(email)
         generateAndSaveEncryptionKey(password)
         sendEvent(OneTimeEvent.SuccessNavigation)
+    }
+
+    private fun saveUserEmail(email: String) = launch {
+        useCases.saveUserEmail.invoke(email)
     }
 
     private fun saveUserToken(token: String) = launch {

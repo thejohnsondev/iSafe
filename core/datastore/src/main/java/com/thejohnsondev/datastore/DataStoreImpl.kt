@@ -51,6 +51,14 @@ class DataStoreImpl @Inject constructor(
         putString(USER_KEY, encodedKey)
     }
 
+    override suspend fun saveUserEmail(email: String) {
+        putString(USER_EMAIL, email)
+    }
+
+    override fun getUserEmail(): String {
+        return getString(USER_EMAIL, EMPTY)
+    }
+
     override suspend fun getUserKey(): ByteArray {
         val encodedKey = getString(USER_KEY, EMPTY)
         return Base64.decode(encodedKey, Base64.NO_WRAP)
@@ -72,7 +80,9 @@ class DataStoreImpl @Inject constructor(
         putString(USER_TOKEN, token)
     }
 
-    override suspend fun clearUserToken() {
+    override suspend fun clearUserData() {
+        remove(USER_KEY)
+        remove(USER_EMAIL)
         remove(USER_TOKEN)
     }
 
@@ -82,8 +92,7 @@ class DataStoreImpl @Inject constructor(
 
     companion object {
         private const val USER_KEY = "user_key"
-        private const val USER_DATA = "user_data"
-        private const val IS_FROM_LOGIN = "is-from-login"
+        private const val USER_EMAIL = "user-email"
         private const val USER_TOKEN = "user-token"
         private const val BASE_URL = "base-url"
         private const val DEFAULT_BASE_URL = "https://isafeapi2.azurewebsites.net/"

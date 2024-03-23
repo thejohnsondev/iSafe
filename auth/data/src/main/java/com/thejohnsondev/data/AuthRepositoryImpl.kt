@@ -21,7 +21,7 @@ class AuthRepositoryImpl @Inject constructor(
 
 
     override suspend fun signOut() {
-        dataStore.clearUserToken()
+        dataStore.clearUserData()
     }
 
     override fun isUserLoggedIn(): Boolean = dataStore.isUserLoggedIn()
