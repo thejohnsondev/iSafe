@@ -11,7 +11,7 @@ import javax.inject.Inject
 class GetAllPasswordsUseCase @Inject constructor(
     private val passwordsRepository: PasswordsRepository
 ) {
-    operator fun invoke(userId: String): Flow<Either<ApiError, List<PasswordModel>>> {
-        return passwordsRepository.getUserPasswords(userId)
+    operator fun invoke(): Flow<Either<ApiError, List<PasswordModel>>> {
+        return passwordsRepository.getUserPasswords()
     }
 }

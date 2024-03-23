@@ -12,10 +12,10 @@ import javax.inject.Inject
 class CreatePasswordUseCase @Inject constructor(
     private val passwordsRepository: PasswordsRepository
 ) {
-    operator fun invoke(userId: String, password: PasswordModel): Flow<Either<ApiError, PasswordModel>> {
+    operator fun invoke(password: PasswordModel): Flow<Either<ApiError, PasswordModel>> {
         if (password.organization.isEmpty() && password.title.isEmpty() && password.password.isEmpty()) {
             return flowOf(Either.Left(HttpError(400, "Empty password")))
         }
-        return passwordsRepository.createPassword(userId, password)
+        return passwordsRepository.createPassword(password)
     }
 }

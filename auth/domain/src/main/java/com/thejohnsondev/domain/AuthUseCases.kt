@@ -7,8 +7,6 @@ data class AuthUseCases @Inject constructor(
     val signIn: SignInUseCase,
     val validateEmail: EmailValidateUseCase,
     val validatePassword: PasswordValidationUseCase,
-    val createUser: CreateUserUseCase,
-    val getUserData: GetRemoteUserDataUseCase,
     val generateUserKey: GenerateUserKeyUseCase,
     val saveUserKey: SaveUserKeyUseCase,
     val saveUserToken: SaveUserTokenUseCase

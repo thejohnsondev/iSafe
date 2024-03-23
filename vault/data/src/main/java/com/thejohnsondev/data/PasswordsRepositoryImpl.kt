@@ -13,21 +13,20 @@ class PasswordsRepositoryImpl @Inject constructor(
     @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource,
 ) : PasswordsRepository {
 
-    override fun getUserPasswords(userId: String): Flow<Either<ApiError, List<PasswordModel>>> =
-        remoteDataSource.getUserPasswords(userId)
+    override fun getUserPasswords(): Flow<Either<ApiError, List<PasswordModel>>> =
+        remoteDataSource.getUserPasswords()
 
-    override fun createPassword(passwordId: String, password: PasswordModel): Flow<Either<ApiError, PasswordModel>> =
-        remoteDataSource.createPassword(passwordId, password)
+    override fun createPassword(password: PasswordModel): Flow<Either<ApiError, PasswordModel>> =
+        remoteDataSource.createPassword(password)
 
-    override fun updatePassword(passwordId: String, password: PasswordModel): Flow<Either<ApiError, Unit>> =
-        remoteDataSource.updatePassword(passwordId, password)
+    override fun updatePassword(password: PasswordModel): Flow<Either<ApiError, Unit>> =
+        remoteDataSource.updatePassword(password)
 
     override fun updatePasswordsList(
-        userId: String,
         newPasswordList: List<PasswordModel>
     ): Flow<DatabaseResponse> =
-        remoteDataSource.updatePasswordsList(userId, newPasswordList)
+        remoteDataSource.updatePasswordsList(newPasswordList)
 
-    override fun deletePassword(userId: String, passwordId: String): Flow<Either<ApiError, Unit>> =
-        remoteDataSource.deletePassword(userId, passwordId)
+    override fun deletePassword(passwordId: String): Flow<Either<ApiError, Unit>> =
+        remoteDataSource.deletePassword(passwordId)
 }

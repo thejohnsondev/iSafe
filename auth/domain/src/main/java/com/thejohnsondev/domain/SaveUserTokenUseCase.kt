@@ -6,10 +6,8 @@ import javax.inject.Inject
 class SaveUserTokenUseCase @Inject constructor(
     private val dataStore: DataStore
 ) {
-
     suspend operator fun invoke(token: String) {
         dataStore.saveUserToken(token)
     }
-
 
 }

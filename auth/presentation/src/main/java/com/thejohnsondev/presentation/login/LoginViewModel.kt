@@ -69,20 +69,6 @@ class LoginViewModel @Inject constructor(
         useCases.saveUserToken.invoke(token)
     }
 
-    private fun getUserData(userId: String, password: String) = launch {
-        useCases.getUserData(userId).collect {
-            when (it) {
-                is UserDataResponse.ResponseFailure -> handleError(it.exception)
-                is UserDataResponse.ResponseSuccess -> saveUserData(it.userModel, password)
-            }
-        }
-    }
-
-    private fun saveUserData(userModel: UserModel, password: String) = launch {
-        generateAndSaveEncryptionKey(password)
-        sendEvent(OneTimeEvent.SuccessNavigation)
-    }
-
     private suspend fun generateAndSaveEncryptionKey(password: String) {
         useCases.generateUserKey(password).collect {
             when (it) {

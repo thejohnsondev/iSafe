@@ -19,15 +19,10 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun singIn(email: String, password: String): Flow<Either<ApiError, AuthResponse>> =
         remoteDataSource.singIn(email, password)
 
+
     override suspend fun signOut() {
-        remoteDataSource.signOut()
+        dataStore.clearUserToken()
     }
-
-    override suspend fun getCurrentUserName(): Flow<String> =
-        remoteDataSource.getCurrentUserName()
-
-    override suspend fun getCurrentUserId(): Flow<String> =
-        remoteDataSource.getCurrentUserId()
 
     override fun isUserLoggedIn(): Boolean = dataStore.isUserLoggedIn()
     override fun deleteAccount(): Flow<Either<ApiError, Unit>> = remoteDataSource.deleteAccount()

@@ -1,5 +1,12 @@
 package com.thejohnsondev.domain
 
-interface LogoutUseCase {
-    suspend operator fun invoke()
+import com.thejohnsondev.data.AuthRepository
+import javax.inject.Inject
+
+class LogoutUseCase @Inject constructor(
+    private val authRepository: AuthRepository
+) {
+    suspend fun invoke() {
+        authRepository.signOut()
+    }
 }

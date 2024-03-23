@@ -52,7 +52,7 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun saveNewOrderedList() = launch {
-        useCases.updatePasswordsUseCase("", _passwordsList.value)
+        useCases.updatePasswordsUseCase(_passwordsList.value)
             .collect {
                 when (it) {
                     is DatabaseResponse.ResponseFailure -> handleError(it.exception)
@@ -122,7 +122,7 @@ class VaultViewModel @Inject constructor(
 
     private fun deletePassword(passwordModel: PasswordModel) = launch {
         passwordModel.id?.let {
-            useCases.deletePassword("", it).first().fold(
+            useCases.deletePassword(it).first().fold(
                 ifLeft = ::handleError,
                 ifRight = {
                     deletePasswordFromList(passwordModel)
@@ -139,7 +139,7 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun fetchVault() = launchLoading {
-        useCases.getAllPasswords("").first().fold(
+        useCases.getAllPasswords().first().fold(
             ifLeft = ::handleError,
             ifRight = {
                 val decryptedPasswordList = it.map {

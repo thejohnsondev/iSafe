@@ -9,7 +9,7 @@ import javax.inject.Inject
 class UpdatePasswordsUseCase @Inject constructor(
     private val passwordRepository: PasswordsRepository
 ) {
-    operator fun invoke(userId: String, newPasswordsList: List<PasswordModel>): Flow<DatabaseResponse> {
-        return passwordRepository.updatePasswordsList(userId, newPasswordsList)
+    operator fun invoke(newPasswordsList: List<PasswordModel>): Flow<DatabaseResponse> {
+        return passwordRepository.updatePasswordsList(newPasswordsList)
     }
 }

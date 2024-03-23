@@ -66,11 +66,6 @@ class SignUpViewModel @Inject constructor(
             )
     }
 
-    private fun handleSignUpSuccess(userModel: UserModel, password: String) = launch {
-        saveUserData(userModel, password)
-        sendEvent(OneTimeEvent.SuccessNavigation)
-    }
-
     private fun handleAuthResponse(authResponse: AuthResponse, password: String) = launch {
         saveUserToken(authResponse.token)
         generateAndSaveEncryptionKey(password)
@@ -79,24 +74,6 @@ class SignUpViewModel @Inject constructor(
 
     private fun saveUserToken(token: String) = launch {
         useCases.saveUserToken.invoke(token)
-    }
-
-    private fun createUserInRemoteDb(userUID: String, userName: String, password: String) = launch {
-        val newUserModel = UserModel(
-            id = userUID,
-            name = userName,
-            userSecret = null
-        )
-        useCases.createUser(newUserModel).collect {
-            when (it) {
-                is DatabaseResponse.ResponseSuccess -> handleSignUpSuccess(newUserModel, password)
-                is DatabaseResponse.ResponseFailure -> handleError(it.exception)
-            }
-        }
-    }
-
-    private suspend fun saveUserData(userModel: UserModel, password: String) = launch {
-        generateAndSaveEncryptionKey(password)
     }
 
     private suspend fun generateAndSaveEncryptionKey(password: String) {

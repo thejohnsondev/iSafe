@@ -146,12 +146,12 @@ class AddEditPasswordViewModel @Inject constructor(
         )
         val encryptedPasswordModel = passwordModel.encryptModel(dataStore.getUserKey())
         if (_isEdit.value) {
-            useCases.updatePassword("", encryptedPasswordModel).first().fold(
+            useCases.updatePassword(encryptedPasswordModel).first().fold(
                 ifLeft = { handleError(it) },
                 ifRight = { handlePasswordSaved() }
             )
         } else {
-            useCases.createPassword("", encryptedPasswordModel).first().fold(
+            useCases.createPassword(encryptedPasswordModel).first().fold(
                 ifLeft = { handleError(it) },
                 ifRight = { handlePasswordSaved() }
             )

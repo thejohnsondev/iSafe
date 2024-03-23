@@ -10,7 +10,7 @@ import javax.inject.Inject
 class UpdatePasswordUseCase @Inject constructor(
     private val passwordsRepository: PasswordsRepository
 ) {
-    operator fun invoke(passwordId: String, password: PasswordModel): Flow<Either<ApiError, Unit>> {
-        return passwordsRepository.updatePassword(passwordId, password)
+    operator fun invoke(password: PasswordModel): Flow<Either<ApiError, Unit>> {
+        return passwordsRepository.updatePassword(password)
     }
 }

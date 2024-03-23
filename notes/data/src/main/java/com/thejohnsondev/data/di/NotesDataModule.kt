@@ -3,7 +3,6 @@ package com.thejohnsondev.data.di
 import com.thejohnsondev.data.NotesRepository
 import com.thejohnsondev.data.NotesRepositoryImpl
 import com.thejohnsondev.network.di.DotNetRemoteDataSource
-import com.thejohnsondev.network.di.FirebaseRemoteDataSource
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import dagger.Module
 import dagger.Provides

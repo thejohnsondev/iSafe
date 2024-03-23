@@ -10,7 +10,7 @@ import javax.inject.Inject
 class DeletePasswordUseCase @Inject constructor(
     private val passwordsRepository: PasswordsRepository
 ) {
-    operator fun invoke(userId: String, passwordId: String): Flow<Either<ApiError, Unit>> {
-        return passwordsRepository.deletePassword(userId, passwordId)
+    operator fun invoke(passwordId: String): Flow<Either<ApiError, Unit>> {
+        return passwordsRepository.deletePassword(passwordId)
     }
 }
