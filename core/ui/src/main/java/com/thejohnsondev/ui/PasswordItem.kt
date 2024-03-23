@@ -376,8 +376,8 @@ fun ExpandedContent(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onPrimary,
             text = stringResource(
-                id = R.string.created_on,
-                0L.getTimeFormatted(NOTE_TIME_FORMAT).orEmpty() // TODO: replace with lastEdit param
+                id = R.string.last_edit,
+                passwordModel.lastEdit.toLongOrNull()?.getTimeFormatted(NOTE_TIME_FORMAT).orEmpty()
             )
         )
     }
@@ -442,7 +442,8 @@ fun PasswordItemPreview() {
         id = "1694854940885",
         organization = "Google Google Google Google Google Google",
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
-        password = "Pass123$"
+        password = "Pass123$",
+        lastEdit = "1711195873"
     ),
         isReordering = false,
         onClick = {},
@@ -459,7 +460,8 @@ fun PasswordItemPreviewReorder() {
         id = "1694854940885",
         organization = "Google Google Google Google Google Google",
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
-        password = "Pass123$"
+        password = "Pass123$",
+        lastEdit = "1711195873"
     ),
         isReordering = true,
         onClick = {},
@@ -476,7 +478,8 @@ fun PasswordItemPreviewDragging() {
         id = "1694854940885",
         organization = "Google Google Google Google Google Google",
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
-        password = "Pass123$"
+        password = "Pass123$",
+        lastEdit = "1711195873"
     ),
         isReordering = true,
         isDragging = true,
@@ -494,7 +497,8 @@ fun PasswordItemPreview2() {
         id = "1694854940885",
         organization = "Google Google Google Google Google Google",
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
-        password = "Pass123$"
+        password = "Pass123$",
+        lastEdit = "1711195873"
     ),
         isReordering = false,
         onClick = {},
@@ -511,7 +515,8 @@ fun PasswordItemPreview3() {
         id = "1694854940885",
         organization = "Google Google Google Google Google Google",
         title = "emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com emal@gmail.com",
-        password = "Pass123$"
+        password = "Pass123$",
+        lastEdit = "1711195873"
     ),
         isReordering = false,
         onClick = {},
@@ -529,7 +534,8 @@ fun ExpandedContentPreview() {
             id = "1694854940885",
             organization = "Google",
             title = "emal@gmail.com",
-            password = "Pass123$"
+            password = "Pass123$",
+            lastEdit = "1711195873"
         ), onDeleteClick = {
 
         },

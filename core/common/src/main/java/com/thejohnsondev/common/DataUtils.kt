@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.regex.Pattern
 
-const val NOTE_TIME_FORMAT = "dd MMM yyyy, hh:mm"
+const val NOTE_TIME_FORMAT = "dd MMM yyyy, HH:mm"
 
 fun String.isPasswordValid(): PasswordValidationState {
     val length = this.length

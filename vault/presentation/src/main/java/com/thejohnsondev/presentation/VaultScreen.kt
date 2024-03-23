@@ -517,6 +517,7 @@ fun VaultScreenPreviewWithPasswordsLight() {
                         null,
                         "title11",
                         "password11",
+                        "1711195873"
                     ),
                     PasswordModel(
                         "12",
@@ -524,6 +525,7 @@ fun VaultScreenPreviewWithPasswordsLight() {
                         null,
                         "title12",
                         "password12",
+                        "1711195873"
                     ),
                     PasswordModel(
                         "13",
@@ -531,6 +533,7 @@ fun VaultScreenPreviewWithPasswordsLight() {
                         null,
                         "title13",
                         "password13",
+                        "1711195873"
                     )
                 )
             ),
@@ -562,6 +565,7 @@ fun VaultScreenPreviewWithPasswordsDark() {
                         null,
                         "title11",
                         "password11",
+                        "1711195873"
                     ),
                     PasswordModel(
                         "12",
@@ -569,6 +573,7 @@ fun VaultScreenPreviewWithPasswordsDark() {
                         null,
                         "title12",
                         "password12",
+                        "1711195873"
                     ),
                     PasswordModel(
                         "13",
@@ -576,6 +581,7 @@ fun VaultScreenPreviewWithPasswordsDark() {
                         null,
                         "title13",
                         "password13",
+                        "1711195873"
                     )
                 )
             ),

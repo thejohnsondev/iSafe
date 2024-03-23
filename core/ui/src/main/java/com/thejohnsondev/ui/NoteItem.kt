@@ -74,7 +74,7 @@ fun NoteItem(
                     modifier = Modifier.padding(Size16),
                     text = stringResource(
                         id = com.thejohnsondev.common.R.string.last_edit,
-                        0L.toLong().getTimeFormatted(NOTE_TIME_FORMAT) // TODO: replace with lastEdit param
+                        note.lastEdit.toLongOrNull()?.getTimeFormatted(NOTE_TIME_FORMAT).orEmpty()
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSecondary
@@ -93,6 +93,7 @@ fun NoteItemPreview() {
             "1",
             "Note 1 title",
             "Note 1 description (long), Note 1 description (long) Note 1 description (long) Note 1 description (long) Note 1 description (long), Note 1 description (long), Note 1 description (long) Note 1 description (long) Note 1 description (long) Note 1 description (long)",
+            "1711195873"
         )
     )
 }

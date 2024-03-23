@@ -173,6 +173,7 @@ fun NotesScreenPreviewWithNotesLight() {
                         id = "1",
                         title = "Note 1",
                         description = "Description 1",
+                        lastEdit = "1711195873"
                     )
                 )
             ),
@@ -196,6 +197,7 @@ fun NotesScreenPreviewWithNotesDark() {
                         id = "1",
                         title = "Note 1",
                         description = "Description 1",
+                        lastEdit = "1711195873"
                     )
                 )
             ),

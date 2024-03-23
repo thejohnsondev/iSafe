@@ -142,6 +142,7 @@ class AddEditPasswordViewModel @Inject constructor(
             null,
             _title.value,
             _password.value,
+            System.currentTimeMillis().toString(),
             _additionalFields.value
         )
         val encryptedPasswordModel = passwordModel.encryptModel(dataStore.getUserKey())

@@ -76,6 +76,7 @@ class AddNoteViewModel @Inject constructor(
             id = _noteId.value,
             title = _titleState.value,
             description = _descriptionState.value,
+            lastEdit = System.currentTimeMillis().toString()
         )
         val encryptedNote = note.encryptModel(dataStore.getUserKey())
         if (_isEdit.value) {
