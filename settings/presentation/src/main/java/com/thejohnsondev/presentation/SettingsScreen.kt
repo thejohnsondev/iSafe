@@ -1,11 +1,14 @@
 package com.thejohnsondev.presentation
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
@@ -28,8 +31,10 @@ import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.ui.AccountSettingsItem
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.ScaffoldConfig
+import com.thejohnsondev.ui.bounceClick
 
 @Composable
 fun SettingsScreen(
@@ -83,12 +88,19 @@ fun SettingsContent(
     onDeleteAccount: () -> Unit = { }
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
-        Row {
-            Text(
-                text = state.userEmail ?: "",
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(Size8)
-            )
+        Row(
+            modifier = Modifier
+                .padding(Size16)
+        ) {
+            AccountSettingsItem(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .bounceClick(),
+                accountName = state.userEmail,
+                onItemClick = {
+                    // todo open account settings
+                })
         }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
