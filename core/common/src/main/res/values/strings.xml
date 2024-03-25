@@ -13,7 +13,10 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="log_in">Log in</string>
     <string name="logout">Logout</string>
+    <string name="logout_confirm_message">Are you sure you want to log out?</string>
     <string name="delete_account">Delete Account</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_account_confirm_message">Are you sure you want to delete the account? \nIt will remove all your data permanently.</string>
     <string name="i">i</string>
     <string name="safe">Safe</string>
     <string name="buttons">Buttons</string>

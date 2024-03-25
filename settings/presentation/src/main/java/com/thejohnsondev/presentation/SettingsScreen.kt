@@ -1,7 +1,6 @@
 package com.thejohnsondev.presentation
 
 import android.content.res.Configuration
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,6 +30,7 @@ import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.ui.AccountSettingsItem
+import com.thejohnsondev.ui.ConfirmAlertDialog
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.bounceClick
@@ -73,19 +72,36 @@ fun SettingsScreen(
     )
     SettingsContent(
         state = state.value,
-        onLogout = {
-        viewModel.perform(SettingsViewModel.Action.Logout)
-        goToSignUp()
-    }, onDeleteAccount = {
-        viewModel.perform(SettingsViewModel.Action.DeleteAccount)
-    })
+        onDeleteAccountConfirm = {
+            viewModel.perform(SettingsViewModel.Action.CloseConfirmDeleteAccountDialog)
+            viewModel.perform(SettingsViewModel.Action.DeleteAccount)
+        }, onDeleteAccountCancel = {
+            viewModel.perform(SettingsViewModel.Action.CloseConfirmDeleteAccountDialog)
+        }, onDeleteAccountClick = {
+            viewModel.perform(SettingsViewModel.Action.OpenConfirmDeleteAccountDialog)
+        },
+        onLogoutConfirm = {
+            viewModel.perform(SettingsViewModel.Action.CloseConfirmLogoutDialog)
+            viewModel.perform(SettingsViewModel.Action.Logout)
+            goToSignUp()
+        },
+        onLogoutClick = {
+            viewModel.perform(SettingsViewModel.Action.OpenConfirmLogoutDialog)
+        },
+        onLogoutCancel = {
+            viewModel.perform(SettingsViewModel.Action.CloseConfirmLogoutDialog)
+        })
 }
 
 @Composable
 fun SettingsContent(
     state: SettingsViewModel.State,
-    onLogout: () -> Unit = { },
-    onDeleteAccount: () -> Unit = { }
+    onDeleteAccountClick: () -> Unit,
+    onDeleteAccountConfirm: () -> Unit,
+    onDeleteAccountCancel: () -> Unit,
+    onLogoutClick: () -> Unit,
+    onLogoutConfirm: () -> Unit,
+    onLogoutCancel: () -> Unit,
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -111,8 +127,7 @@ fun SettingsContent(
                     .padding(horizontal = Size8),
                 text = stringResource(id = R.string.delete_account),
                 onClick = {
-                    // TODO: add popup for confirmation
-                    onDeleteAccount()
+                    onDeleteAccountClick()
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error,
@@ -124,9 +139,37 @@ fun SettingsContent(
                     .padding(start = Size8, end = Size8, bottom = Size16),
                 text = stringResource(id = R.string.logout),
                 onClick = {
-                    onLogout()
+                    onLogoutClick()
                 }
             )
+            if (state.openConfirmDeleteAccountDialog) {
+                ConfirmAlertDialog(
+                    title = stringResource(id = R.string.delete_account),
+                    message = stringResource(id = R.string.delete_account_confirm_message),
+                    confirmButtonText = stringResource(id = R.string.delete_account),
+                    cancelButtonText = stringResource(id = R.string.cancel),
+                    onConfirm = {
+                        onDeleteAccountConfirm()
+                    },
+                    onCancel = {
+                        onDeleteAccountCancel()
+                    }
+                )
+            }
+            if (state.openConfirmLogoutDialog) {
+                ConfirmAlertDialog(
+                    title = stringResource(id = R.string.logout),
+                    message = stringResource(id = R.string.logout_confirm_message),
+                    confirmButtonText = stringResource(id = R.string.logout),
+                    cancelButtonText = stringResource(id = R.string.cancel),
+                    onConfirm = {
+                        onLogoutConfirm()
+                    },
+                    onCancel = {
+                        onLogoutCancel()
+                    }
+                )
+            }
         }
     }
 }
@@ -136,12 +179,36 @@ fun SettingsContent(
 private fun SettingsScreenPreviewDark() {
     ISafeTheme {
         SettingsContent(
-            onLogout = {},
-            onDeleteAccount = {},
+            onLogoutConfirm = {},
             state = SettingsViewModel.State(
                 loadingState = LoadingState.Loaded,
                 userEmail = "email@email.com"
-            )
+            ),
+            onDeleteAccountConfirm = {},
+            onDeleteAccountCancel = {},
+            onDeleteAccountClick = {},
+            onLogoutCancel = {},
+            onLogoutClick = {}
+        )
+    }
+}
+
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun SettingsScreenPreviewDarkConfirmDeleteAccount() {
+    ISafeTheme {
+        SettingsContent(
+            onLogoutConfirm = {},
+            state = SettingsViewModel.State(
+                loadingState = LoadingState.Loaded,
+                userEmail = "email@email.com",
+                openConfirmLogoutDialog = true
+            ), onDeleteAccountConfirm = {},
+            onDeleteAccountCancel = {},
+            onDeleteAccountClick = {},
+            onLogoutCancel = {},
+            onLogoutClick = {}
         )
     }
 }
@@ -151,12 +218,36 @@ private fun SettingsScreenPreviewDark() {
 private fun SettingsScreenPreviewLight() {
     ISafeTheme {
         SettingsContent(
-            onLogout = {},
-            onDeleteAccount = {},
+            onLogoutConfirm = {},
             state = SettingsViewModel.State(
                 loadingState = LoadingState.Loaded,
                 userEmail = "email@email.com"
-            )
+            ),
+            onDeleteAccountConfirm = {},
+            onDeleteAccountCancel = {},
+            onDeleteAccountClick = {},
+            onLogoutCancel = {},
+            onLogoutClick = {}
+        )
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun SettingsScreenPreviewLightConfirmDeleteAccount() {
+    ISafeTheme {
+        SettingsContent(
+            onLogoutConfirm = {},
+            state = SettingsViewModel.State(
+                loadingState = LoadingState.Loaded,
+                userEmail = "email@email.com",
+                openConfirmDeleteAccountDialog = true
+            ),
+            onDeleteAccountConfirm = {},
+            onDeleteAccountCancel = {},
+            onDeleteAccountClick = {},
+            onLogoutCancel = {},
+            onLogoutClick = {}
         )
     }
 }

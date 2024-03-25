@@ -16,10 +16,14 @@ class SettingsViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _userEmail = MutableStateFlow<String?>(null)
+    private val _openConfirmDeleteAccountDialog = MutableStateFlow(false)
+    private val _openConfirmLogoutDialog = MutableStateFlow(false)
 
     val viewState = combine(
         _loadingState,
         _userEmail,
+        _openConfirmDeleteAccountDialog,
+        _openConfirmLogoutDialog,
         ::State,
     )
 
@@ -28,7 +32,27 @@ class SettingsViewModel @Inject constructor(
             is Action.FetchData -> fetchData()
             is Action.Logout -> logout()
             is Action.DeleteAccount -> deleteAccount()
+            is Action.CloseConfirmDeleteAccountDialog -> closeConfirmDeleteAccountDialog()
+            is Action.CloseConfirmLogoutDialog -> closeConfirmLogoutDialog()
+            is Action.OpenConfirmDeleteAccountDialog -> openConfirmDeleteAccountDialog()
+            is Action.OpenConfirmLogoutDialog -> openConfirmLogoutDialog()
         }
+    }
+
+    private fun openConfirmDeleteAccountDialog() {
+        _openConfirmDeleteAccountDialog.value = true
+    }
+
+    private fun closeConfirmDeleteAccountDialog() {
+        _openConfirmDeleteAccountDialog.value = false
+    }
+
+    private fun openConfirmLogoutDialog() {
+        _openConfirmLogoutDialog.value = true
+    }
+
+    private fun closeConfirmLogoutDialog() {
+        _openConfirmLogoutDialog.value = false
     }
 
     private fun fetchData() = launch {
@@ -56,11 +80,17 @@ class SettingsViewModel @Inject constructor(
         object FetchData : Action()
         object Logout : Action()
         object DeleteAccount : Action()
+        object OpenConfirmDeleteAccountDialog : Action()
+        object CloseConfirmDeleteAccountDialog : Action()
+        object OpenConfirmLogoutDialog : Action()
+        object CloseConfirmLogoutDialog : Action()
     }
 
     data class State(
         val loadingState: LoadingState = LoadingState.Loaded,
-        val userEmail: String? = null
+        val userEmail: String? = null,
+        val openConfirmDeleteAccountDialog: Boolean = false,
+        val openConfirmLogoutDialog: Boolean = false
     )
 
 }
