@@ -1,19 +1,17 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
-    id("com.google.firebase.crashlytics")
+    id("kotlin-parcelize")
     kotlin("kapt")
 }
 
 android {
-    namespace = "com.thejohnsondev.data"
+    namespace = "com.thejohnsondev.database"
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 29
+        minSdk = 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -41,30 +39,25 @@ dependencies {
 
     implementation(project(":core:model"))
     implementation(project(":core:common"))
-    implementation(project(":core:datastore"))
-    implementation(project(":core:network"))
-    implementation(project(":core:database"))
-
-    // Firebase
-    implementation(platform(libs.com.google.firebase.bom))
-    implementation(libs.com.google.firebase.analyticsktx)
-    implementation(libs.com.google.firebase.crashlyticsktx)
 
     implementation(libs.androidx.ktx)
     implementation(platform(libs.org.jetbrains.kotlin.bom))
     implementation(libs.androidx.appcompat)
-
-    // Test
+    implementation(libs.com.google.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
+
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
+
+    // Arrow
+    implementation(libs.arrow.core)
 
     // Hilt-Dagger
     implementation(libs.com.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.com.google.dagger.hilt.compiler)
-
-    // Arrow
-    implementation(libs.arrow.core)
-
 }

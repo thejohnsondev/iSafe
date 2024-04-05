@@ -139,17 +139,19 @@ class VaultViewModel @Inject constructor(
     }
 
     private fun fetchVault() = launchLoading {
-        useCases.getAllPasswords().first().fold(
-            ifLeft = ::handleError,
-            ifRight = {
-                val decryptedPasswordList = it.map {
-                    it.decryptModel(dataStore.getUserKey())
+        useCases.getAllPasswords().collect {
+            it.fold(
+                ifLeft = ::handleError,
+                ifRight = {
+                    val decryptedPasswordList = it.map {
+                        it.decryptModel(dataStore.getUserKey())
+                    }.sortedByDescending { it.lastEdit }
+                    handlePasswordsList(decryptedPasswordList)
+                    _passwordsListFetched.emit(decryptedPasswordList)
                 }
-                handlePasswordsList(decryptedPasswordList)
-                _passwordsListFetched.emit(decryptedPasswordList)
-            }
 
-        )
+            )
+        }
         _bankAccountsList.emit(
             emptyList()
         )

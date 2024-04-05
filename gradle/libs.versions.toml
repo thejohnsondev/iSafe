@@ -25,10 +25,12 @@ firebase-bom = "32.2.0"
 security-crypto = "1.0.0"
 gson = "2.10.1"
 retrofit = "2.9.0"
+logging = "4.12.0"
 arrow = "1.1.2"
 splashscreen = "1.0.1"
 agp = "8.1.0-rc01"
 org-jetbrains-kotlin-android = "1.7.20"
+room = "2.6.1"
 
 [libraries]
 
@@ -94,8 +96,15 @@ com-google-code-gson = { module = "com.google.code.gson:gson", version.ref = "gs
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-converter-json = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
+okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "logging" }
+
+#Room
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+room = { id = "androidx.room", version.ref = "room" }

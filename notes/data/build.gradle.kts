@@ -42,6 +42,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:datastore"))
     implementation(project(":core:network"))
+    implementation(project(":core:database"))
 
     // Firebase
     implementation(platform(libs.com.google.firebase.bom))

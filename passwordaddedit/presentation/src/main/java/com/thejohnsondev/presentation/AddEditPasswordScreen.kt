@@ -329,12 +329,12 @@ fun AddEditPasswordContent(
                     title = additionalField.title,
                     value = additionalField.value,
                     onTitleChanged = { title ->
-                        onEnterAdditionalFieldTitle(additionalField.id, title)
+                        onEnterAdditionalFieldTitle(additionalField.id.orEmpty(), title)
                     },
                     onValueChanged = { value ->
-                        onEnterAdditionalFieldValue(additionalField.id, value)
+                        onEnterAdditionalFieldValue(additionalField.id.orEmpty(), value)
                     }, onDeleteClick = {
-                        onDeleteAdditionalField(additionalField.id)
+                        onDeleteAdditionalField(additionalField.id.orEmpty())
                     })
             }
             Button(

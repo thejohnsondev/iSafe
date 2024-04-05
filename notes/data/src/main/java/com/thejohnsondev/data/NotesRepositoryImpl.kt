@@ -1,13 +1,16 @@
 package com.thejohnsondev.data
 
 import arrow.core.Either
+import com.thejohnsondev.database.local_datasource.LocalDataSource
 import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.NoteModel
+import com.thejohnsondev.network.di.DotNetRemoteDataSource
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
 
 class NotesRepositoryImpl(
-    private val remoteDataSource: RemoteDataSource
+    @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource
 ) : NotesRepository {
     override fun getNotes(): Flow<Either<ApiError, List<NoteModel>>> = remoteDataSource.getNotes()
 

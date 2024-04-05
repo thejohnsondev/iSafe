@@ -2,6 +2,7 @@ package com.thejohnsondev.data.di
 
 import com.thejohnsondev.data.PasswordsRepository
 import com.thejohnsondev.data.PasswordsRepositoryImpl
+import com.thejohnsondev.database.local_datasource.LocalDataSource
 import com.thejohnsondev.network.di.DotNetRemoteDataSource
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import dagger.Module
@@ -17,9 +18,11 @@ object DataModule {
     @Singleton
     @Provides
     fun providePasswordsRepository(
-        @DotNetRemoteDataSource remoteDataSource: RemoteDataSource
+        @DotNetRemoteDataSource remoteDataSource: RemoteDataSource,
+        localDataSource: LocalDataSource
     ): PasswordsRepository = PasswordsRepositoryImpl(
-        remoteDataSource
+        remoteDataSource,
+        localDataSource
     )
 
 }

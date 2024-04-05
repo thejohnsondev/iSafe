@@ -1,7 +1,7 @@
 package com.thejohnsondev.model
 
 data class AdditionalField(
-    val id: String,
+    var id: String? = null,
     val title: String,
     val value: String,
 )
