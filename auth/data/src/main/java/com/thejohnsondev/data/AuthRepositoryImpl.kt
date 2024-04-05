@@ -25,6 +25,8 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun signOut() {
         localDataSource.logout()
         dataStore.clearUserData()
+        dataStore.setIsFirstPasswordsLoad(true)
+        dataStore.setIsFirstNotesLoad(true)
     }
 
     override fun isUserLoggedIn(): Boolean = dataStore.isUserLoggedIn()

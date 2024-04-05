@@ -90,11 +90,29 @@ class DataStoreImpl @Inject constructor(
         return getUserToken().isNotEmpty()
     }
 
+    override fun isFirstPasswordsLoad(): Boolean {
+        return getBoolean(IS_FIRST_PASSWORDS_LOAD)
+    }
+
+    override suspend fun setIsFirstPasswordsLoad(isFirstPasswordsLoad: Boolean) {
+        putBoolean(IS_FIRST_PASSWORDS_LOAD, isFirstPasswordsLoad)
+    }
+
+    override fun isFirstNotesLoad(): Boolean {
+        return getBoolean(IS_FIRST_NOTES_LOAD)
+    }
+
+    override suspend fun setIsFirstNotesLoad(isFirstNotesLoad: Boolean) {
+        putBoolean(IS_FIRST_NOTES_LOAD, isFirstNotesLoad)
+    }
+
     companion object {
         private const val USER_KEY = "user_key"
         private const val USER_EMAIL = "user-email"
         private const val USER_TOKEN = "user-token"
         private const val BASE_URL = "base-url"
+        private const val IS_FIRST_PASSWORDS_LOAD = "is-first-passwords-load"
+        private const val IS_FIRST_NOTES_LOAD = "is-first-notes-load"
         private const val DEFAULT_BASE_URL = "https://isafeapi2.azurewebsites.net/"
     }
 }

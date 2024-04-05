@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.thejohnsondev.common.awaitChannelFlow
 import com.thejohnsondev.common.sendOrNothing
 import com.thejohnsondev.database.local_datasource.LocalDataSource
+import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.PasswordModel
@@ -15,11 +16,16 @@ import javax.inject.Inject
 
 class PasswordsRepositoryImpl @Inject constructor(
     @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource
+    private val localDataSource: LocalDataSource,
+    private val dataStore: DataStore
 ) : PasswordsRepository {
 
     override fun getUserPasswords(): Flow<Either<ApiError, List<PasswordModel>>> = awaitChannelFlow {
-        send(Either.Right(localDataSource.getUserPasswords()))
+        if (!dataStore.isFirstPasswordsLoad()) {
+            send(Either.Right(localDataSource.getUserPasswords()))
+        } else {
+            dataStore.setIsFirstPasswordsLoad(false)
+        }
         remoteDataSource.getUserPasswords().first().fold(
             ifLeft = { sendOrNothing(Either.Left(it)) },
             ifRight = {

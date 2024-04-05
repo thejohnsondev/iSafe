@@ -62,7 +62,7 @@ class RoomLocalDataSourceImpl @Inject constructor(
 
     override suspend fun updatePasswords(passwords: List<PasswordModel>) {
         passwords.forEach {
-            passwordsDao.updatePassword(it.toEntity())
+            passwordsDao.insertPassword(it.toEntity())
         }
     }
 

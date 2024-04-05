@@ -148,6 +148,7 @@ class VaultViewModel @Inject constructor(
                     }.sortedByDescending { it.lastEdit }
                     handlePasswordsList(decryptedPasswordList)
                     _passwordsListFetched.emit(decryptedPasswordList)
+                    loaded()
                 }
 
             )
@@ -158,7 +159,6 @@ class VaultViewModel @Inject constructor(
         _allBankAccountsList.emit(
             emptyList()
         )
-        loaded()
     }
 
     private fun handlePasswordsList(list: List<PasswordModel>) = launch {

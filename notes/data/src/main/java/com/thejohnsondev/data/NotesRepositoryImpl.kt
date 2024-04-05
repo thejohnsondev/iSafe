@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.thejohnsondev.common.awaitChannelFlow
 import com.thejohnsondev.common.sendOrNothing
 import com.thejohnsondev.database.local_datasource.LocalDataSource
+import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.network.di.DotNetRemoteDataSource
@@ -13,10 +14,15 @@ import kotlinx.coroutines.flow.first
 
 class NotesRepositoryImpl(
     @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource
+    private val localDataSource: LocalDataSource,
+    private val dataStore: DataStore
 ) : NotesRepository {
     override fun getNotes(): Flow<Either<ApiError, List<NoteModel>>> = awaitChannelFlow {
-        send(Either.Right(localDataSource.getNotes()))
+        if (!dataStore.isFirstNotesLoad()) {
+            send(Either.Right(localDataSource.getNotes()))
+        } else {
+            dataStore.setIsFirstNotesLoad(false)
+        }
         remoteDataSource.getNotes().first().fold(
             ifLeft = { sendOrNothing(Either.Left(it)) },
             ifRight = {

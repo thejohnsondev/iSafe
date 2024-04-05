@@ -16,4 +16,9 @@ interface DataStore {
     suspend fun clearUserData()
 
     fun isUserLoggedIn(): Boolean
+
+    fun isFirstPasswordsLoad(): Boolean
+    suspend fun setIsFirstPasswordsLoad(isFirstPasswordsLoad: Boolean)
+    fun isFirstNotesLoad(): Boolean
+    suspend fun setIsFirstNotesLoad(isFirstNotesLoad: Boolean)
 }
