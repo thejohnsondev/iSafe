@@ -37,7 +37,7 @@ interface ISafeDotNetApi {
     suspend fun updatePassword(
         @Path("id") id: String?,
         @Body passwordModel: PasswordModel
-    ): Either<ApiError, Unit>
+    ): Either<ApiError, PasswordModel>
 
     @DELETE("$DELETE_PASSWORD/{id}")
     suspend fun deletePassword(

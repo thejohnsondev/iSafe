@@ -34,11 +34,12 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun fetchNotes() = launchLoading {
-        useCases.getAllNotes().first().fold(
-            ifLeft = ::handleError,
-            ifRight = ::handleNotesList
-        )
-
+        useCases.getAllNotes().collect {
+            it.fold(
+                ifLeft = ::handleError,
+                ifRight = ::handleNotesList
+            )
+        }
     }
 
     private fun handleNotesList(notesList: List<NoteModel>) = launch {

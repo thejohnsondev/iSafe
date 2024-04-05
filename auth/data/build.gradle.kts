@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:common"))
     implementation(project(":core:network"))
+    implementation(project(":core:database"))
 
     implementation(libs.androidx.ktx)
     implementation(platform(libs.org.jetbrains.kotlin.bom))

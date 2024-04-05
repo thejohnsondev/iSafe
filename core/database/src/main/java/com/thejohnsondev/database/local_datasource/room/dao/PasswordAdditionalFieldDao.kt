@@ -19,6 +19,9 @@ interface PasswordAdditionalFieldDao {
     @Query("DELETE FROM additionalFields WHERE id = :additionalFieldId")
     suspend fun deletePasswordAdditionalFieldById(additionalFieldId: String?)
 
+    @Query("DELETE FROM additionalFields WHERE passwordId = :passwordId")
+    suspend fun deleteAdditionalFieldsByPasswordId(passwordId: String?)
+
     @Query("SELECT * FROM additionalFields WHERE passwordId = :passwordId")
     suspend fun getAdditionalFieldsByPasswordId(passwordId: String?): List<AdditionalFieldEntity>
 

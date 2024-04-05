@@ -22,7 +22,10 @@ class PasswordsRepositoryImpl @Inject constructor(
         send(Either.Right(localDataSource.getUserPasswords()))
         remoteDataSource.getUserPasswords().first().fold(
             ifLeft = { sendOrNothing(Either.Left(it)) },
-            ifRight = { sendOrNothing(Either.Right(it)) }
+            ifRight = {
+                localDataSource.updatePasswords(it)
+                sendOrNothing(Either.Right(it))
+            }
         )
     }
 
@@ -36,14 +39,30 @@ class PasswordsRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun updatePassword(password: PasswordModel): Flow<Either<ApiError, Unit>> =
-        remoteDataSource.updatePassword(password)
+    override fun updatePassword(password: PasswordModel): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
+        remoteDataSource.updatePassword(password).first().fold(
+            ifLeft = { sendOrNothing(Either.Left(it)) },
+            ifRight = {
+                localDataSource.updatePassword(it)
+                sendOrNothing(Either.Right(Unit))
+            }
+        )
+    }
+
 
     override fun updatePasswordsList(
         newPasswordList: List<PasswordModel>
     ): Flow<DatabaseResponse> =
         remoteDataSource.updatePasswordsList(newPasswordList)
 
-    override fun deletePassword(passwordId: String): Flow<Either<ApiError, Unit>> =
-        remoteDataSource.deletePassword(passwordId)
+    override fun deletePassword(passwordId: String): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
+        remoteDataSource.deletePassword(passwordId).first().fold(
+            ifLeft = { sendOrNothing(Either.Left(it)) },
+            ifRight = {
+                localDataSource.deletePassword(passwordId)
+                sendOrNothing(Either.Right(Unit))
+            }
+        )
+    }
+
 }

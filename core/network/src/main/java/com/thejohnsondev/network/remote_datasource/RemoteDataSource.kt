@@ -15,7 +15,7 @@ interface RemoteDataSource {
 
     fun getUserPasswords(): Flow<Either<ApiError, List<PasswordModel>>>
     fun createPassword(passwordModel: PasswordModel): Flow<Either<ApiError, PasswordModel>>
-    fun updatePassword(passwordModel: PasswordModel): Flow<Either<ApiError, Unit>>
+    fun updatePassword(passwordModel: PasswordModel): Flow<Either<ApiError, PasswordModel>>
     fun updatePasswordsList(newPasswordList: List<PasswordModel>): Flow<DatabaseResponse>
     fun deletePassword(passwordId: String): Flow<Either<ApiError, Unit>>
     fun deleteAccount(): Flow<Either<ApiError, Unit>>

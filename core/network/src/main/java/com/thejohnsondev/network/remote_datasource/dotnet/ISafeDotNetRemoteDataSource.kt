@@ -31,7 +31,7 @@ class ISafeDotNetRemoteDataSource @Inject constructor(
 
     override fun updatePassword(
         passwordModel: PasswordModel
-    ): Flow<Either<ApiError, Unit>> =
+    ): Flow<Either<ApiError, PasswordModel>> =
         awaitChannelFlow {
             sendOrNothing(api.updatePassword(passwordModel.id, passwordModel))
         }

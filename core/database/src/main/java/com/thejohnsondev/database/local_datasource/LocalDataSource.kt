@@ -1,23 +1,21 @@
 package com.thejohnsondev.database.local_datasource
 
-import arrow.core.Either
-import com.thejohnsondev.model.ApiError
-import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.PasswordModel
-import kotlinx.coroutines.flow.Flow
 
 interface LocalDataSource {
     suspend fun getUserPasswords(): List<PasswordModel>
     suspend fun createPassword(passwordModel: PasswordModel): PasswordModel
-    fun updatePassword(passwordModel: PasswordModel): Flow<Either<ApiError, Unit>>
-    fun updatePasswordsList(newPasswordList: List<PasswordModel>): Flow<DatabaseResponse>
-    fun deletePassword(passwordId: String): Flow<Either<ApiError, Unit>>
-    fun deleteAccount(): Flow<Either<ApiError, Unit>>
+    suspend fun updatePassword(passwordModel: PasswordModel)
+    suspend fun updatePasswordsList(newPasswordList: List<PasswordModel>)
+    suspend fun deletePassword(passwordId: String)
+    suspend fun logout()
+    suspend fun updatePasswords(passwords: List<PasswordModel>)
 
-    fun getNotes(): Flow<Either<ApiError, List<NoteModel>>>
-    fun createNote(noteModel: NoteModel): Flow<Either<ApiError, NoteModel>>
-    fun updateNote(noteModel: NoteModel): Flow<Either<ApiError, Unit>>
-    fun deleteNote(noteId: String): Flow<Either<ApiError, Unit>>
+    suspend fun getNotes(): List<NoteModel>
+    suspend fun createNote(noteModel: NoteModel): NoteModel
+    suspend fun updateNote(noteModel: NoteModel)
+    suspend fun deleteNote(noteId: String)
+    suspend fun updateNotes(notes: List<NoteModel>)
 
 }

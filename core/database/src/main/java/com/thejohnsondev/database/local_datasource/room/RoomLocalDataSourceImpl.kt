@@ -1,30 +1,28 @@
 package com.thejohnsondev.database.local_datasource.room
 
-import arrow.core.Either
-import com.thejohnsondev.common.awaitChannelFlow
-import com.thejohnsondev.common.sendOrNothing
 import com.thejohnsondev.database.local_datasource.LocalDataSource
-import com.thejohnsondev.database.local_datasource.room.db.ISafeDataBase
+import com.thejohnsondev.database.local_datasource.room.dao.NotesDao
+import com.thejohnsondev.database.local_datasource.room.dao.PasswordAdditionalFieldDao
+import com.thejohnsondev.database.local_datasource.room.dao.PasswordsDao
 import com.thejohnsondev.database.local_datasource.room.entity.AdditionalFieldEntity.Companion.toEntity
 import com.thejohnsondev.database.local_datasource.room.entity.AdditionalFieldEntity.Companion.toModel
 import com.thejohnsondev.database.local_datasource.room.entity.NoteEntity.Companion.toEntity
 import com.thejohnsondev.database.local_datasource.room.entity.NoteEntity.Companion.toModel
 import com.thejohnsondev.database.local_datasource.room.entity.PasswordEntity.Companion.toEntity
 import com.thejohnsondev.database.local_datasource.room.entity.PasswordEntity.Companion.toModel
-import com.thejohnsondev.model.ApiError
-import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.PasswordModel
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RoomLocalDataSourceImpl @Inject constructor(
-    private val iSafeDataBase: ISafeDataBase
+    private val passwordsDao: PasswordsDao,
+    private val additionalFieldDao: PasswordAdditionalFieldDao,
+    private val notesDao: NotesDao
 ) : LocalDataSource {
     override suspend fun getUserPasswords(): List<PasswordModel> =
-        iSafeDataBase.getPasswordsDao().getAllPasswords().map { passwordEntity ->
+        passwordsDao.getAllPasswords().map { passwordEntity ->
             passwordEntity.toModel().copy(
-                additionalFields = iSafeDataBase.getAdditionalFieldsDao()
+                additionalFields = additionalFieldDao
                     .getAdditionalFieldsByPasswordId(passwordEntity.id).map {
                         it.toModel()
                     }
@@ -32,60 +30,62 @@ class RoomLocalDataSourceImpl @Inject constructor(
         }
 
     override suspend fun createPassword(passwordModel: PasswordModel): PasswordModel {
-        iSafeDataBase.getPasswordsDao().insertPassword(passwordModel.toEntity())
+        passwordsDao.insertPassword(passwordModel.toEntity())
         passwordModel.additionalFields.forEach {
-            iSafeDataBase.getAdditionalFieldsDao()
-                .insertAdditionalField(it.toEntity(passwordModel.id))
+            additionalFieldDao.insertAdditionalField(it.toEntity(passwordModel.id))
         }
         return passwordModel
     }
 
-    override fun updatePassword(passwordModel: PasswordModel): Flow<Either<ApiError, Unit>> =
-        awaitChannelFlow {
-            iSafeDataBase.getPasswordsDao().updatePassword(passwordModel.toEntity())
-            passwordModel.additionalFields.forEach {
-                iSafeDataBase.getAdditionalFieldsDao()
-                    .updateAdditionalField(it.toEntity(passwordModel.id))
-            }
-            sendOrNothing(Either.Right(Unit))
+    override suspend fun updatePassword(passwordModel: PasswordModel) {
+        passwordsDao.updatePassword(passwordModel.toEntity())
+        additionalFieldDao.deleteAdditionalFieldsByPasswordId(passwordModel.id)
+        passwordModel.additionalFields.forEach {
+            additionalFieldDao.insertAdditionalField(it.toEntity(passwordModel.id))
         }
+    }
 
-    override fun updatePasswordsList(newPasswordList: List<PasswordModel>): Flow<DatabaseResponse> {
+    override suspend fun updatePasswordsList(newPasswordList: List<PasswordModel>) {
         TODO("Not yet implemented")
     }
 
-    override fun deletePassword(passwordId: String): Flow<Either<ApiError, Unit>> =
-        awaitChannelFlow {
-            iSafeDataBase.getAdditionalFieldsDao().getAdditionalFieldsByPasswordId(passwordId)
-                .forEach {
-                    iSafeDataBase.getAdditionalFieldsDao().deletePasswordAdditionalFieldById(it.id)
-                }
-            iSafeDataBase.getPasswordsDao().deletePasswordById(passwordId)
-            sendOrNothing(Either.Right(Unit))
+    override suspend fun deletePassword(passwordId: String) {
+        passwordsDao.deletePasswordById(passwordId)
+        additionalFieldDao.deleteAdditionalFieldsByPasswordId(passwordId)
+    }
+
+    override suspend fun logout() {
+        passwordsDao.deleteAllPasswords()
+        additionalFieldDao.deleteAllAdditionalFields()
+        notesDao.deleteAllNotes()
+    }
+
+    override suspend fun updatePasswords(passwords: List<PasswordModel>) {
+        passwords.forEach {
+            passwordsDao.updatePassword(it.toEntity())
         }
-
-    override fun deleteAccount(): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
-        iSafeDataBase.getAdditionalFieldsDao().deleteAllAdditionalFields()
-        iSafeDataBase.getPasswordsDao().deleteAllPasswords()
-        iSafeDataBase.getNotesDao().deleteAllNotes()
-        sendOrNothing(Either.Right(Unit))
     }
 
-    override fun getNotes(): Flow<Either<ApiError, List<NoteModel>>> = awaitChannelFlow {
-        sendOrNothing(Either.Right(iSafeDataBase.getNotesDao().getAllNotes().map { it.toModel() }))
+    override suspend fun getNotes(): List<NoteModel> {
+        return notesDao.getAllNotes().map { it.toModel() }
     }
 
-    override fun createNote(noteModel: NoteModel): Flow<Either<ApiError, NoteModel>> =
-        awaitChannelFlow {
-            iSafeDataBase.getNotesDao().insertNote(noteModel.toEntity())
-            sendOrNothing(Either.Right(noteModel))
+    override suspend fun createNote(noteModel: NoteModel): NoteModel {
+        notesDao.insertNote(noteModel.toEntity())
+        return noteModel
+    }
+
+    override suspend fun updateNote(noteModel: NoteModel) {
+        notesDao.updateNote(noteModel.toEntity())
+    }
+
+    override suspend fun deleteNote(noteId: String) {
+        notesDao.deleteNoteById(noteId)
+    }
+
+    override suspend fun updateNotes(notes: List<NoteModel>) {
+        notes.forEach {
+            notesDao.insertNote(it.toEntity())
         }
-
-    override fun updateNote(noteModel: NoteModel): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
-        sendOrNothing(Either.Right(iSafeDataBase.getNotesDao().updateNote(noteModel.toEntity())))
-    }
-
-    override fun deleteNote(noteId: String): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
-        sendOrNothing(Either.Right(iSafeDataBase.getNotesDao().deleteNoteById(noteId)))
     }
 }
