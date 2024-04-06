@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -327,6 +328,7 @@ fun AddEditPasswordContent(
                     }
                 }
             }
+            Spacer(modifier = Modifier.size(Size16))
             state.additionalFields.forEachIndexed { index, additionalField ->
                 AdditionalField(
                     modifier = Modifier
@@ -472,6 +474,31 @@ fun AddEditPasswordPreviewWithAdditionalFieldsLight() {
                 title = "Test",
                 password = "Pass123$",
                 additionalFields = listOf(
+                    com.thejohnsondev.model.AdditionalField(
+                        id = "1",
+                        title = "Test",
+                        value = "Test"
+                    ),
+                    com.thejohnsondev.model.AdditionalField(
+                        id = "1",
+                        title = "Test",
+                        value = "Test"
+                    ),
+                    com.thejohnsondev.model.AdditionalField(
+                        id = "1",
+                        title = "Test",
+                        value = "Test"
+                    ),
+                    com.thejohnsondev.model.AdditionalField(
+                        id = "1",
+                        title = "Test",
+                        value = "Test"
+                    ),
+                    com.thejohnsondev.model.AdditionalField(
+                        id = "1",
+                        title = "Test",
+                        value = "Test"
+                    ),
                     com.thejohnsondev.model.AdditionalField(
                         id = "1",
                         title = "Test",
