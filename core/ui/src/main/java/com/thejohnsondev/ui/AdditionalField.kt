@@ -10,7 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +36,6 @@ import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size40
 import com.thejohnsondev.designsystem.Size8
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AdditionalField(
     modifier: Modifier = Modifier,
@@ -95,7 +94,7 @@ fun AdditionalField(
                         },
                         hint = stringResource(id = com.thejohnsondev.common.R.string.title)
                     )
-                    Divider()
+                    HorizontalDivider()
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
@@ -156,7 +155,7 @@ fun AdditionalField(
             }
         }
     }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(titleFocusRequester) {
         titleFocusRequester.requestFocus()
     }
 }

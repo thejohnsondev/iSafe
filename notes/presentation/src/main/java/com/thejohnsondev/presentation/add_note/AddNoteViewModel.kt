@@ -50,7 +50,7 @@ class AddNoteViewModel @Inject constructor(
                 ifLeft = ::handleError,
                 ifRight = {
                     sendEvent(OneTimeEvent.InfoToast("Note deleted"))
-                    sendEvent(OneTimeEvent.SuccessNavigation)
+                    sendEvent(OneTimeEvent.SuccessNavigation())
                 }
             )
         }
@@ -84,7 +84,7 @@ class AddNoteViewModel @Inject constructor(
                 ifLeft = ::handleError,
                 ifRight = {
                     sendEvent(OneTimeEvent.InfoToast("Note updated"))
-                    sendEvent(OneTimeEvent.SuccessNavigation)
+                    sendEvent(OneTimeEvent.SuccessNavigation())
                 }
             )
             return@launchLoading
@@ -93,7 +93,7 @@ class AddNoteViewModel @Inject constructor(
                 ifLeft = ::handleError,
                 ifRight = {
                     sendEvent(OneTimeEvent.InfoToast("Note added"))
-                    sendEvent(OneTimeEvent.SuccessNavigation)
+                    sendEvent(OneTimeEvent.SuccessNavigation())
                 }
             )
         }

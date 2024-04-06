@@ -135,7 +135,7 @@ class AddEditPasswordViewModel @Inject constructor(
         _additionalFields.emit(newList)
     }
 
-    private fun savePassword() = launchLoading {
+    private fun savePassword() = launch {
         val passwordModel = PasswordModel(
             id = _passwordId.value,
             _organization.value,
@@ -161,8 +161,7 @@ class AddEditPasswordViewModel @Inject constructor(
 
     private fun handlePasswordSaved() = launch {
         val infoText = if (_isEdit.value) "Password edited" else "Password added"
-        sendEvent(OneTimeEvent.InfoToast(infoText))
-        sendEvent(OneTimeEvent.SuccessNavigation)
+        sendEvent(OneTimeEvent.SuccessNavigation(infoText))
     }
 
 

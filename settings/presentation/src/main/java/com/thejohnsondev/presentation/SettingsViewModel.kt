@@ -73,7 +73,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun handleSuccess() = launch {
-        sendEvent(OneTimeEvent.SuccessNavigation)
+        sendEvent(OneTimeEvent.SuccessNavigation())
     }
 
     sealed class Action {

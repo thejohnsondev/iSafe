@@ -102,6 +102,9 @@ fun AddEditPasswordScreen(
                 )
 
                 is OneTimeEvent.SuccessNavigation -> {
+                    if (it.message != null) {
+                        context.toast(it.message!!)
+                    }
                     keyboardController?.hide()
                     onGoBackClick()
                 }
