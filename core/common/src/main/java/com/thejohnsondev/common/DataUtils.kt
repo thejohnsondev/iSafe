@@ -9,6 +9,7 @@ import android.os.PersistableBundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import com.google.gson.Gson
+import com.google.gson.stream.JsonReader
 import com.thejohnsondev.model.EmailIncorrectReason
 import com.thejohnsondev.model.EmailValidationState
 import com.thejohnsondev.model.IncorrectPasswordReason
@@ -75,7 +76,7 @@ fun Any?.toJson(): String {
 }
 
 inline fun <reified T> String?.fromJson(): T {
-    val jsonReader = com.google.gson.stream.JsonReader(StringReader(this))
+    val jsonReader = JsonReader(StringReader(this))
     jsonReader.isLenient = true
     return Gson().fromJson(jsonReader, T::class.java)
 }
