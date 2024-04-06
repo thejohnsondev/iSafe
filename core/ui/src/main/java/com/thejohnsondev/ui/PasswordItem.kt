@@ -28,6 +28,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -295,9 +296,15 @@ fun ExpandedContent(
                 color = MaterialTheme.colorScheme.surfaceVariant
             ) {
                 Column {
-                    passwordModel.additionalFields.forEach {
+                    passwordModel.additionalFields.forEachIndexed { index, it ->
                         AdditionalFieldItem(additionalField = it) {
                             onCopyClick(it)
+                        }
+                        if (index != passwordModel.additionalFields.size - 1) {
+                            HorizontalDivider(
+                                thickness = Size4,
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         }
                     }
                 }
