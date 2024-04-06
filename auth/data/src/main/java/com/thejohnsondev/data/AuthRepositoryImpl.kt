@@ -1,6 +1,7 @@
 package com.thejohnsondev.data
 
 import arrow.core.Either
+import com.thejohnsondev.common.encrypt
 import com.thejohnsondev.database.local_datasource.LocalDataSource
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.ApiError
@@ -15,11 +16,17 @@ class AuthRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
     private val dataStore: DataStore
 ) : AuthRepository {
-    override suspend fun signUp(email: String, password: String): Flow<Either<ApiError, AuthResponse>> =
-        remoteDataSource.signUp(email, password)
+    override suspend fun signUp(email: String, password: String): Flow<Either<ApiError, AuthResponse>> {
+        val encryptedEmail = email.encrypt(BuildConfig.AUTH_SECRET_KEY.toByteArray())
+        val encryptedPassword = password.encrypt(BuildConfig.AUTH_SECRET_KEY.toByteArray())
+        return remoteDataSource.signUp(encryptedEmail, encryptedPassword)
+    }
 
-    override suspend fun singIn(email: String, password: String): Flow<Either<ApiError, AuthResponse>> =
-        remoteDataSource.singIn(email, password)
+    override suspend fun singIn(email: String, password: String): Flow<Either<ApiError, AuthResponse>> {
+        val encryptedEmail = email.encrypt(BuildConfig.AUTH_SECRET_KEY.toByteArray())
+        val encryptedPassword = password.encrypt(BuildConfig.AUTH_SECRET_KEY.toByteArray())
+        return remoteDataSource.singIn(encryptedEmail, encryptedPassword)
+    }
 
 
     override suspend fun signOut() {

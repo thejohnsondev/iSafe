@@ -417,17 +417,18 @@ fun SearchBarItem(
 fun FiltersItem(
     isSearching: Boolean
 ) {
-    AnimatedVisibility(visible = !isSearching) {
-        Filters(
-            onAllClick = {
-
-            }, onPasswordsClick = {
-
-            }, onBankAccountsClick = {
-
-            }
-        )
-    }
+    // TODO: uncomment after adding multiple data types
+//    AnimatedVisibility(visible = !isSearching) {
+//        Filters(
+//            onAllClick = {
+//
+//            }, onPasswordsClick = {
+//
+//            }, onBankAccountsClick = {
+//
+//            }
+//        )
+//    }
 }
 
 @Composable

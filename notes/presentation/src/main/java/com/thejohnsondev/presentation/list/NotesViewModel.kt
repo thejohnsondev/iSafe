@@ -43,7 +43,11 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun handleNotesList(notesList: List<NoteModel>) = launch {
-        val decryptedNotes = notesList.map { it.decryptModel(dataStore.getUserKey()) }
+        val decryptedNotes = notesList.map {
+            it.decryptModel(dataStore.getUserKey())
+        }.sortedByDescending {
+            it.lastEdit
+        }
         _notesList.emit(
             decryptedNotes
         )

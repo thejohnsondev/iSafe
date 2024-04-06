@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -5,6 +7,8 @@ plugins {
     id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
+
+val authSecretKey: String = gradleLocalProperties(rootDir).getProperty("auth_secret_key")
 
 android {
     namespace = "com.thejohnsondev.data"
@@ -15,6 +19,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        buildConfigField("String", "AUTH_SECRET_KEY", authSecretKey)
     }
 
     buildTypes {
@@ -32,6 +37,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

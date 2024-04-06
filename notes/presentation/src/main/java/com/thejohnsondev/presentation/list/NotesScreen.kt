@@ -122,7 +122,6 @@ fun NotesContent(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
         ) {
-            Spacer(modifier = Modifier.height(Size16))
             NotesList(
                 notesList = screenState.notesList,
                 onNoteClick = onNoteClick,
