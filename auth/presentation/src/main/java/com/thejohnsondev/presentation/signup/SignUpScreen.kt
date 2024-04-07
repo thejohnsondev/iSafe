@@ -1,7 +1,7 @@
 package com.thejohnsondev.presentation.signup
 
 import android.annotation.SuppressLint
-import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -27,20 +29,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -50,7 +50,6 @@ import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.getEmailErrorMessage
 import com.thejohnsondev.common.getPasswordErrorMessage
 import com.thejohnsondev.common.toast
-import com.thejohnsondev.designsystem.EqualRounded
 import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
@@ -120,6 +119,7 @@ fun SignUpScreen(
             keyboardController?.hide()
         },
         sigUpWithEmail = { email, password ->
+            keyboardController?.hide()
             viewModel.perform(SignUpViewModel.Action.SignUpWithEmail(email, password))
         }
     )
@@ -158,40 +158,45 @@ fun SignUpContent(
                 Color.Black
             }
         ) {
-            Box {
+            Column(
+                modifier = Modifier.imePadding(),
+            ) {
                 Box {
-                    GlowPulsingBackground()
-                }
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .scrollable(rememberScrollState(), Orientation.Vertical),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    LogoSection()
-                    FieldsSection(
-                        screenState = state,
-                        emailState = emailState,
-                        passwordState = passwordState,
-                        emailFocusRequest = emailFocusRequest,
-                        passwordFocusRequest = passwordFocusRequest,
-                        onGoToLogin = onGoToLogin,
-                        validateEmail = validateEmail,
-                        validatePassword = validatePassword,
-                        hideKeyboard = hideKeyboard
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = paddingValues.calculateBottomPadding())
-                ) {
-                    SignUpButtonSection(
-                        screenState = state,
-                        emailState = emailState,
-                        passwordState = passwordState,
-                        sigUpWithEmail = sigUpWithEmail
-                    )
+                    Box {
+                        GlowPulsingBackground()
+                    }
+                    Column(
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .scrollable(rememberScrollState(), Orientation.Vertical),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        LogoSection()
+                        FieldsSection(
+                            screenState = state,
+                            emailState = emailState,
+                            passwordState = passwordState,
+                            emailFocusRequest = emailFocusRequest,
+                            passwordFocusRequest = passwordFocusRequest,
+                            onGoToLogin = onGoToLogin,
+                            validateEmail = validateEmail,
+                            validatePassword = validatePassword,
+                            hideKeyboard = hideKeyboard
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = paddingValues.calculateBottomPadding(), start = Size8, end = Size8)
+                            .clip(RoundedCornerShape(Size24))
+                    ) {
+                        SignUpButtonSection(
+                            screenState = state,
+                            emailState = emailState,
+                            passwordState = passwordState,
+                            sigUpWithEmail = sigUpWithEmail
+                        )
+                    }
                 }
             }
         }
@@ -222,7 +227,7 @@ fun FieldsSection(
             .fillMaxHeight()
             .padding(horizontal = Size8),
         color = MaterialTheme.colorScheme.surface,
-        shape = EqualRounded.medium
+        shape = RoundedCornerShape(Size24)
     ) {
         Column {
             Text(
@@ -236,7 +241,9 @@ fun FieldsSection(
             )
             Spacer(modifier = Modifier.height(Size8))
             TextField(
-                modifier = Modifier.focusRequester(emailFocusRequest),
+                modifier = Modifier
+                    .focusRequester(emailFocusRequest)
+                    .padding(horizontal = Size16),
                 textState = emailState,
                 onTextChanged = {
                     emailState.value = it
@@ -258,7 +265,9 @@ fun FieldsSection(
             )
             Spacer(modifier = Modifier.height(Size8))
             TextField(
-                modifier = Modifier.focusRequester(passwordFocusRequest),
+                modifier = Modifier
+                    .focusRequester(passwordFocusRequest)
+                    .padding(horizontal = Size16),
                 textState = passwordState,
                 onTextChanged = {
                     passwordState.value = it
@@ -309,10 +318,13 @@ fun SignUpButtonSection(
     passwordState: MutableState<String>,
     sigUpWithEmail: (String, String) -> Unit
 ) {
-    Column(verticalArrangement = Arrangement.Bottom) {
+    Column(
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+        verticalArrangement = Arrangement.Bottom
+    ) {
         RoundedButton(
             text = stringResource(id = com.thejohnsondev.common.R.string.sign_up),
-            modifier = Modifier.padding(Size8),
+            modifier = Modifier.padding(horizontal = Size16, vertical = Size16),
             enabled = screenState.signUpReady,
             onClick = {
                 sigUpWithEmail(

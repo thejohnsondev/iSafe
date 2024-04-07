@@ -39,7 +39,6 @@ fun RoundedButton(
     Button(
         onClick = onClick,
         modifier = modifier
-            .padding(Size8)
             .height(Size48)
             .fillMaxWidth(),
         enabled = !loading && enabled,

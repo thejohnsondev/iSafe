@@ -2,6 +2,7 @@ package com.thejohnsondev.presentation.login
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
@@ -13,8 +14,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +39,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -58,6 +62,7 @@ import com.thejohnsondev.designsystem.Size4
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Size86
 import com.thejohnsondev.designsystem.TopRounded
+import com.thejohnsondev.designsystem.isLight
 import com.thejohnsondev.model.EmailValidationState
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
@@ -80,7 +85,6 @@ fun LoginScreen(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginContent(
@@ -118,7 +122,6 @@ fun LoginContent(
         }
     }
 
-    StatusBarColor()
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackbarHostState) { data ->
@@ -133,52 +136,55 @@ fun LoginContent(
     ) { paddingValues ->
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = Color.Black
+            color = if (MaterialTheme.colorScheme.isLight()) {
+                Color.White
+            } else {
+                Color.Black
+            }
         ) {
-            Box {
+            Column(
+                modifier = Modifier.imePadding()
+            ) {
                 Box {
-                    GlowPulsingBackground()
-                }
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .scrollable(rememberScrollState(), Orientation.Vertical),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    LogoSection()
-                    FieldsSection(
-                        context = context,
-                        viewModel = viewModel,
-                        screenState = screenState,
-                        emailState = emailState,
-                        passwordState = passwordState,
-                        passwordFocusRequest = passwordFocusRequest,
-                        keyboardController = keyboardController,
-                        onGoBack = onGoBack
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = paddingValues.calculateBottomPadding())
-                ) {
-                    LoginButtonSection(
-                        screenState = screenState,
-                        viewModel = viewModel,
-                        emailState = emailState,
-                        passwordState = passwordState
-                    )
+                    Box {
+                        GlowPulsingBackground()
+                    }
+                    Column(
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .scrollable(rememberScrollState(), Orientation.Vertical),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        LogoSection()
+                        FieldsSection(
+                            context = context,
+                            viewModel = viewModel,
+                            screenState = screenState,
+                            emailState = emailState,
+                            passwordState = passwordState,
+                            passwordFocusRequest = passwordFocusRequest,
+                            keyboardController = keyboardController,
+                            onGoBack = onGoBack
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = paddingValues.calculateBottomPadding(), start = Size8, end = Size8)
+                            .clip(RoundedCornerShape(Size24))
+                    ) {
+                        LoginButtonSection(
+                            screenState = screenState,
+                            viewModel = viewModel,
+                            keyboardController = keyboardController,
+                            emailState = emailState,
+                            passwordState = passwordState
+                        )
+                    }
                 }
             }
         }
     }
-}
-
-
-@Composable
-fun StatusBarColor() {
-    val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(MaterialTheme.colorScheme.surfaceVariant)
 }
 
 @Composable
@@ -204,7 +210,7 @@ fun FieldsSection(
             .fillMaxHeight()
             .padding(horizontal = Size8),
         color = MaterialTheme.colorScheme.surface,
-        shape = EqualRounded.medium
+        shape = RoundedCornerShape(Size24)
     ) {
         Column {
             Text(
@@ -218,6 +224,8 @@ fun FieldsSection(
             )
             Spacer(modifier = Modifier.height(Size8))
             TextField(
+                modifier = Modifier
+                    .padding(horizontal = Size16),
                 textState = emailState,
                 onTextChanged = {
                     emailState.value = it
@@ -226,7 +234,6 @@ fun FieldsSection(
                 label = stringResource(com.thejohnsondev.common.R.string.email),
                 onKeyboardAction = KeyboardActions {
                     passwordFocusRequest.requestFocus()
-
                 }, imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Email,
                 isError = screenState.value.emailValidationState !is EmailValidationState.EmailCorrectState,
@@ -238,7 +245,8 @@ fun FieldsSection(
             Spacer(modifier = Modifier.height(Size8))
             TextField(
                 modifier = Modifier
-                    .focusRequester(passwordFocusRequest),
+                    .focusRequester(passwordFocusRequest)
+                    .padding(horizontal = Size16),
                 textState = passwordState,
                 onTextChanged = {
                     passwordState.value = it
@@ -285,15 +293,19 @@ fun FieldsSection(
 fun LoginButtonSection(
     screenState: State<LoginViewModel.State>,
     viewModel: LoginViewModel,
+    keyboardController: SoftwareKeyboardController?,
     emailState: MutableState<String>,
     passwordState: MutableState<String>
 ) {
-    Column(verticalArrangement = Arrangement.Bottom) {
+    Column(
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+        verticalArrangement = Arrangement.Bottom) {
         RoundedButton(
             text = stringResource(id = com.thejohnsondev.common.R.string.log_in),
-            modifier = Modifier.padding(Size8),
+            modifier = Modifier.padding(horizontal = Size16, vertical = Size16),
             enabled = screenState.value.loginReady,
             onClick = {
+                keyboardController?.hide()
                 viewModel.perform(
                     LoginViewModel.Action.LoginWithEmail(
                         emailState.value,

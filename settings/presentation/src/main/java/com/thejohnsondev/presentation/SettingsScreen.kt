@@ -124,7 +124,7 @@ fun SettingsContent(
         ) {
             RoundedButton(
                 modifier = Modifier
-                    .padding(horizontal = Size8),
+                    .padding(Size8),
                 text = stringResource(id = R.string.delete_account),
                 onClick = {
                     onDeleteAccountClick()

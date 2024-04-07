@@ -53,7 +53,6 @@ fun TextField(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = Size16, vertical = Size8)
     ) {
         OutlinedTextField(
             modifier = Modifier
