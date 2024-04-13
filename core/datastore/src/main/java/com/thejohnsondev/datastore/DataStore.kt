@@ -1,5 +1,8 @@
 package com.thejohnsondev.datastore
 
+import com.thejohnsondev.model.settings.DarkThemeConfig
+import com.thejohnsondev.model.settings.ThemeBrand
+
 
 interface DataStore {
     suspend fun getUserKey(): ByteArray
@@ -21,4 +24,14 @@ interface DataStore {
     suspend fun setIsFirstPasswordsLoad(isFirstPasswordsLoad: Boolean)
     fun isFirstNotesLoad(): Boolean
     suspend fun setIsFirstNotesLoad(isFirstNotesLoad: Boolean)
+
+    suspend fun setCustomTheme(theme: ThemeBrand)
+    fun getCustomTheme(): ThemeBrand
+
+    suspend fun setUseDynamicColor(useDynamicColor: Boolean)
+    fun getUseDynamicColor(): Boolean
+
+    suspend fun setDarkThemeConfig(config: DarkThemeConfig)
+    fun getDarkThemeConfig(): DarkThemeConfig
+
 }

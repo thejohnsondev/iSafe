@@ -4,6 +4,7 @@ import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.domain.SettingsUseCases
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.model.settings.SettingsConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -18,12 +19,14 @@ class SettingsViewModel @Inject constructor(
     private val _userEmail = MutableStateFlow<String?>(null)
     private val _openConfirmDeleteAccountDialog = MutableStateFlow(false)
     private val _openConfirmLogoutDialog = MutableStateFlow(false)
+    private val _settingsConfig = useCases.getSettingsConfig()
 
     val viewState = combine(
         _loadingState,
         _userEmail,
         _openConfirmDeleteAccountDialog,
         _openConfirmLogoutDialog,
+        _settingsConfig,
         ::State,
     )
 
@@ -90,7 +93,8 @@ class SettingsViewModel @Inject constructor(
         val loadingState: LoadingState = LoadingState.Loaded,
         val userEmail: String? = null,
         val openConfirmDeleteAccountDialog: Boolean = false,
-        val openConfirmLogoutDialog: Boolean = false
+        val openConfirmLogoutDialog: Boolean = false,
+        val settingsConfig: SettingsConfig? = null
     )
 
 }

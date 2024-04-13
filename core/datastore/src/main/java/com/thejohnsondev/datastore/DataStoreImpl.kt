@@ -6,9 +6,8 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.thejohnsondev.common.DATA_STORE_NAME
 import com.thejohnsondev.common.EMPTY
-import com.thejohnsondev.common.fromJson
-import com.thejohnsondev.common.toJson
-import com.thejohnsondev.model.UserModel
+import com.thejohnsondev.model.settings.DarkThemeConfig
+import com.thejohnsondev.model.settings.ThemeBrand
 import javax.inject.Inject
 
 class DataStoreImpl @Inject constructor(
@@ -40,6 +39,14 @@ class DataStoreImpl @Inject constructor(
 
     private fun DataStore.getBoolean(key: String): Boolean {
         return sharedPreferences.getBoolean(key, false)
+    }
+
+    private fun DataStore.putInt(key: String, value: Int) {
+        sharedPreferences.edit().putInt(key, value).apply()
+    }
+
+    private fun DataStore.getInt(key: String, defaultValue: Int): Int {
+        return sharedPreferences.getInt(key, defaultValue)
     }
 
     private fun DataStore.remove(key: String) {
@@ -106,6 +113,41 @@ class DataStoreImpl @Inject constructor(
         putBoolean(IS_FIRST_NOTES_LOAD, isFirstNotesLoad)
     }
 
+    override suspend fun setCustomTheme(theme: ThemeBrand) {
+        putInt(THEME_BRAND, theme.ordinal)
+    }
+
+    override fun getCustomTheme(): ThemeBrand {
+        val theme = getInt(THEME_BRAND, ThemeBrand.DEFAULT.ordinal)
+        return when (theme) {
+            ThemeBrand.DEFAULT.ordinal -> ThemeBrand.DEFAULT
+            ThemeBrand.ANDROID.ordinal -> ThemeBrand.ANDROID
+            else -> ThemeBrand.DEFAULT
+        }
+    }
+
+    override suspend fun setUseDynamicColor(useDynamicColor: Boolean) {
+        putBoolean(USE_DYNAMIC_COLOR, useDynamicColor)
+    }
+
+    override fun getUseDynamicColor(): Boolean {
+        return getBoolean(USE_DYNAMIC_COLOR)
+    }
+
+    override suspend fun setDarkThemeConfig(config: DarkThemeConfig) {
+        putInt(DARK_THEME_CONFIG, config.ordinal)
+    }
+
+    override fun getDarkThemeConfig(): DarkThemeConfig {
+        val darkThemeConfig = getInt(DARK_THEME_CONFIG, DarkThemeConfig.SYSTEM.ordinal)
+        return when (darkThemeConfig) {
+            DarkThemeConfig.SYSTEM.ordinal -> DarkThemeConfig.SYSTEM
+            DarkThemeConfig.LIGHT.ordinal -> DarkThemeConfig.LIGHT
+            DarkThemeConfig.DARK.ordinal -> DarkThemeConfig.DARK
+            else -> DarkThemeConfig.SYSTEM
+        }
+    }
+
     companion object {
         private const val USER_KEY = "user_key"
         private const val USER_EMAIL = "user-email"
@@ -114,5 +156,8 @@ class DataStoreImpl @Inject constructor(
         private const val IS_FIRST_PASSWORDS_LOAD = "is-first-passwords-load"
         private const val IS_FIRST_NOTES_LOAD = "is-first-notes-load"
         private const val DEFAULT_BASE_URL = "https://isafeapi2.azurewebsites.net/"
+        private const val THEME_BRAND = "theme-brand"
+        private const val USE_DYNAMIC_COLOR = "use-dynamic-color"
+        private const val DARK_THEME_CONFIG = "dark-theme-config"
     }
 }

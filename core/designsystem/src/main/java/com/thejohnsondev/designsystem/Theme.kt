@@ -9,6 +9,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.thejohnsondev.model.settings.ThemeBrand
 
 
 private val LightColors = lightColorScheme(
@@ -81,6 +82,7 @@ fun ISafeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
+    customTheme: ThemeBrand? = ThemeBrand.DEFAULT, // todo add custom themes
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

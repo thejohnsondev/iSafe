@@ -5,5 +5,7 @@ import javax.inject.Inject
 data class SettingsUseCases @Inject constructor(
     val logout: LogoutUseCase,
     val deleteAccount: DeleteAccountUseCase,
-    val getUserEmail: GetUserEmailUseCase
+    val getUserEmail: GetUserEmailUseCase,
+    val getSettingsConfig: GetSettingsConfigUseCase,
+    val updateUISetting: UpdateUISettingsUseCase
 )

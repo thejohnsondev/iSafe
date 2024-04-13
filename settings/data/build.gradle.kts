@@ -1,15 +1,16 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.com.android.library)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
+    id("dagger.hilt.android.plugin")
+    kotlin("kapt")
 }
 
 android {
-    namespace = "com.thejohnsondev.designsystem"
+    namespace = "com.thejohnsondev.data"
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 29
+        minSdk = 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -31,33 +32,24 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
 
     implementation(project(":core:model"))
+    implementation(project(":core:common"))
+    implementation(project(":core:datastore"))
 
     implementation(libs.androidx.ktx)
     implementation(platform(libs.org.jetbrains.kotlin.bom))
     implementation(libs.androidx.appcompat)
-
-    // Firebase
-    implementation(platform(libs.com.google.firebase.bom))
-    implementation(libs.com.google.firebase.analyticsktx)
-    implementation(libs.com.google.firebase.crashlyticsktx)
-
-    // Test
+    implementation(libs.com.google.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
 
-    // Compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
+    // Hilt-Dagger
+    implementation(libs.com.google.dagger.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt(libs.com.google.dagger.hilt.compiler)
 }
