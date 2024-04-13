@@ -170,7 +170,11 @@ fun LoginContent(
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .padding(bottom = paddingValues.calculateBottomPadding(), start = Size8, end = Size8)
+                            .padding(
+                                bottom = paddingValues.calculateBottomPadding(),
+                                start = Size8,
+                                end = Size8
+                            )
                             .clip(RoundedCornerShape(Size24))
                     ) {
                         LoginButtonSection(
@@ -212,6 +216,7 @@ fun FieldsSection(
         color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(Size24)
     ) {
+        // TODO: refactor this screen as sign up
         Column {
             Text(
                 modifier = Modifier
