@@ -4,7 +4,9 @@ import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.domain.SettingsUseCases
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.model.settings.DarkThemeConfig
 import com.thejohnsondev.model.settings.SettingsConfig
+import com.thejohnsondev.model.settings.ThemeBrand
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -39,7 +41,22 @@ class SettingsViewModel @Inject constructor(
             is Action.CloseConfirmLogoutDialog -> closeConfirmLogoutDialog()
             is Action.OpenConfirmDeleteAccountDialog -> openConfirmDeleteAccountDialog()
             is Action.OpenConfirmLogoutDialog -> openConfirmLogoutDialog()
+            is Action.UpdateDarkThemeConfig -> updateDarkThemeConfig(action.darkThemeConfig)
+            is Action.UpdateUseCustomTheme -> updateUseCustomTheme(action.customTheme)
+            is Action.UpdateUseDynamicColor -> updateUseDynamicColor(action.useDynamicColor)
         }
+    }
+
+    private fun updateUseCustomTheme(customTheme: ThemeBrand) = launch {
+        useCases.updateUISetting(themeBrand = customTheme)
+    }
+
+    private fun updateUseDynamicColor(useDynamicColor: Boolean) = launch {
+        useCases.updateUISetting(useDynamicColor = useDynamicColor)
+    }
+
+    private fun updateDarkThemeConfig(darkThemeConfig: DarkThemeConfig) = launch {
+        useCases.updateUISetting(darkThemeConfig = darkThemeConfig)
     }
 
     private fun openConfirmDeleteAccountDialog() {
@@ -87,6 +104,9 @@ class SettingsViewModel @Inject constructor(
         object CloseConfirmDeleteAccountDialog : Action()
         object OpenConfirmLogoutDialog : Action()
         object CloseConfirmLogoutDialog : Action()
+        class UpdateUseCustomTheme(val customTheme: ThemeBrand) : Action()
+        class UpdateUseDynamicColor(val useDynamicColor: Boolean) : Action()
+        class UpdateDarkThemeConfig(val darkThemeConfig: DarkThemeConfig) : Action()
     }
 
     data class State(

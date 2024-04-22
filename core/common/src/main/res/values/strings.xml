@@ -14,6 +14,8 @@
     <string name="log_in">Log in</string>
     <string name="logout">Logout</string>
     <string name="logout_confirm_message">Are you sure you want to log out?</string>
+    <string name="account">Account</string>
+    <string name="manage_account">Manage account</string>
     <string name="delete_account">Delete Account</string>
     <string name="cancel">Cancel</string>
     <string name="delete_account_confirm_message">Are you sure you want to delete the account? \nIt will remove all your data permanently.</string>
@@ -56,5 +58,17 @@
     <string name="created_on">Created on %s</string>
     <string name="reorder">Reorder</string>
     <string name="manage_your_account">Manage your account</string>
+    <string name="setting_title_style">Style and appearance</string>
+    <string name="setting_description_style">Customize the look and feel of the app</string>
+    <string name="theme">Theme</string>
+    <string name="theme_default">Default</string>
+    <string name="theme_android">Android</string>
+    <string name="use_dynamic_color">Use Dynamic Colors</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="dark_mode_preference">Dark mode preference</string>
+    <string name="dark_mode_preference_system">Use system settings</string>
+    <string name="dark_mode_preference_dark">Dark</string>
+    <string name="dark_mode_preference_light">Light</string>
 
 </resources>

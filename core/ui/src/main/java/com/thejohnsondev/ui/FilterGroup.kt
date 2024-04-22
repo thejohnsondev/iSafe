@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size32
@@ -87,4 +88,14 @@ fun Chip(
     }
 }
 
+@PreviewLightDark
+@Composable
+fun FilterGroupPreview() {
+    FilterGroup(filters = listOf(
+        "All",
+        "Active",
+        "Inactive"
+    ), onFilterClick = {}, defaultSelected = "All"
+    )
+}
 
