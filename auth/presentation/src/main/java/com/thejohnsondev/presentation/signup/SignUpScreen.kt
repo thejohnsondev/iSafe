@@ -109,19 +109,10 @@ fun SignUpScreen(
         passwordFocusRequest,
         snackbarHostState,
         goToLogin,
-        validateEmail = {
-            viewModel.perform(SignUpViewModel.Action.ValidateEmail(it))
-        },
-        validatePassword = {
-            viewModel.perform(SignUpViewModel.Action.ValidatePassword(it))
-        },
         hideKeyboard = {
             keyboardController?.hide()
         },
-        sigUpWithEmail = { email, password ->
-            keyboardController?.hide()
-            viewModel.perform(SignUpViewModel.Action.SignUpWithEmail(email, password))
-        }
+        onAction = viewModel::perform
     )
 }
 
@@ -135,10 +126,8 @@ fun SignUpContent(
     passwordFocusRequest: FocusRequester,
     snackbarHostState: SnackbarHostState,
     onGoToLogin: () -> Unit,
-    validateEmail: (String) -> Unit,
-    validatePassword: (String) -> Unit,
     hideKeyboard: () -> Unit,
-    sigUpWithEmail: (String, String) -> Unit
+    onAction: (SignUpViewModel.Action) -> Unit
 ) {
 
     Scaffold(snackbarHost = {
@@ -179,22 +168,26 @@ fun SignUpContent(
                             emailFocusRequest = emailFocusRequest,
                             passwordFocusRequest = passwordFocusRequest,
                             onGoToLogin = onGoToLogin,
-                            validateEmail = validateEmail,
-                            validatePassword = validatePassword,
-                            hideKeyboard = hideKeyboard
+                            hideKeyboard = hideKeyboard,
+                            onAction = onAction
                         )
                     }
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .padding(bottom = paddingValues.calculateBottomPadding(), start = Size8, end = Size8)
+                            .padding(
+                                bottom = paddingValues.calculateBottomPadding(),
+                                start = Size8,
+                                end = Size8
+                            )
                             .clip(RoundedCornerShape(Size24))
                     ) {
                         SignUpButtonSection(
                             screenState = state,
                             emailState = emailState,
                             passwordState = passwordState,
-                            sigUpWithEmail = sigUpWithEmail
+                            hideKeyboard = hideKeyboard,
+                            onAction = onAction
                         )
                     }
                 }
@@ -217,9 +210,8 @@ fun FieldsSection(
     emailFocusRequest: FocusRequester,
     passwordFocusRequest: FocusRequester,
     onGoToLogin: () -> Unit,
-    validateEmail: (String) -> Unit,
-    validatePassword: (String) -> Unit,
-    hideKeyboard: () -> Unit
+    hideKeyboard: () -> Unit,
+    onAction: (SignUpViewModel.Action) -> Unit
 ) {
     val context = LocalContext.current
     Surface(
@@ -247,8 +239,7 @@ fun FieldsSection(
                 textState = emailState,
                 onTextChanged = {
                     emailState.value = it
-                    validateEmail(it)
-
+                    onAction(SignUpViewModel.Action.ValidateEmail(it))
                 },
                 label = stringResource(com.thejohnsondev.common.R.string.email),
                 onKeyboardAction = KeyboardActions {
@@ -271,7 +262,7 @@ fun FieldsSection(
                 textState = passwordState,
                 onTextChanged = {
                     passwordState.value = it
-                    validatePassword(it)
+                    onAction(SignUpViewModel.Action.ValidatePassword(it))
                 },
                 label = stringResource(com.thejohnsondev.common.R.string.password),
                 imeAction = ImeAction.Done,
@@ -316,7 +307,8 @@ fun SignUpButtonSection(
     screenState: SignUpViewModel.State,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
-    sigUpWithEmail: (String, String) -> Unit
+    hideKeyboard: () -> Unit,
+    onAction: (SignUpViewModel.Action) -> Unit
 ) {
     Column(
         modifier = Modifier.background(MaterialTheme.colorScheme.surface),
@@ -327,8 +319,12 @@ fun SignUpButtonSection(
             modifier = Modifier.padding(horizontal = Size16, vertical = Size16),
             enabled = screenState.signUpReady,
             onClick = {
-                sigUpWithEmail(
-                    emailState.value, passwordState.value
+                hideKeyboard()
+                onAction(
+                    SignUpViewModel.Action.SignUpWithEmail(
+                        emailState.value,
+                        passwordState.value
+                    )
                 )
             },
             loading = screenState.loadingState is LoadingState.Loading
@@ -348,10 +344,8 @@ private fun SignUpScreenPreviewEmpty() {
             passwordFocusRequest = remember { FocusRequester() },
             snackbarHostState = remember { SnackbarHostState() },
             onGoToLogin = {},
-            validateEmail = {},
-            validatePassword = {},
             hideKeyboard = {},
-            sigUpWithEmail = { _, _ -> }
+            onAction = {}
         )
     }
 }
