@@ -1,6 +1,7 @@
 package com.thejohnsondev.presentation
 
 import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.common.combine
 import com.thejohnsondev.domain.SettingsUseCases
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
@@ -8,11 +9,13 @@ import com.thejohnsondev.model.settings.DarkThemeConfig
 import com.thejohnsondev.model.settings.GeneralSettings
 import com.thejohnsondev.model.settings.PrivacySettings
 import com.thejohnsondev.model.settings.SettingsConfig
+import com.thejohnsondev.ui.ui_model.SettingsSection
+import com.thejohnsondev.ui.ui_model.SettingsSubSection
 import com.thejohnsondev.model.settings.ThemeBrand
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +23,7 @@ class SettingsViewModel @Inject constructor(
     private val useCases: SettingsUseCases
 ) : BaseViewModel() {
 
+    private val _settingsSections = flowOf(SettingsSection.getSettingsSections())
     private val _userEmail = MutableStateFlow<String?>(null)
     private val _openConfirmDeleteAccountDialog = MutableStateFlow(false)
     private val _openConfirmLogoutDialog = MutableStateFlow(false)
@@ -27,6 +31,7 @@ class SettingsViewModel @Inject constructor(
 
     val viewState = combine(
         _loadingState,
+        _settingsSections,
         _userEmail,
         _openConfirmDeleteAccountDialog,
         _openConfirmLogoutDialog,
@@ -48,6 +53,7 @@ class SettingsViewModel @Inject constructor(
             is Action.UpdateUseDynamicColor -> updateUseDynamicColor(action.useDynamicColor)
             is Action.UpdateGeneralSettings -> updateGeneralSettings(action.generalSettings)
             is Action.UpdatePrivacySettings -> updatePrivacySettings(action.privacySettings)
+            is Action.UpdateExpandedSubSection -> updateExpandedSection(action.section)
         }
     }
 
@@ -108,6 +114,12 @@ class SettingsViewModel @Inject constructor(
         sendEvent(OneTimeEvent.SuccessNavigation())
     }
 
+    private fun updateExpandedSection(
+        section: SettingsSubSection
+    ) = launch {
+        // TODO: implement
+    }
+
     sealed class Action {
         object FetchData : Action()
         object Logout : Action()
@@ -121,14 +133,16 @@ class SettingsViewModel @Inject constructor(
         class UpdateDarkThemeConfig(val darkThemeConfig: DarkThemeConfig) : Action()
         class UpdateGeneralSettings(val generalSettings: GeneralSettings) : Action()
         class UpdatePrivacySettings(val privacySettings: PrivacySettings) : Action()
+        class UpdateExpandedSubSection(val section: SettingsSubSection) : Action()
     }
 
     data class State(
         val loadingState: LoadingState = LoadingState.Loaded,
+        val settingsSection: List<SettingsSection> = emptyList(),
         val userEmail: String? = null,
         val openConfirmDeleteAccountDialog: Boolean = false,
         val openConfirmLogoutDialog: Boolean = false,
-        val settingsConfig: SettingsConfig? = null,
+        val settingsConfig: SettingsConfig? = null
     )
 
 }
