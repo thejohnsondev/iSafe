@@ -6,6 +6,7 @@ import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.settings.DarkThemeConfig
 import com.thejohnsondev.model.settings.GeneralSettings
+import com.thejohnsondev.model.settings.PrivacySettings
 import com.thejohnsondev.model.settings.SettingsConfig
 import com.thejohnsondev.model.settings.ThemeBrand
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,6 +47,7 @@ class SettingsViewModel @Inject constructor(
             is Action.UpdateUseCustomTheme -> updateUseCustomTheme(action.customTheme)
             is Action.UpdateUseDynamicColor -> updateUseDynamicColor(action.useDynamicColor)
             is Action.UpdateGeneralSettings -> updateGeneralSettings(action.generalSettings)
+            is Action.UpdatePrivacySettings -> updatePrivacySettings(action.privacySettings)
         }
     }
 
@@ -63,6 +65,10 @@ class SettingsViewModel @Inject constructor(
 
     private fun updateGeneralSettings(generalSettings: GeneralSettings) = launch {
         useCases.updateSetting(generalSettings = generalSettings)
+    }
+
+    private fun updatePrivacySettings(privacySettings: PrivacySettings) = launch {
+        useCases.updateSetting(privacySettings = privacySettings)
     }
 
     private fun openConfirmDeleteAccountDialog() {
@@ -114,6 +120,7 @@ class SettingsViewModel @Inject constructor(
         class UpdateUseDynamicColor(val useDynamicColor: Boolean) : Action()
         class UpdateDarkThemeConfig(val darkThemeConfig: DarkThemeConfig) : Action()
         class UpdateGeneralSettings(val generalSettings: GeneralSettings) : Action()
+        class UpdatePrivacySettings(val privacySettings: PrivacySettings) : Action()
     }
 
     data class State(

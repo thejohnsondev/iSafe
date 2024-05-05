@@ -8,6 +8,7 @@ import com.thejohnsondev.common.DATA_STORE_NAME
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.model.settings.DarkThemeConfig
 import com.thejohnsondev.model.settings.GeneralSettings
+import com.thejohnsondev.model.settings.PrivacySettings
 import com.thejohnsondev.model.settings.ThemeBrand
 import javax.inject.Inject
 
@@ -158,6 +159,20 @@ class DataStoreImpl @Inject constructor(
         return GeneralSettings(isDeepSearchEnabled = isUseDeepSearch)
     }
 
+    override suspend fun setPrivacySettings(privacySettings: PrivacySettings) {
+        putBoolean(UNLOCK_WITH_BIOMETRICS, privacySettings.isUnlockWithBiometricEnabled)
+        putBoolean(BLOCK_SCREENSHOTS, privacySettings.isBlockScreenshotsEnabled)
+    }
+
+    override fun getPrivacySettings(): PrivacySettings {
+        val isUnlockWithBiometrics = getBoolean(UNLOCK_WITH_BIOMETRICS)
+        val isBlockScreenshots = getBoolean(BLOCK_SCREENSHOTS)
+        return PrivacySettings(
+            isUnlockWithBiometricEnabled = isUnlockWithBiometrics,
+            isBlockScreenshotsEnabled = isBlockScreenshots
+        )
+    }
+
     companion object {
         private const val USER_KEY = "user_key"
         private const val USER_EMAIL = "user-email"
@@ -170,5 +185,7 @@ class DataStoreImpl @Inject constructor(
         private const val USE_DYNAMIC_COLOR = "use-dynamic-color"
         private const val DARK_THEME_CONFIG = "dark-theme-config"
         private const val USE_DEEP_SEARCH = "use-deep-search"
+        private const val UNLOCK_WITH_BIOMETRICS = "unlock-with-biometrics"
+        private const val BLOCK_SCREENSHOTS = "block-screenshots"
     }
 }

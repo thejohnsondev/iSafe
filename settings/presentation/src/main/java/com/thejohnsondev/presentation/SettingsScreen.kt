@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatPaint
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +37,7 @@ import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.settings.DarkThemeConfig
 import com.thejohnsondev.model.settings.GeneralSettings
+import com.thejohnsondev.model.settings.PrivacySettings
 import com.thejohnsondev.model.settings.ThemeBrand
 import com.thejohnsondev.ui.ConfirmAlertDialog
 import com.thejohnsondev.ui.RoundedButton
@@ -273,6 +275,49 @@ fun SettingsContent(
                         onAction(
                             SettingsViewModel.Action.UpdateDarkThemeConfig(
                                 DarkThemeConfig.LIGHT
+                            )
+                        )
+                    }
+                }
+            }
+            SettingsItem(
+                title = stringResource(id = R.string.security_and_privacy_title),
+                description = stringResource(id = R.string.security_and_privacy_description),
+                icon = Icons.Default.Security,
+                isLastItem = true
+            ) {
+                Column(
+                    modifier = Modifier.padding(Size16)
+                ) {
+                    ToggleOptionItem(
+                        optionTitle = stringResource(id = R.string.unlock_with_biometrics),
+                        isSelected = state.settingsConfig?.privacySettings?.isUnlockWithBiometricEnabled
+                            ?: false,
+                        isFirstItem = true,
+                        isLastItem = true
+                    ) { isUnlockWithBiometricsEnabled ->
+                        onAction(
+                            SettingsViewModel.Action.UpdatePrivacySettings(
+                                state.settingsConfig?.privacySettings?.copy(
+                                    isUnlockWithBiometricEnabled = isUnlockWithBiometricsEnabled
+                                )
+                                    ?: PrivacySettings(isUnlockWithBiometricEnabled = isUnlockWithBiometricsEnabled)
+                            )
+                        )
+                    }
+                    ToggleOptionItem(
+                        modifier = Modifier.padding(top = Size16),
+                        optionTitle = stringResource(id = R.string.block_screenshot),
+                        isSelected = state.settingsConfig?.privacySettings?.isBlockScreenshotsEnabled
+                            ?: false,
+                        isFirstItem = true,
+                        isLastItem = true
+                    ) {
+                        onAction(
+                            SettingsViewModel.Action.UpdatePrivacySettings(
+                                state.settingsConfig?.privacySettings?.copy(
+                                    isBlockScreenshotsEnabled = it
+                                ) ?: PrivacySettings(isBlockScreenshotsEnabled = it)
                             )
                         )
                     }

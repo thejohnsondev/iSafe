@@ -2,6 +2,7 @@ package com.thejohnsondev.datastore
 
 import com.thejohnsondev.model.settings.DarkThemeConfig
 import com.thejohnsondev.model.settings.GeneralSettings
+import com.thejohnsondev.model.settings.PrivacySettings
 import com.thejohnsondev.model.settings.ThemeBrand
 
 
@@ -37,5 +38,8 @@ interface DataStore {
 
     suspend fun setGeneralSettings(generalSettings: GeneralSettings)
     fun getGeneralSettings(): GeneralSettings
+
+    suspend fun setPrivacySettings(privacySettings: PrivacySettings)
+    fun getPrivacySettings(): PrivacySettings
 
 }

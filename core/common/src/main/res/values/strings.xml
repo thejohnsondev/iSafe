@@ -74,5 +74,9 @@
     <string name="general_description">General settings</string>
     <string name="deep_search_title">Deep search</string>
     <string name="deep_search_description">Search by all details, not only titles</string>
+    <string name="security_and_privacy_title">Security &amp; Privacy</string>
+    <string name="security_and_privacy_description">Manage your security and privacy</string>
+    <string name="unlock_with_biometrics">Unlock with biometrics</string>
+    <string name="block_screenshot">Block screenshot</string>
 
 </resources>
