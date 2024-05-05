@@ -1,6 +1,5 @@
 package com.thejohnsondev.presentation
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatPaint
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
@@ -35,12 +35,14 @@ import com.thejohnsondev.designsystem.supportsDynamicTheming
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.settings.DarkThemeConfig
+import com.thejohnsondev.model.settings.GeneralSettings
 import com.thejohnsondev.model.settings.ThemeBrand
 import com.thejohnsondev.ui.ConfirmAlertDialog
-import com.thejohnsondev.ui.OptionItem
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.ScaffoldConfig
+import com.thejohnsondev.ui.SelectableOptionItem
 import com.thejohnsondev.ui.SettingsItem
+import com.thejohnsondev.ui.ToggleOptionItem
 
 @Composable
 fun SettingsScreen(
@@ -79,49 +81,18 @@ fun SettingsScreen(
     )
     SettingsContent(
         state = state.value,
-        onDeleteAccountConfirm = {
-            viewModel.perform(SettingsViewModel.Action.CloseConfirmDeleteAccountDialog)
-            viewModel.perform(SettingsViewModel.Action.DeleteAccount)
-        }, onDeleteAccountCancel = {
-            viewModel.perform(SettingsViewModel.Action.CloseConfirmDeleteAccountDialog)
-        }, onDeleteAccountClick = {
-            viewModel.perform(SettingsViewModel.Action.OpenConfirmDeleteAccountDialog)
+        onAction = { action ->
+            viewModel.perform(action)
         },
-        onLogoutConfirm = {
-            viewModel.perform(SettingsViewModel.Action.CloseConfirmLogoutDialog)
-            viewModel.perform(SettingsViewModel.Action.Logout)
-            goToSignUp()
-        },
-        onLogoutClick = {
-            viewModel.perform(SettingsViewModel.Action.OpenConfirmLogoutDialog)
-        },
-        onLogoutCancel = {
-            viewModel.perform(SettingsViewModel.Action.CloseConfirmLogoutDialog)
-        },
-        onThemeBrandingSelect = {
-            viewModel.perform(SettingsViewModel.Action.UpdateUseCustomTheme(it))
-        },
-        onSupportDynamicTheme = {
-            viewModel.perform(SettingsViewModel.Action.UpdateUseDynamicColor(it))
-        },
-        onDarkThemeConfigSelect = {
-            viewModel.perform(SettingsViewModel.Action.UpdateDarkThemeConfig(it))
-        }
+        goToSignUp = goToSignUp
     )
 }
 
 @Composable
 fun SettingsContent(
     state: SettingsViewModel.State,
-    onDeleteAccountClick: () -> Unit,
-    onDeleteAccountConfirm: () -> Unit,
-    onDeleteAccountCancel: () -> Unit,
-    onLogoutClick: () -> Unit,
-    onLogoutConfirm: () -> Unit,
-    onLogoutCancel: () -> Unit,
-    onThemeBrandingSelect: (ThemeBrand) -> Unit,
-    onSupportDynamicTheme: (Boolean) -> Unit,
-    onDarkThemeConfigSelect: (DarkThemeConfig) -> Unit
+    onAction: (SettingsViewModel.Action) -> Unit,
+    goToSignUp: () -> Unit
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -149,7 +120,7 @@ fun SettingsContent(
                         .padding(horizontal = Size16, vertical = Size8),
                     text = stringResource(id = R.string.delete_account),
                     onClick = {
-                        onDeleteAccountClick()
+                        onAction(SettingsViewModel.Action.OpenConfirmDeleteAccountDialog)
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -161,7 +132,7 @@ fun SettingsContent(
                         .padding(start = Size16, end = Size16, bottom = Size16, top = Size8),
                     text = stringResource(id = R.string.logout),
                     onClick = {
-                        onLogoutClick()
+                        onAction(SettingsViewModel.Action.OpenConfirmLogoutDialog)
                     },
 
                     colors = ButtonDefaults.buttonColors(
@@ -178,10 +149,34 @@ fun SettingsContent(
                 style = MaterialTheme.typography.titleLarge
             )
             SettingsItem(
+                title = stringResource(id = R.string.general_title),
+                description = stringResource(id = R.string.general_description),
+                icon = Icons.Default.Settings,
+                isFirstItem = true,
+                isLastItem = false
+            ) {
+                Column(
+                    modifier = Modifier.padding(Size16)
+                ) {
+                    ToggleOptionItem(
+                        optionTitle = stringResource(id = R.string.deep_search_title),
+                        isSelected = state.settingsConfig?.generalSettings?.isDeepSearchEnabled
+                            ?: false,
+                        isFirstItem = true,
+                        isLastItem = true
+                    ) {
+                        onAction(SettingsViewModel.Action.UpdateGeneralSettings(
+                            state.settingsConfig?.generalSettings?.copy(
+                                isDeepSearchEnabled = it
+                            ) ?: GeneralSettings(isDeepSearchEnabled = it)
+                        ))
+                    }
+                }
+            }
+            SettingsItem(
                 title = stringResource(id = R.string.setting_title_style),
                 description = stringResource(id = R.string.setting_description_style),
-                icon = Icons.Default.FormatPaint,
-                isFirstItem = true
+                icon = Icons.Default.FormatPaint
             ) {
                 Column(
                     modifier = Modifier.padding(Size16)
@@ -192,49 +187,49 @@ fun SettingsContent(
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSecondary
                     )
-                    OptionItem(
+                    SelectableOptionItem(
                         modifier = Modifier
                             .padding(top = Size4),
                         optionTitle = stringResource(id = R.string.theme_default),
                         isFirstItem = true,
                         isSelected = state.settingsConfig?.customTheme == ThemeBrand.DEFAULT
                     ) {
-                        onThemeBrandingSelect(ThemeBrand.DEFAULT)
+                        onAction(SettingsViewModel.Action.UpdateUseCustomTheme(ThemeBrand.DEFAULT))
                     }
-                    OptionItem(
+                    SelectableOptionItem(
                         modifier = Modifier
                             .padding(top = Size4),
                         optionTitle = stringResource(id = R.string.theme_android),
                         isLastItem = true,
                         isSelected = state.settingsConfig?.customTheme == ThemeBrand.ANDROID
                     ) {
-                        onSupportDynamicTheme(false)
-                        onThemeBrandingSelect(ThemeBrand.ANDROID)
+                        onAction(SettingsViewModel.Action.UpdateUseDynamicColor(false))
+                        onAction(SettingsViewModel.Action.UpdateUseCustomTheme(ThemeBrand.ANDROID))
                     }
-                    if(state.settingsConfig?.customTheme == ThemeBrand.DEFAULT && supportsDynamicTheming()) {
+                    if (state.settingsConfig?.customTheme == ThemeBrand.DEFAULT && supportsDynamicTheming()) {
                         Text(
                             modifier = Modifier.padding(bottom = Size8, top = Size16),
                             text = stringResource(id = R.string.use_dynamic_color),
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSecondary
                         )
-                        OptionItem(
+                        SelectableOptionItem(
                             modifier = Modifier
                                 .padding(top = Size4),
                             optionTitle = stringResource(id = R.string.yes),
                             isFirstItem = true,
                             isSelected = state.settingsConfig.useDynamicColor
                         ) {
-                            onSupportDynamicTheme(true)
+                            onAction(SettingsViewModel.Action.UpdateUseDynamicColor(true))
                         }
-                        OptionItem(
+                        SelectableOptionItem(
                             modifier = Modifier
                                 .padding(top = Size4),
                             optionTitle = stringResource(id = R.string.no),
                             isLastItem = true,
                             isSelected = !state.settingsConfig.useDynamicColor
                         ) {
-                            onSupportDynamicTheme(false)
+                            onAction(SettingsViewModel.Action.UpdateUseDynamicColor(false))
                         }
                     }
                     Text(
@@ -243,31 +238,43 @@ fun SettingsContent(
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSecondary
                     )
-                    OptionItem(
+                    SelectableOptionItem(
                         modifier = Modifier
                             .padding(top = Size4),
                         optionTitle = stringResource(id = R.string.dark_mode_preference_system),
                         isFirstItem = true,
                         isSelected = state.settingsConfig?.darkThemeConfig == DarkThemeConfig.SYSTEM
                     ) {
-                        onDarkThemeConfigSelect(DarkThemeConfig.SYSTEM)
+                        onAction(
+                            SettingsViewModel.Action.UpdateDarkThemeConfig(
+                                DarkThemeConfig.SYSTEM
+                            )
+                        )
                     }
-                    OptionItem(
+                    SelectableOptionItem(
                         modifier = Modifier
                             .padding(top = Size4),
                         optionTitle = stringResource(id = R.string.dark_mode_preference_dark),
                         isSelected = state.settingsConfig?.darkThemeConfig == DarkThemeConfig.DARK
                     ) {
-                        onDarkThemeConfigSelect(DarkThemeConfig.DARK)
+                        onAction(
+                            SettingsViewModel.Action.UpdateDarkThemeConfig(
+                                DarkThemeConfig.DARK
+                            )
+                        )
                     }
-                    OptionItem(
+                    SelectableOptionItem(
                         modifier = Modifier
                             .padding(top = Size4),
                         optionTitle = stringResource(id = R.string.dark_mode_preference_light),
                         isLastItem = true,
                         isSelected = state.settingsConfig?.darkThemeConfig == DarkThemeConfig.LIGHT
                     ) {
-                        onDarkThemeConfigSelect(DarkThemeConfig.LIGHT)
+                        onAction(
+                            SettingsViewModel.Action.UpdateDarkThemeConfig(
+                                DarkThemeConfig.LIGHT
+                            )
+                        )
                     }
                 }
             }
@@ -278,10 +285,11 @@ fun SettingsContent(
                     confirmButtonText = stringResource(id = R.string.delete_account),
                     cancelButtonText = stringResource(id = R.string.cancel),
                     onConfirm = {
-                        onDeleteAccountConfirm()
+                        onAction(SettingsViewModel.Action.CloseConfirmDeleteAccountDialog)
+                        onAction(SettingsViewModel.Action.DeleteAccount)
                     },
                     onCancel = {
-                        onDeleteAccountCancel()
+                        onAction(SettingsViewModel.Action.CloseConfirmDeleteAccountDialog)
                     }
                 )
             }
@@ -292,10 +300,12 @@ fun SettingsContent(
                     confirmButtonText = stringResource(id = R.string.logout),
                     cancelButtonText = stringResource(id = R.string.cancel),
                     onConfirm = {
-                        onLogoutConfirm()
+                        onAction(SettingsViewModel.Action.CloseConfirmLogoutDialog)
+                        onAction(SettingsViewModel.Action.Logout)
+                        goToSignUp()
                     },
                     onCancel = {
-                        onLogoutCancel()
+                        onAction(SettingsViewModel.Action.CloseConfirmLogoutDialog)
                     }
                 )
             }
@@ -308,19 +318,12 @@ fun SettingsContent(
 private fun SettingsScreenPreviewDark() {
     ISafeTheme {
         SettingsContent(
-            onLogoutConfirm = {},
             state = SettingsViewModel.State(
                 loadingState = LoadingState.Loaded,
                 userEmail = "email@email.com"
             ),
-            onDeleteAccountConfirm = {},
-            onDeleteAccountCancel = {},
-            onDeleteAccountClick = {},
-            onLogoutCancel = {},
-            onLogoutClick = {},
-            onThemeBrandingSelect = {},
-            onSupportDynamicTheme = {},
-            onDarkThemeConfigSelect = {}
+            onAction = {},
+            goToSignUp = {}
         )
     }
 }
@@ -330,20 +333,13 @@ private fun SettingsScreenPreviewDark() {
 private fun SettingsScreenPreviewLightConfirmDeleteAccount() {
     ISafeTheme {
         SettingsContent(
-            onLogoutConfirm = {},
             state = SettingsViewModel.State(
                 loadingState = LoadingState.Loaded,
                 userEmail = "email@email.com",
                 openConfirmDeleteAccountDialog = true
             ),
-            onDeleteAccountConfirm = {},
-            onDeleteAccountCancel = {},
-            onDeleteAccountClick = {},
-            onLogoutCancel = {},
-            onLogoutClick = {},
-            onThemeBrandingSelect = {},
-            onSupportDynamicTheme = {},
-            onDarkThemeConfigSelect = {}
+            onAction = {},
+            goToSignUp = {}
         )
     }
 }

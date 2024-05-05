@@ -7,5 +7,5 @@ data class SettingsUseCases @Inject constructor(
     val deleteAccount: DeleteAccountUseCase,
     val getUserEmail: GetUserEmailUseCase,
     val getSettingsConfig: GetSettingsConfigUseCase,
-    val updateUISetting: UpdateUISettingsUseCase
+    val updateSetting: UpdateSettingsUseCase
 )

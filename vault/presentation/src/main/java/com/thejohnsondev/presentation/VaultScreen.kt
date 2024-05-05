@@ -136,7 +136,7 @@ fun VaultScreen(
             onEditPasswordClick(password)
         },
         onSearchQueryEntered = { query ->
-            viewModel.perform(VaultViewModel.Action.Search(query))
+            viewModel.perform(VaultViewModel.Action.Search(query, state.value.isDeepSearchEnabled))
         },
         onStopSearching = {
             keyboardController?.hide()

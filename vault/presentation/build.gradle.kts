@@ -44,6 +44,7 @@ android {
 dependencies {
 
     implementation(project(":vault:domain"))
+    implementation(project(":settings:domain"))
 
     implementation(project(":core:model"))
     implementation(project(":core:common"))

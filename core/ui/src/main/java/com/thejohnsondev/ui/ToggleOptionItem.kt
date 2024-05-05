@@ -7,45 +7,47 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
-import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size4
-import com.thejohnsondev.designsystem.Size8
 
 @Composable
-fun OptionItem(
+fun ToggleOptionItem(
     modifier: Modifier = Modifier,
     optionTitle: String,
     isSelected: Boolean,
     isFirstItem: Boolean = false,
     isLastItem: Boolean = false,
-    onOptionSelect: () -> Unit = {}
+    onOptionToggle: (Boolean) -> Unit = {}
 ) {
+    val haptic = LocalHapticFeedback.current
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .clip(RoundedCornerShape(
-                topStart = if (isFirstItem) Size16 else Size4,
-                topEnd = if (isFirstItem) Size16 else Size4,
-                bottomStart = if (isLastItem) Size16 else Size4,
-                bottomEnd = if (isLastItem) Size16 else Size4
-            ))
+            .clip(
+                RoundedCornerShape(
+                    topStart = if (isFirstItem) Size16 else Size4,
+                    topEnd = if (isFirstItem) Size16 else Size4,
+                    bottomStart = if (isLastItem) Size16 else Size4,
+                    bottomEnd = if (isLastItem) Size16 else Size4
+                ),
+            )
             .clickable {
-                onOptionSelect()
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                onOptionToggle(!isSelected)
             },
-        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer,
+        color = MaterialTheme.colorScheme.secondaryContainer
     ) {
         Row(
             modifier = Modifier
@@ -57,21 +59,26 @@ fun OptionItem(
                 text = optionTitle,
                 color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSecondaryContainer
             )
-            if (isSelected) {
-                Icon(imageVector = Icons.Default.Done, contentDescription = null)
-            }
+            Switch(
+                checked = isSelected,
+                onCheckedChange = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    onOptionToggle(it)
+                }
+            )
         }
+
     }
+
 }
 
 @Preview
 @Composable
-private fun OptionSelectedPreview() {
-    OptionItem(optionTitle = "Option", isSelected = true)
-}
-
-@Preview
-@Composable
-private fun OptionUnselectedPreview() {
-    OptionItem(optionTitle = "Option", isSelected = false)
+fun ToggleOptionItemPreview() {
+    ToggleOptionItem(
+        optionTitle = "Option 1",
+        isSelected = true,
+        isLastItem = true,
+        isFirstItem = true
+    )
 }

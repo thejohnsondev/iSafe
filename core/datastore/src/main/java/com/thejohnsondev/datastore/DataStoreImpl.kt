@@ -7,6 +7,7 @@ import androidx.security.crypto.MasterKeys
 import com.thejohnsondev.common.DATA_STORE_NAME
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.model.settings.DarkThemeConfig
+import com.thejohnsondev.model.settings.GeneralSettings
 import com.thejohnsondev.model.settings.ThemeBrand
 import javax.inject.Inject
 
@@ -148,6 +149,15 @@ class DataStoreImpl @Inject constructor(
         }
     }
 
+    override suspend fun setGeneralSettings(generalSettings: GeneralSettings) {
+        putBoolean(USE_DEEP_SEARCH, generalSettings.isDeepSearchEnabled)
+    }
+
+    override fun getGeneralSettings(): GeneralSettings {
+        val isUseDeepSearch = getBoolean(USE_DEEP_SEARCH)
+        return GeneralSettings(isDeepSearchEnabled = isUseDeepSearch)
+    }
+
     companion object {
         private const val USER_KEY = "user_key"
         private const val USER_EMAIL = "user-email"
@@ -159,5 +169,6 @@ class DataStoreImpl @Inject constructor(
         private const val THEME_BRAND = "theme-brand"
         private const val USE_DYNAMIC_COLOR = "use-dynamic-color"
         private const val DARK_THEME_CONFIG = "dark-theme-config"
+        private const val USE_DEEP_SEARCH = "use-deep-search"
     }
 }

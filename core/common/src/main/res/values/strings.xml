@@ -70,5 +70,9 @@
     <string name="dark_mode_preference_system">Use system settings</string>
     <string name="dark_mode_preference_dark">Dark</string>
     <string name="dark_mode_preference_light">Light</string>
+    <string name="general_title">General</string>
+    <string name="general_description">General settings</string>
+    <string name="deep_search_title">Deep search</string>
+    <string name="deep_search_description">Search by all details, not only titles</string>
 
 </resources>

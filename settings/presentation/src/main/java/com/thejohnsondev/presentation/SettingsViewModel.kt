@@ -5,6 +5,7 @@ import com.thejohnsondev.domain.SettingsUseCases
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.settings.DarkThemeConfig
+import com.thejohnsondev.model.settings.GeneralSettings
 import com.thejohnsondev.model.settings.SettingsConfig
 import com.thejohnsondev.model.settings.ThemeBrand
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,19 +45,24 @@ class SettingsViewModel @Inject constructor(
             is Action.UpdateDarkThemeConfig -> updateDarkThemeConfig(action.darkThemeConfig)
             is Action.UpdateUseCustomTheme -> updateUseCustomTheme(action.customTheme)
             is Action.UpdateUseDynamicColor -> updateUseDynamicColor(action.useDynamicColor)
+            is Action.UpdateGeneralSettings -> updateGeneralSettings(action.generalSettings)
         }
     }
 
     private fun updateUseCustomTheme(customTheme: ThemeBrand) = launch {
-        useCases.updateUISetting(themeBrand = customTheme)
+        useCases.updateSetting(themeBrand = customTheme)
     }
 
     private fun updateUseDynamicColor(useDynamicColor: Boolean) = launch {
-        useCases.updateUISetting(useDynamicColor = useDynamicColor)
+        useCases.updateSetting(useDynamicColor = useDynamicColor)
     }
 
     private fun updateDarkThemeConfig(darkThemeConfig: DarkThemeConfig) = launch {
-        useCases.updateUISetting(darkThemeConfig = darkThemeConfig)
+        useCases.updateSetting(darkThemeConfig = darkThemeConfig)
+    }
+
+    private fun updateGeneralSettings(generalSettings: GeneralSettings) = launch {
+        useCases.updateSetting(generalSettings = generalSettings)
     }
 
     private fun openConfirmDeleteAccountDialog() {
@@ -107,6 +113,7 @@ class SettingsViewModel @Inject constructor(
         class UpdateUseCustomTheme(val customTheme: ThemeBrand) : Action()
         class UpdateUseDynamicColor(val useDynamicColor: Boolean) : Action()
         class UpdateDarkThemeConfig(val darkThemeConfig: DarkThemeConfig) : Action()
+        class UpdateGeneralSettings(val generalSettings: GeneralSettings) : Action()
     }
 
     data class State(
@@ -114,7 +121,7 @@ class SettingsViewModel @Inject constructor(
         val userEmail: String? = null,
         val openConfirmDeleteAccountDialog: Boolean = false,
         val openConfirmLogoutDialog: Boolean = false,
-        val settingsConfig: SettingsConfig? = null
+        val settingsConfig: SettingsConfig? = null,
     )
 
 }

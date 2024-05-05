@@ -2,6 +2,7 @@ package com.thejohnsondev.data
 
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.settings.DarkThemeConfig
+import com.thejohnsondev.model.settings.GeneralSettings
 import com.thejohnsondev.model.settings.SettingsConfig
 import com.thejohnsondev.model.settings.ThemeBrand
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +16,8 @@ class SettingsRepositoryImpl @Inject constructor(
     private val _settingsConfig = MutableStateFlow(SettingsConfig(
         customTheme = dataStore.getCustomTheme(),
         useDynamicColor = dataStore.getUseDynamicColor(),
-        darkThemeConfig = dataStore.getDarkThemeConfig()
+        darkThemeConfig = dataStore.getDarkThemeConfig(),
+        generalSettings = dataStore.getGeneralSettings()
     ))
     override val settingsConfig: Flow<SettingsConfig> = _settingsConfig
 
@@ -32,5 +34,10 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun setDarkThemeConfig(config: DarkThemeConfig) {
         _settingsConfig.value = _settingsConfig.value.copy(darkThemeConfig = config)
         dataStore.setDarkThemeConfig(config)
+    }
+
+    override suspend fun setGeneralSettings(generalSettings: GeneralSettings) {
+        _settingsConfig.value = _settingsConfig.value.copy(generalSettings = generalSettings)
+        dataStore.setGeneralSettings(generalSettings)
     }
 }
