@@ -33,7 +33,7 @@ import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.settings.DarkThemeConfig
 import com.thejohnsondev.model.settings.GeneralSettings
 import com.thejohnsondev.model.settings.PrivacySettings
-import com.thejohnsondev.ui.ui_model.SettingsSubSection
+import com.thejohnsondev.model.settings.SettingsConfig
 import com.thejohnsondev.model.settings.ThemeBrand
 import com.thejohnsondev.ui.ConfirmAlertDialog
 import com.thejohnsondev.ui.RoundedButton
@@ -42,6 +42,7 @@ import com.thejohnsondev.ui.SelectableOptionItem
 import com.thejohnsondev.ui.SettingsItem
 import com.thejohnsondev.ui.ToggleOptionItem
 import com.thejohnsondev.ui.ui_model.SettingsSection
+import com.thejohnsondev.ui.ui_model.SettingsSubSection
 
 @Composable
 fun SettingsScreen(
@@ -134,14 +135,16 @@ fun SettingsList(
 fun SettingsSectionTitle(
     section: SettingsSection
 ) {
-    Column {
-        Text(
-            modifier = Modifier
-                .padding(Size16)
-                .align(Alignment.Start),
-            text = stringResource(id = section.sectionTitleRes),
-            style = MaterialTheme.typography.titleLarge
-        )
+    section.sectionTitleRes?.let { sectionTitleRes ->
+        Column {
+            Text(
+                modifier = Modifier
+                    .padding(Size16)
+                    .align(Alignment.Start),
+                text = stringResource(id = sectionTitleRes),
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
     }
 }
 
@@ -193,13 +196,13 @@ fun ManageAccountSubSection(
     RoundedButton(
         modifier = Modifier
             .padding(horizontal = Size16, vertical = Size8),
-        text = stringResource(id = R.string.delete_account),
+        text = stringResource(id = R.string.change_password),
         onClick = {
-            onAction(SettingsViewModel.Action.OpenConfirmDeleteAccountDialog)
+            // TODO: implement
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         )
     )
     RoundedButton(
@@ -218,6 +221,24 @@ fun ManageAccountSubSection(
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+    )
+    Text(
+        text = stringResource(id = R.string.dangerous_zone),
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.errorContainer,
+        modifier = Modifier.padding(start = Size16)
+    )
+    RoundedButton(
+        modifier = Modifier
+            .padding(Size16),
+        text = stringResource(id = R.string.delete_account),
+        onClick = {
+            onAction(SettingsViewModel.Action.OpenConfirmDeleteAccountDialog)
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.errorContainer,
+            contentColor = MaterialTheme.colorScheme.onErrorContainer
         )
     )
 }
@@ -472,7 +493,17 @@ private fun SettingsScreenPreviewDark() {
         SettingsContent(
             state = SettingsViewModel.State(
                 loadingState = LoadingState.Loaded,
-                userEmail = "email@email.com"
+                userEmail = "email@email.com",
+                settingsConfig = SettingsConfig(
+                    customTheme = ThemeBrand.DEFAULT,
+                    useDynamicColor = true,
+                    darkThemeConfig = DarkThemeConfig.SYSTEM,
+                    generalSettings = GeneralSettings(isDeepSearchEnabled = true),
+                    privacySettings = PrivacySettings(
+                        isUnlockWithBiometricEnabled = false,
+                        isBlockScreenshotsEnabled = false
+                    )
+                )
             ),
             onAction = {},
             goToSignUp = {}
@@ -488,7 +519,17 @@ private fun SettingsScreenPreviewLightConfirmDeleteAccount() {
             state = SettingsViewModel.State(
                 loadingState = LoadingState.Loaded,
                 userEmail = "email@email.com",
-                openConfirmDeleteAccountDialog = true
+                openConfirmDeleteAccountDialog = true,
+                settingsConfig = SettingsConfig(
+                    customTheme = ThemeBrand.DEFAULT,
+                    useDynamicColor = true,
+                    darkThemeConfig = DarkThemeConfig.SYSTEM,
+                    generalSettings = GeneralSettings(isDeepSearchEnabled = true),
+                    privacySettings = PrivacySettings(
+                        isUnlockWithBiometricEnabled = false,
+                        isBlockScreenshotsEnabled = false
+                    )
+                )
             ),
             onAction = {},
             goToSignUp = {}
