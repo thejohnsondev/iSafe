@@ -37,5 +37,8 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun isUserLoggedIn(): Boolean = dataStore.isUserLoggedIn()
-    override fun deleteAccount(): Flow<Either<ApiError, Unit>> = remoteDataSource.deleteAccount()
+    override suspend fun deleteAccount(): Flow<Either<ApiError, Unit>>  {
+        signOut()
+        return remoteDataSource.deleteAccount()
+    }
 }

@@ -57,7 +57,7 @@ fun ToggleOptionItem(
         ) {
             Text(
                 text = optionTitle,
-                color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSecondaryContainer
+                color = MaterialTheme.colorScheme.onSecondaryContainer
             )
             Switch(
                 checked = isSelected,
@@ -78,6 +78,17 @@ fun ToggleOptionItemPreview() {
     ToggleOptionItem(
         optionTitle = "Option 1",
         isSelected = true,
+        isLastItem = true,
+        isFirstItem = true
+    )
+}
+
+@Preview
+@Composable
+fun ToggleOptionItemPreviewOff() {
+    ToggleOptionItem(
+        optionTitle = "Option 2",
+        isSelected = false,
         isLastItem = true,
         isFirstItem = true
     )

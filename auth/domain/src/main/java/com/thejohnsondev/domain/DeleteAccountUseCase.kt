@@ -9,7 +9,7 @@ import javax.inject.Inject
 class DeleteAccountUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    operator fun invoke(): Flow<Either<ApiError, Unit>> {
+    suspend operator fun invoke(): Flow<Either<ApiError, Unit>> {
         return authRepository.deleteAccount()
     }
 }
