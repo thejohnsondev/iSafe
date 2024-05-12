@@ -2,6 +2,7 @@ package com.thejohnsondev.datastore
 
 import android.content.Context
 import android.util.Base64
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.thejohnsondev.common.DATA_STORE_NAME
@@ -161,12 +162,14 @@ class DataStoreImpl @Inject constructor(
 
     override suspend fun setPrivacySettings(privacySettings: PrivacySettings) {
         putBoolean(UNLOCK_WITH_BIOMETRICS, privacySettings.isUnlockWithBiometricEnabled)
+        Log.e("TAG", "-- put: ${privacySettings.isBlockScreenshotsEnabled} --")
         putBoolean(BLOCK_SCREENSHOTS, privacySettings.isBlockScreenshotsEnabled)
     }
 
     override fun getPrivacySettings(): PrivacySettings {
         val isUnlockWithBiometrics = getBoolean(UNLOCK_WITH_BIOMETRICS)
         val isBlockScreenshots = getBoolean(BLOCK_SCREENSHOTS)
+        Log.e("TAG", "-- get: $isBlockScreenshots --")
         return PrivacySettings(
             isUnlockWithBiometricEnabled = isUnlockWithBiometrics,
             isBlockScreenshotsEnabled = isBlockScreenshots

@@ -1,6 +1,7 @@
 package com.thejohnsondev.isafe.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -47,6 +48,7 @@ class MainActivity : ComponentActivity() {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { newState ->
                     state = newState
+                    applyPrivacySettings(state.settingsConfig?.privacySettings?.isBlockScreenshotsEnabled ?: false)
                 }
             }
         }
@@ -59,6 +61,18 @@ class MainActivity : ComponentActivity() {
             ) {
                 ISafeApp()
             }
+        }
+    }
+
+    private fun applyPrivacySettings(isBlockScreenshots: Boolean) {
+        Log.e("TAG", "-- isBlockScreenshots: $isBlockScreenshots --")
+        if (isBlockScreenshots) {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE
+            )
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
     }
 }
