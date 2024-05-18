@@ -63,4 +63,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.com.google.dagger.hilt.compiler)
 
+    // Biometric
+    implementation(libs.androidx.biometric)
+
 }

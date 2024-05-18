@@ -31,6 +31,7 @@ splashscreen = "1.0.1"
 agp = "8.1.0-rc01"
 org-jetbrains-kotlin-android = "1.7.20"
 room = "2.6.1"
+biometric = "1.2.0-alpha05"
 
 [libraries]
 
@@ -102,6 +103,9 @@ okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+#Biometric
+androidx-biometric = { module = "androidx.biometric:biometric-ktx", version.ref = "biometric" }
 
 
 [plugins]

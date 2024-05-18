@@ -1,5 +1,6 @@
 package com.thejohnsondev.presentation
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.thejohnsondev.common.R
+import com.thejohnsondev.common.isBiometricAvailable
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
@@ -90,6 +92,7 @@ fun SettingsScreen(
         )
     )
     SettingsContent(
+        context = context,
         state = state.value,
         onAction = { action ->
             viewModel.perform(action)
@@ -100,6 +103,7 @@ fun SettingsScreen(
 
 @Composable
 fun SettingsContent(
+    context: Context,
     state: SettingsViewModel.State,
     onAction: (SettingsViewModel.Action) -> Unit,
     goToSignUp: () -> Unit
@@ -111,7 +115,7 @@ fun SettingsContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
         ) {
-            SettingsList(state, onAction)
+            SettingsList(context, state, onAction)
             ConfirmDialogs(state, onAction, goToSignUp)
         }
     }
@@ -119,6 +123,7 @@ fun SettingsContent(
 
 @Composable
 fun SettingsList(
+    context: Context,
     state: SettingsViewModel.State,
     onAction: (SettingsViewModel.Action) -> Unit
 ) {
@@ -130,6 +135,7 @@ fun SettingsList(
             )
             section.subsections.forEachIndexed { index, subsection ->
                 SettingsSubSections(
+                    context = context,
                     state = state,
                     subSection = subsection,
                     subSectionsNumber = subSectionsNumber,
@@ -160,6 +166,7 @@ fun SettingsSectionTitle(
 
 @Composable
 fun SettingsSubSections(
+    context: Context,
     state: SettingsViewModel.State,
     subSection: SettingsSubSection,
     subSectionIndex: Int,
@@ -193,7 +200,7 @@ fun SettingsSubSections(
             }
 
             SettingsSubSection.PrivacySettingsSub -> {
-                PrivacySettingsSubSection(state = state, onAction = onAction)
+                PrivacySettingsSubSection(context = context, state = state, onAction = onAction)
             }
         }
     }
@@ -237,12 +244,12 @@ fun ManageAccountSubSection(
             .fillMaxWidth()
             .wrapContentHeight()
             .clip(RoundedCornerShape(Size16))
-            .background(MaterialTheme.colorScheme.onErrorContainer)
+            .background(MaterialTheme.colorScheme.errorContainer)
     ) {
         Text(
             text = stringResource(id = R.string.dangerous_zone),
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.errorContainer,
+            color = MaterialTheme.colorScheme.onErrorContainer,
             modifier = Modifier.padding(start = Size16, top = Size16)
         )
         RoundedButton(
@@ -253,8 +260,8 @@ fun ManageAccountSubSection(
                 onAction(SettingsViewModel.Action.OpenConfirmDeleteAccountDialog)
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.errorContainer,
-                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                containerColor = MaterialTheme.colorScheme.onErrorContainer,
+                contentColor = MaterialTheme.colorScheme.errorContainer
             )
         )
     }
@@ -420,29 +427,32 @@ fun StyleSettingsSubSection(
 
 @Composable
 fun PrivacySettingsSubSection(
+    context: Context,
     state: SettingsViewModel.State,
     onAction: (SettingsViewModel.Action) -> Unit
 ) {
     Column(
         modifier = Modifier.padding(Size16)
     ) {
-        ToggleOptionItem(
-            optionTitle = stringResource(id = R.string.unlock_with_biometrics),
-            isSelected = state.settingsConfig?.privacySettings?.isUnlockWithBiometricEnabled
-                ?: false,
-            isFirstItem = true,
-            isLastItem = true
-        ) { isUnlockWithBiometricsEnabled ->
-            onAction(
-                SettingsViewModel.Action.UpdatePrivacySettings(
-                    state.settingsConfig?.privacySettings?.copy(
-                        isUnlockWithBiometricEnabled = isUnlockWithBiometricsEnabled
-                    )
-                        ?: PrivacySettings(
+        if (context.isBiometricAvailable()) {
+            ToggleOptionItem(
+                optionTitle = stringResource(id = R.string.unlock_with_biometrics),
+                isSelected = state.settingsConfig?.privacySettings?.isUnlockWithBiometricEnabled
+                    ?: false,
+                isFirstItem = true,
+                isLastItem = true
+            ) { isUnlockWithBiometricsEnabled ->
+                onAction(
+                    SettingsViewModel.Action.UpdatePrivacySettings(
+                        state.settingsConfig?.privacySettings?.copy(
                             isUnlockWithBiometricEnabled = isUnlockWithBiometricsEnabled
                         )
+                            ?: PrivacySettings(
+                                isUnlockWithBiometricEnabled = isUnlockWithBiometricsEnabled
+                            )
+                    )
                 )
-            )
+            }
         }
         ToggleOptionItem(
             modifier = Modifier.padding(top = Size16),
@@ -508,6 +518,7 @@ fun ConfirmDialogs(
 private fun SettingsScreenPreviewDark() {
     ISafeTheme {
         SettingsContent(
+            context = LocalContext.current,
             state = SettingsViewModel.State(
                 loadingState = LoadingState.Loaded,
                 userEmail = "email@email.com",
@@ -533,6 +544,7 @@ private fun SettingsScreenPreviewDark() {
 private fun SettingsScreenPreviewLightConfirmDeleteAccount() {
     ISafeTheme {
         SettingsContent(
+            context = LocalContext.current,
             state = SettingsViewModel.State(
                 loadingState = LoadingState.Loaded,
                 userEmail = "email@email.com",
