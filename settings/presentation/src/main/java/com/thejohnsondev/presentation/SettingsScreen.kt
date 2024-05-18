@@ -1,10 +1,15 @@
 package com.thejohnsondev.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -27,6 +33,8 @@ import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size2
 import com.thejohnsondev.designsystem.Size4
+import com.thejohnsondev.designsystem.Size64
+import com.thejohnsondev.designsystem.Size72
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.supportsDynamicTheming
 import com.thejohnsondev.model.LoadingState
@@ -197,6 +205,7 @@ fun ManageAccountSubSection(
 ) {
     RoundedButton(
         modifier = Modifier
+            .height(Size64)
             .padding(start = Size16, end = Size16, top = Size8, bottom = Size2),
         text = stringResource(id = R.string.change_password),
         onClick = {
@@ -210,12 +219,8 @@ fun ManageAccountSubSection(
     )
     RoundedButton(
         modifier = Modifier
-            .padding(
-                start = Size16,
-                end = Size16,
-                bottom = Size16,
-                top = Size2
-            ),
+            .height(Size72)
+            .padding(start = Size16, end = Size16, bottom = Size16, top = Size2),
         text = stringResource(id = R.string.logout),
         onClick = {
             onAction(SettingsViewModel.Action.OpenConfirmLogoutDialog)
@@ -226,24 +231,33 @@ fun ManageAccountSubSection(
         ),
         buttonShape = ButtonShape.BOTTOM_ROUNDED
     )
-    Text(
-        text = stringResource(id = R.string.dangerous_zone),
-        style = MaterialTheme.typography.titleMedium,
-        color = MaterialTheme.colorScheme.errorContainer,
-        modifier = Modifier.padding(start = Size16)
-    )
-    RoundedButton(
+    Column(
         modifier = Modifier
-            .padding(Size16),
-        text = stringResource(id = R.string.delete_account),
-        onClick = {
-            onAction(SettingsViewModel.Action.OpenConfirmDeleteAccountDialog)
-        },
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer
+            .padding(start = Size16, end = Size16, top = Size8, bottom = Size16)
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clip(RoundedCornerShape(Size16))
+            .background(MaterialTheme.colorScheme.onErrorContainer)
+    ) {
+        Text(
+            text = stringResource(id = R.string.dangerous_zone),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.errorContainer,
+            modifier = Modifier.padding(start = Size16, top = Size16)
         )
-    )
+        RoundedButton(
+            modifier = Modifier
+                .padding(Size16),
+            text = stringResource(id = R.string.delete_account),
+            onClick = {
+                onAction(SettingsViewModel.Action.OpenConfirmDeleteAccountDialog)
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer
+            )
+        )
+    }
 }
 
 @Composable

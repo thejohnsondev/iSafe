@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 val SizeDefault = 0.dp
+val SizeBorder = 1.dp
 val Size2 = 2.dp
 val Size4 = 4.dp
 val Size8 = 8.dp
