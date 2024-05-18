@@ -1,11 +1,13 @@
 package com.thejohnsondev.presentation.nagivation
 
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.thejohnsondev.common.navigation.Screens
+import com.thejohnsondev.presentation.biometric.BiometricScreen
 import com.thejohnsondev.presentation.check_auth_state.CheckAuthStateScreen
 import com.thejohnsondev.presentation.check_auth_state.CheckAuthStateViewModel
 import com.thejohnsondev.presentation.login.LoginScreen
@@ -76,6 +78,20 @@ fun NavGraphBuilder.signUpScreen(
             viewModel = viewModel,
             goToHome = goToHome,
             goToLogin = goToLogin
+        )
+    }
+}
+
+fun NavGraphBuilder.biometricScreen(
+    parentActivity: FragmentActivity,
+    onBiometricSuccess: () -> Unit
+) {
+    composable(
+        route = Screens.BiometricScreen.name
+    ) {
+        BiometricScreen(
+            parentActivity = parentActivity,
+            onBiometricSuccess = onBiometricSuccess
         )
     }
 }

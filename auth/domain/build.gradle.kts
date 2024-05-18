@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":core:datastore"))
     implementation(project(":core:common"))
 
+    implementation(project(":settings:data"))
     implementation(project(":auth:data"))
 
     implementation(libs.androidx.ktx)

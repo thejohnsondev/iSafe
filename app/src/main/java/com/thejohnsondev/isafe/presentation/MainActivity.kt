@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -29,7 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     private val viewModel by viewModels<MainActivityViewModel>()
 
@@ -59,7 +60,7 @@ class MainActivity : ComponentActivity() {
                 dynamicColor = shouldUseDynamicColor(state),
                 customTheme = state.settingsConfig?.customTheme
             ) {
-                ISafeApp()
+                ISafeApp(this@MainActivity)
             }
         }
     }
@@ -78,7 +79,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ISafeApp() {
+fun ISafeApp(
+    parentActivity: FragmentActivity
+) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -87,7 +90,9 @@ fun ISafeApp() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Navigation()
+            Navigation(
+                parentActivity = parentActivity
+            )
         }
     }
 }
