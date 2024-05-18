@@ -25,6 +25,7 @@ import com.thejohnsondev.common.R
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
+import com.thejohnsondev.designsystem.Size2
 import com.thejohnsondev.designsystem.Size4
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.supportsDynamicTheming
@@ -41,6 +42,7 @@ import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.SelectableOptionItem
 import com.thejohnsondev.ui.SettingsItem
 import com.thejohnsondev.ui.ToggleOptionItem
+import com.thejohnsondev.ui.ui_model.ButtonShape
 import com.thejohnsondev.ui.ui_model.SettingsSection
 import com.thejohnsondev.ui.ui_model.SettingsSubSection
 
@@ -195,7 +197,7 @@ fun ManageAccountSubSection(
 ) {
     RoundedButton(
         modifier = Modifier
-            .padding(horizontal = Size16, vertical = Size8),
+            .padding(start = Size16, end = Size16, top = Size8, bottom = Size2),
         text = stringResource(id = R.string.change_password),
         onClick = {
             // TODO: implement
@@ -203,7 +205,8 @@ fun ManageAccountSubSection(
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
+        ),
+        buttonShape = ButtonShape.TOP_ROUNDED
     )
     RoundedButton(
         modifier = Modifier
@@ -211,17 +214,17 @@ fun ManageAccountSubSection(
                 start = Size16,
                 end = Size16,
                 bottom = Size16,
-                top = Size8
+                top = Size2
             ),
         text = stringResource(id = R.string.logout),
         onClick = {
             onAction(SettingsViewModel.Action.OpenConfirmLogoutDialog)
         },
-
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
+        ),
+        buttonShape = ButtonShape.BOTTOM_ROUNDED
     )
     Text(
         text = stringResource(id = R.string.dangerous_zone),

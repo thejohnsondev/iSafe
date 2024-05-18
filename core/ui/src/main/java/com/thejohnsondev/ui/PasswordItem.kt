@@ -24,11 +24,9 @@ import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -57,13 +55,14 @@ import com.thejohnsondev.designsystem.EqualRounded
 import com.thejohnsondev.designsystem.Percent80
 import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
+import com.thejohnsondev.designsystem.Size2
 import com.thejohnsondev.designsystem.Size4
 import com.thejohnsondev.designsystem.Size42
 import com.thejohnsondev.designsystem.Size56
 import com.thejohnsondev.designsystem.Size8
-import com.thejohnsondev.designsystem.SizeDefault
 import com.thejohnsondev.model.AdditionalField
 import com.thejohnsondev.model.PasswordModel
+import com.thejohnsondev.ui.ui_model.ButtonShape
 
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedTransitionTargetStateParameter")
@@ -259,7 +258,7 @@ fun ExpandedContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Surface(
+        RoundedContainer(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
@@ -267,16 +266,19 @@ fun ExpandedContent(
                 .clickable {
                     isHidden = !isHidden
                 },
-            shape = EqualRounded.small,
-            color = MaterialTheme.colorScheme.surfaceVariant
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            isFirstItem = true,
+            isLastItem = passwordModel.additionalFields.isEmpty()
         ) {
             Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(Size12), text = password,
+                        .padding(horizontal = Size12, vertical = Size16), text = password,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Icon(
@@ -286,95 +288,62 @@ fun ExpandedContent(
                 )
             }
         }
-        if (passwordModel.additionalFields.isNotEmpty()) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(start = Size16, end = Size16, top = Size16),
-                shape = EqualRounded.small,
-                color = MaterialTheme.colorScheme.surfaceVariant
-            ) {
-                Column {
-                    passwordModel.additionalFields.forEachIndexed { index, it ->
-                        AdditionalFieldItem(additionalField = it) {
-                            onCopyClick(it)
-                        }
-                        if (index != passwordModel.additionalFields.size - 1) {
-                            HorizontalDivider(
-                                thickness = Size4,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
+        Column {
+            passwordModel.additionalFields.forEachIndexed { index, it ->
+                RoundedContainer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(start = Size16, end = Size16, top = Size4),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    isFirstItem = false,
+                    isLastItem = index == passwordModel.additionalFields.size - 1
+                ) {
+                    AdditionalFieldItem(additionalField = it) {
+                        onCopyClick(it)
                     }
                 }
-
             }
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            Button(
+            RoundedButton(
                 modifier = Modifier
                     .weight(0.5f)
-                    .padding(start = Size16, end = Size8, bottom = Size8, top = Size16)
+                    .padding(start = Size16, end = Size2, bottom = Size16, top = Size16)
                     .bounceClick(),
+                text = stringResource(R.string.edit),
+                imageVector = Icons.Filled.Edit,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                ),
+                buttonShape = ButtonShape.START_ROUNDED,
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     onEditClick(passwordModel)
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                ),
-                shape = EqualRounded.medium,
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(end = Size4)
-                        .size(Size16),
-                    imageVector = Icons.Filled.Edit,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(vertical = Size4),
-                    text = stringResource(com.thejohnsondev.common.R.string.edit),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-            }
-            Button(
+                }
+            )
+            RoundedButton(
                 modifier = Modifier
                     .weight(0.5f)
-                    .padding(start = Size8, end = Size16, bottom = Size8, top = Size16)
+                    .padding(start = Size2, end = Size16, bottom = Size16, top = Size16)
                     .bounceClick(),
+                text = stringResource(R.string.delete),
+                imageVector = Icons.Filled.Delete,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                ),
+                buttonShape = ButtonShape.END_ROUNDED,
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     onDeleteClick(passwordModel)
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer
-                ),
-                shape = EqualRounded.medium
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(end = Size4)
-                        .size(Size16),
-                    imageVector = Icons.Filled.Delete,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.onErrorContainer
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(vertical = Size4),
-                    text = stringResource(id = com.thejohnsondev.common.R.string.delete),
-                    color = MaterialTheme.colorScheme.onErrorContainer
-                )
-            }
+                }
+            )
         }
-
         Text(
             modifier = Modifier
                 .fillMaxWidth()

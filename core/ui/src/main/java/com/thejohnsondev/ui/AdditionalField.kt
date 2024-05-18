@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Visibility
@@ -34,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.thejohnsondev.designsystem.EqualRounded
 import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size40
+import com.thejohnsondev.designsystem.Size64
 import com.thejohnsondev.designsystem.Size8
 
 @Composable
@@ -140,6 +143,7 @@ fun AdditionalField(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
+                    .height(Size64)
                     .clickable {
                         onDeleteClick()
                     },
@@ -147,7 +151,7 @@ fun AdditionalField(
                 color = MaterialTheme.colorScheme.errorContainer
             ) {
                 Icon(
-                    modifier = Modifier.padding(horizontal = Size8, vertical = Size40),
+                    modifier = Modifier.padding(horizontal = Size8),
                     imageVector = Icons.Default.Delete,
                     contentDescription = stringResource(com.thejohnsondev.common.R.string.visibility),
                     tint = MaterialTheme.colorScheme.onErrorContainer

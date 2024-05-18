@@ -2,6 +2,7 @@ package com.thejohnsondev.presentation
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -65,8 +66,11 @@ import com.thejohnsondev.ui.AdditionalField
 import com.thejohnsondev.ui.ISafeLoading
 import com.thejohnsondev.ui.HintTextField
 import com.thejohnsondev.ui.LoadedImage
+import com.thejohnsondev.ui.RoundedButton
+import com.thejohnsondev.ui.RoundedContainer
 import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.bounceClick
+import com.thejohnsondev.ui.ui_model.ButtonShape
 
 @Composable
 fun AddEditPasswordScreen(
@@ -254,19 +258,19 @@ fun AddEditPasswordContent(
                     imeAction = ImeAction.Next
                 )
             }
-            Surface(
+            RoundedContainer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(start = Size16, end = Size16, top = Size24),
-                shape = EqualRounded.small,
-                color = MaterialTheme.colorScheme.surfaceVariant
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                isFirstItem = true,
             ) {
                 HintTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .padding(Size12),
+                        .padding(horizontal = Size12, vertical = Size16),
                     onValueChanged = { title ->
                         onEnterTitle(title)
                     },
@@ -283,13 +287,13 @@ fun AddEditPasswordContent(
                 )
 
             }
-            Surface(
-                modifier = Modifier
+            RoundedContainer(
+                modifier =  Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(start = Size16, end = Size16, top = Size8),
-                shape = EqualRounded.small,
-                color = MaterialTheme.colorScheme.surfaceVariant
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                isLastItem = true,
             ) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -299,7 +303,7 @@ fun AddEditPasswordContent(
                         modifier = Modifier
                             .wrapContentHeight()
                             .fillMaxWidth(0.9f)
-                            .padding(Size12),
+                            .padding(horizontal = Size12, vertical = Size16),
                         onValueChanged = { password ->
                             onEnterPassword(password)
                         },
@@ -344,26 +348,23 @@ fun AddEditPasswordContent(
                         onDeleteAdditionalField(additionalField.id.orEmpty())
                     })
             }
-            Button(
+            RoundedButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(Size16)
                     .bounceClick(),
+                text = stringResource(R.string.add_field),
                 onClick = {
                     onAddAdditionalField(
                         System.currentTimeMillis().toString()
                     )
                 },
-                shape = EqualRounded.medium,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
-            ) {
-                Text(
-                    text = stringResource(R.string.add_field),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
+                buttonShape = ButtonShape.ROUNDED
+            )
         }
     }
 }

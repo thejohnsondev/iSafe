@@ -54,6 +54,8 @@ import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
 import com.thejohnsondev.designsystem.Size4
+import com.thejohnsondev.designsystem.Size64
+import com.thejohnsondev.designsystem.Size72
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Size86
 import com.thejohnsondev.designsystem.isLight
