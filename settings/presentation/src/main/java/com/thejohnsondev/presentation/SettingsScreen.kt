@@ -277,6 +277,7 @@ fun GeneralSettingsSubSection(
     ) {
         ToggleOptionItem(
             optionTitle = stringResource(id = R.string.deep_search_title),
+            optionDescription = stringResource(id = R.string.deep_search_description),
             isSelected = state.settingsConfig?.generalSettings?.isDeepSearchEnabled
                 ?: false,
             isFirstItem = true,
@@ -437,6 +438,7 @@ fun PrivacySettingsSubSection(
         if (context.isBiometricAvailable()) {
             ToggleOptionItem(
                 optionTitle = stringResource(id = R.string.unlock_with_biometrics),
+                optionDescription = stringResource(id = R.string.unlock_with_biometrics_description),
                 isSelected = state.settingsConfig?.privacySettings?.isUnlockWithBiometricEnabled
                     ?: false,
                 isFirstItem = true,
@@ -457,6 +459,7 @@ fun PrivacySettingsSubSection(
         ToggleOptionItem(
             modifier = Modifier.padding(top = Size16),
             optionTitle = stringResource(id = R.string.block_screenshot),
+            optionDescription = stringResource(id = R.string.block_screenshot_description),
             isSelected = state.settingsConfig?.privacySettings?.isBlockScreenshotsEnabled
                 ?: false,
             isFirstItem = true,

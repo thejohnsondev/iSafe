@@ -2,10 +2,12 @@ package com.thejohnsondev.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -17,14 +19,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import com.thejohnsondev.designsystem.Percent80
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size4
+import com.thejohnsondev.designsystem.Size8
 
 @Composable
 fun ToggleOptionItem(
     modifier: Modifier = Modifier,
     optionTitle: String,
+    optionDescription: String,
     isSelected: Boolean,
     isFirstItem: Boolean = false,
     isLastItem: Boolean = false,
@@ -55,10 +62,24 @@ fun ToggleOptionItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = optionTitle,
-                color = MaterialTheme.colorScheme.onSecondaryContainer
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(Percent80)
+            ) {
+                Text(
+                    text = optionTitle,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleMedium,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    modifier = Modifier.padding(top = Size8),
+                    text = optionDescription,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
             Switch(
                 checked = isSelected,
                 onCheckedChange = {
@@ -77,6 +98,7 @@ fun ToggleOptionItem(
 fun ToggleOptionItemPreview() {
     ToggleOptionItem(
         optionTitle = "Option 1",
+        optionDescription = "Option 1 description a a a a a a a a a a a a a a a a",
         isSelected = true,
         isLastItem = true,
         isFirstItem = true
@@ -88,6 +110,7 @@ fun ToggleOptionItemPreview() {
 fun ToggleOptionItemPreviewOff() {
     ToggleOptionItem(
         optionTitle = "Option 2",
+        optionDescription = "Option 2 description",
         isSelected = false,
         isLastItem = true,
         isFirstItem = true

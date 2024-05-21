@@ -31,7 +31,7 @@ fun NavController.navigateToSignUp() {
     navigate(
         signUpRoute,
         NavOptions.Builder()
-            .setPopUpTo(signUpRoute, true)
+            .setPopUpTo(signUpRoute, false)
             .build()
     )
 }
