@@ -1,7 +1,7 @@
 package com.thejohnsondev.isafe.presentation
 
 import com.thejohnsondev.common.base.BaseViewModel
-import com.thejohnsondev.domain.GetSettingsConfigUseCase
+import com.thejohnsondev.domain.GetSettingsConfigFlowUseCase
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.settings.SettingsConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    private val getSettingsConfig: GetSettingsConfigUseCase
+    private val getSettingsConfig: GetSettingsConfigFlowUseCase
 ) : BaseViewModel() {
 
     private val _settingsConfig = getSettingsConfig()

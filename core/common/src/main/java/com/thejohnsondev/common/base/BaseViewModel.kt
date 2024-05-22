@@ -13,7 +13,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
@@ -22,7 +24,7 @@ abstract class BaseViewModel : ViewModel() {
     protected val _loadingState: MutableStateFlow<LoadingState> =
         MutableStateFlow(LoadingState.Loaded)
 
-    fun getEventFlow() = eventChannel.receiveAsFlow()
+    fun getEventFlow() = eventChannel.receiveAsFlow().stateIn(viewModelScope, SharingStarted.Eagerly, OneTimeEvent.None)
 
 
     protected fun BaseViewModel.sendEvent(event: OneTimeEvent) = launch {

@@ -5,6 +5,7 @@ app-compat = "1.6.1"
 kotlin-bom = "1.8.0"
 lifecycle-runtime-ktx = "2.6.1"
 material-2 = "1.10.0"
+coroutines-test = "1.6.0"
 junit = "4.13.2"
 mockito = "5.7.0"
 truth = "1.1"
@@ -52,6 +53,7 @@ androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "a
 androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 google-truth = { module = "com.google.truth:truth", version.ref = "truth" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines-test"}
 
 #Compose
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }

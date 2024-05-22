@@ -507,7 +507,6 @@ fun ConfirmDialogs(
             onConfirm = {
                 onAction(SettingsViewModel.Action.CloseConfirmLogoutDialog)
                 onAction(SettingsViewModel.Action.Logout)
-                goToSignUp()
             },
             onCancel = {
                 onAction(SettingsViewModel.Action.CloseConfirmLogoutDialog)

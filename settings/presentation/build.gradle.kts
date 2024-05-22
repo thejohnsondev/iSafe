@@ -64,6 +64,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.coroutines.test)
+    testImplementation(project(":settings:data"))
+    testImplementation(project(":auth:data"))
+    testImplementation(project(":core:datastore"))
 
     // Compose
     implementation(libs.androidx.activity.compose)

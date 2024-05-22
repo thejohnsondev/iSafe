@@ -6,6 +6,6 @@ data class SettingsUseCases @Inject constructor(
     val logout: LogoutUseCase,
     val deleteAccount: DeleteAccountUseCase,
     val getUserEmail: GetUserEmailUseCase,
-    val getSettingsConfig: GetSettingsConfigUseCase,
+    val getSettingsConfig: GetSettingsConfigFlowUseCase,
     val updateSetting: UpdateSettingsUseCase
 )

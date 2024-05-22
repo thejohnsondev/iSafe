@@ -1,5 +1,6 @@
 package com.thejohnsondev.presentation
 
+import androidx.lifecycle.viewModelScope
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.common.combine
 import com.thejohnsondev.domain.SettingsUseCases
@@ -9,13 +10,16 @@ import com.thejohnsondev.model.settings.DarkThemeConfig
 import com.thejohnsondev.model.settings.GeneralSettings
 import com.thejohnsondev.model.settings.PrivacySettings
 import com.thejohnsondev.model.settings.SettingsConfig
+import com.thejohnsondev.model.settings.ThemeBrand
 import com.thejohnsondev.ui.ui_model.SettingsSection
 import com.thejohnsondev.ui.ui_model.SettingsSubSection
-import com.thejohnsondev.model.settings.ThemeBrand
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +31,13 @@ class SettingsViewModel @Inject constructor(
     private val _userEmail = MutableStateFlow<String?>(null)
     private val _openConfirmDeleteAccountDialog = MutableStateFlow(false)
     private val _openConfirmLogoutDialog = MutableStateFlow(false)
-    private val _settingsConfig = useCases.getSettingsConfig()
+    private val _settingsConfig = MutableStateFlow<SettingsConfig?>(null)
+
+    init {
+        viewModelScope.launch {
+            _settingsConfig.emit(useCases.getSettingsConfig().first())
+        }
+    }
 
     val viewState = combine(
         _loadingState,
@@ -36,8 +46,8 @@ class SettingsViewModel @Inject constructor(
         _openConfirmDeleteAccountDialog,
         _openConfirmLogoutDialog,
         _settingsConfig,
-        ::State,
-    )
+        ::State
+    ).stateIn(viewModelScope, SharingStarted.Eagerly, State())
 
     fun perform(action: Action) {
         when (action) {
@@ -58,22 +68,27 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun updateUseCustomTheme(customTheme: ThemeBrand) = launch {
+        _settingsConfig.value = _settingsConfig.value?.copy(customTheme = customTheme)
         useCases.updateSetting(themeBrand = customTheme)
     }
 
     private fun updateUseDynamicColor(useDynamicColor: Boolean) = launch {
+        _settingsConfig.value = _settingsConfig.value?.copy(useDynamicColor = useDynamicColor)
         useCases.updateSetting(useDynamicColor = useDynamicColor)
     }
 
     private fun updateDarkThemeConfig(darkThemeConfig: DarkThemeConfig) = launch {
+        _settingsConfig.value = _settingsConfig.value?.copy(darkThemeConfig = darkThemeConfig)
         useCases.updateSetting(darkThemeConfig = darkThemeConfig)
     }
 
     private fun updateGeneralSettings(generalSettings: GeneralSettings) = launch {
+        _settingsConfig.value = _settingsConfig.value?.copy(generalSettings = generalSettings)
         useCases.updateSetting(generalSettings = generalSettings)
     }
 
     private fun updatePrivacySettings(privacySettings: PrivacySettings) = launch {
+        _settingsConfig.value = _settingsConfig.value?.copy(privacySettings = privacySettings)
         useCases.updateSetting(privacySettings = privacySettings)
     }
 
@@ -99,6 +114,7 @@ class SettingsViewModel @Inject constructor(
 
     private fun logout() = launch {
         useCases.logout.invoke()
+        handleSuccess()
     }
 
     private fun deleteAccount() = launch {
