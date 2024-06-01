@@ -121,7 +121,7 @@ class SettingsViewModel @Inject constructor(
         useCases.deleteAccount.invoke().first().fold(
             ifLeft = ::handleError,
             ifRight = {
-                handleSuccess()
+                logout()
             }
         )
     }
