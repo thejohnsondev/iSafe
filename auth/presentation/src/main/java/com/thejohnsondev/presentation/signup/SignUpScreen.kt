@@ -1,6 +1,8 @@
 package com.thejohnsondev.presentation.signup
 
 import android.annotation.SuppressLint
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -17,7 +19,9 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -30,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,6 +46,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -52,10 +58,9 @@ import com.thejohnsondev.common.getPasswordErrorMessage
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
+import com.thejohnsondev.designsystem.Size2
 import com.thejohnsondev.designsystem.Size24
 import com.thejohnsondev.designsystem.Size4
-import com.thejohnsondev.designsystem.Size64
-import com.thejohnsondev.designsystem.Size72
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Size86
 import com.thejohnsondev.designsystem.isLight
@@ -65,8 +70,11 @@ import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
 import com.thejohnsondev.ui.GlowPulsingBackground
 import com.thejohnsondev.ui.ISafeLogo
+import com.thejohnsondev.ui.PRIVACY_POLICY_TAG
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.TextField
+import com.thejohnsondev.ui.getPrivacyPolicyAcceptText
+import com.thejohnsondev.ui.utils.keyboardAsState
 
 @Composable
 fun SignUpScreen(
@@ -76,6 +84,9 @@ fun SignUpScreen(
 ) {
     val screenState = viewModel.viewState.collectAsState(initial = SignUpViewModel.State())
     val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
+    val privacyPolicyUrl =
+        stringResource(id = com.thejohnsondev.common.R.string.privacy_policy_link)
     val emailState = rememberSaveable {
         mutableStateOf(EMPTY)
     }
@@ -88,6 +99,8 @@ fun SignUpScreen(
     val snackbarHostState = remember {
         SnackbarHostState()
     }
+    val isKeyboardOpened by keyboardAsState()
+
     LaunchedEffect(true) {
         viewModel.getEventFlow().collect {
             when (it) {
@@ -105,6 +118,7 @@ fun SignUpScreen(
     }
     SignUpContent(
         screenState.value,
+        isKeyboardOpened,
         emailState,
         passwordState,
         emailFocusRequest,
@@ -114,6 +128,9 @@ fun SignUpScreen(
         hideKeyboard = {
             keyboardController?.hide()
         },
+        openPrivacyPolicy = {
+            uriHandler.openUri(privacyPolicyUrl)
+        },
         onAction = viewModel::perform
     )
 }
@@ -122,6 +139,7 @@ fun SignUpScreen(
 @Composable
 fun SignUpContent(
     state: SignUpViewModel.State,
+    isKeyboardOpened: Boolean,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
     emailFocusRequest: FocusRequester,
@@ -129,6 +147,7 @@ fun SignUpContent(
     snackbarHostState: SnackbarHostState,
     onGoToLogin: () -> Unit,
     hideKeyboard: () -> Unit,
+    openPrivacyPolicy: () -> Unit,
     onAction: (SignUpViewModel.Action) -> Unit
 ) {
 
@@ -162,7 +181,12 @@ fun SignUpContent(
                             .scrollable(rememberScrollState(), Orientation.Vertical),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        LogoSection()
+                        AnimatedVisibility(
+                            visible = !isKeyboardOpened) {
+                            Column {
+                                LogoSection()
+                            }
+                        }
                         FieldsSection(
                             screenState = state,
                             emailState = emailState,
@@ -189,7 +213,8 @@ fun SignUpContent(
                             emailState = emailState,
                             passwordState = passwordState,
                             hideKeyboard = hideKeyboard,
-                            onAction = onAction
+                            onAction = onAction,
+                            openPrivacyPolicy = openPrivacyPolicy
                         )
                     }
                 }
@@ -310,12 +335,33 @@ fun SignUpButtonSection(
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
     hideKeyboard: () -> Unit,
+    openPrivacyPolicy: () -> Unit,
     onAction: (SignUpViewModel.Action) -> Unit
 ) {
+    val text = getPrivacyPolicyAcceptText()
     Column(
         modifier = Modifier.background(MaterialTheme.colorScheme.surface),
         verticalArrangement = Arrangement.Bottom
     ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = Size2),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(checked = screenState.isPrivacyPolicyAccepted,
+                onCheckedChange = {
+                    onAction(SignUpViewModel.Action.AcceptPrivacyPolicy(it))
+                })
+            ClickableText(text = text) { offset ->
+                text.getStringAnnotations(
+                    tag = PRIVACY_POLICY_TAG,
+                    start = offset,
+                    end = offset
+                ).firstOrNull()?.let {
+                    openPrivacyPolicy()
+                }
+            }
+        }
         RoundedButton(
             text = stringResource(id = com.thejohnsondev.common.R.string.sign_up),
             modifier = Modifier.padding(horizontal = Size16, vertical = Size16),
@@ -340,6 +386,7 @@ private fun SignUpScreenPreviewEmpty() {
     ISafeTheme {
         SignUpContent(
             state = SignUpViewModel.State(),
+            isKeyboardOpened = false,
             emailState = rememberSaveable { mutableStateOf(EMPTY) },
             passwordState = rememberSaveable { mutableStateOf(EMPTY) },
             emailFocusRequest = remember { FocusRequester() },
@@ -347,6 +394,7 @@ private fun SignUpScreenPreviewEmpty() {
             snackbarHostState = remember { SnackbarHostState() },
             onGoToLogin = {},
             hideKeyboard = {},
+            openPrivacyPolicy = {},
             onAction = {}
         )
     }

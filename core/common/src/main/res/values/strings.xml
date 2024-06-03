@@ -86,4 +86,10 @@
     <string name="biometric_authentication_description">Unlock the app with your fingerprint or face</string>
     <string name="scan_to_unlock">Scan to unlock</string>
 
+    <string name="privacy_policy_link">https://andrewdobosh.notion.site/Privacy-Policy-3f95b4857e0e49a78b35f0ca837b4ec5</string>
+    <string name="accept_and_agree">I accept and agree to the </string>
+    <string name="and"> and </string>
+    <string name="terms_of_use"> Terms of Use</string>
+    <string name="privacy_policy">Privacy Policy.</string>
+
 </resources>

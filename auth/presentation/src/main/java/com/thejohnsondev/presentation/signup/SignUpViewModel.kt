@@ -2,13 +2,11 @@ package com.thejohnsondev.presentation.signup
 
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.domain.AuthUseCases
-import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.EmailValidationState
 import com.thejohnsondev.model.KeyGenerateResult
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
-import com.thejohnsondev.model.UserModel
 import com.thejohnsondev.model.auth.AuthResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
+import com.thejohnsondev.common.combine as combine6
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -25,18 +24,21 @@ class SignUpViewModel @Inject constructor(
     private val _isSignUpSuccess = MutableStateFlow<Boolean?>(null)
     private val _emailValidationState = MutableStateFlow<EmailValidationState?>(null)
     private val _passwordValidationState = MutableStateFlow<PasswordValidationState?>(null)
+    private val _isPrivacyPolicyAccepted = MutableStateFlow(false)
     private val _signUpReadyState: Flow<Boolean> = combine(
         _emailValidationState,
         _passwordValidationState,
+        _isPrivacyPolicyAccepted,
         ::isSignUpReady
     )
 
-    val viewState: Flow<State> = combine(
+    val viewState: Flow<State> = combine6(
         _isSignUpSuccess,
         _loadingState,
         _emailValidationState,
         _passwordValidationState,
         _signUpReadyState,
+        _isPrivacyPolicyAccepted,
         ::mergeSources
     )
 
@@ -45,7 +47,12 @@ class SignUpViewModel @Inject constructor(
             is Action.SignUpWithEmail -> signUp(action.email, action.password)
             is Action.ValidateEmail -> validateEmail(action.email)
             is Action.ValidatePassword -> validatePassword(action.password)
+            is Action.AcceptPrivacyPolicy -> acceptPrivacyPolicy(action.isAccepted)
         }
+    }
+
+    private fun acceptPrivacyPolicy(isAccepted: Boolean) = launch {
+        _isPrivacyPolicyAccepted.value = isAccepted
     }
 
     private fun validateEmail(email: String) = launch {
@@ -104,21 +111,25 @@ class SignUpViewModel @Inject constructor(
         authLoadingState: LoadingState,
         emailValidationState: EmailValidationState?,
         passwordValidationState: PasswordValidationState?,
-        signUpReady: Boolean
+        signUpReady: Boolean,
+        isPrivacyPolicyAccepted: Boolean
     ): State = State(
         isSignUpSuccess = isSignUpSuccess,
         loadingState = authLoadingState,
         emailValidationState = emailValidationState,
         passwordValidationState = passwordValidationState,
-        signUpReady = signUpReady
+        signUpReady = signUpReady,
+        isPrivacyPolicyAccepted = isPrivacyPolicyAccepted
     )
 
 
     private fun isSignUpReady(
         emailValidationState: EmailValidationState?,
-        passwordValidationState: PasswordValidationState?
+        passwordValidationState: PasswordValidationState?,
+        isPrivacyPolicyAccepted: Boolean?
     ): Boolean = emailValidationState is EmailValidationState.EmailCorrectState
             && passwordValidationState is PasswordValidationState.PasswordCorrectState
+            && isPrivacyPolicyAccepted == true
 
     sealed class Action {
         class SignUpWithEmail(
@@ -128,6 +139,7 @@ class SignUpViewModel @Inject constructor(
 
         class ValidateEmail(val email: String) : Action()
         class ValidatePassword(val password: String) : Action()
+        class AcceptPrivacyPolicy(val isAccepted: Boolean) : Action()
     }
 
     data class State(
@@ -135,6 +147,7 @@ class SignUpViewModel @Inject constructor(
         val loadingState: LoadingState = LoadingState.Loaded,
         val emailValidationState: EmailValidationState? = null,
         val passwordValidationState: PasswordValidationState? = null,
-        val signUpReady: Boolean = false
+        val signUpReady: Boolean = false,
+        val isPrivacyPolicyAccepted: Boolean = false
     )
 }
