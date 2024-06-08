@@ -32,6 +32,7 @@ fun getPrivacyPolicyAcceptText(): AnnotatedString {
                 textDecoration = TextDecoration.Underline
             )
         ) {
+            pushStringAnnotation(tag = TERMS_OF_USE_TAG, annotation = "click")
             append(stringResource(R.string.terms_of_use))
         }
         withStyle(
@@ -61,3 +62,4 @@ fun getPrivacyPolicyAcceptText(): AnnotatedString {
 }
 
 const val PRIVACY_POLICY_TAG = "privacy-policy"
+const val TERMS_OF_USE_TAG = "terms-of-use"

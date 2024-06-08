@@ -72,6 +72,7 @@ import com.thejohnsondev.ui.GlowPulsingBackground
 import com.thejohnsondev.ui.ISafeLogo
 import com.thejohnsondev.ui.PRIVACY_POLICY_TAG
 import com.thejohnsondev.ui.RoundedButton
+import com.thejohnsondev.ui.TERMS_OF_USE_TAG
 import com.thejohnsondev.ui.TextField
 import com.thejohnsondev.ui.getPrivacyPolicyAcceptText
 import com.thejohnsondev.ui.utils.keyboardAsState
@@ -87,6 +88,7 @@ fun SignUpScreen(
     val uriHandler = LocalUriHandler.current
     val privacyPolicyUrl =
         stringResource(id = com.thejohnsondev.common.R.string.privacy_policy_link)
+    val termsOfUseUrl = stringResource(id = com.thejohnsondev.common.R.string.terms_of_use_link)
     val emailState = rememberSaveable {
         mutableStateOf(EMPTY)
     }
@@ -131,6 +133,9 @@ fun SignUpScreen(
         openPrivacyPolicy = {
             uriHandler.openUri(privacyPolicyUrl)
         },
+        openTermsOfUse = {
+            uriHandler.openUri(termsOfUseUrl)
+        },
         onAction = viewModel::perform
     )
 }
@@ -148,6 +153,7 @@ fun SignUpContent(
     onGoToLogin: () -> Unit,
     hideKeyboard: () -> Unit,
     openPrivacyPolicy: () -> Unit,
+    openTermsOfUse: () -> Unit,
     onAction: (SignUpViewModel.Action) -> Unit
 ) {
 
@@ -214,7 +220,8 @@ fun SignUpContent(
                             passwordState = passwordState,
                             hideKeyboard = hideKeyboard,
                             onAction = onAction,
-                            openPrivacyPolicy = openPrivacyPolicy
+                            openPrivacyPolicy = openPrivacyPolicy,
+                            openTermsOfUse = openTermsOfUse
                         )
                     }
                 }
@@ -336,6 +343,7 @@ fun SignUpButtonSection(
     passwordState: MutableState<String>,
     hideKeyboard: () -> Unit,
     openPrivacyPolicy: () -> Unit,
+    openTermsOfUse: () -> Unit,
     onAction: (SignUpViewModel.Action) -> Unit
 ) {
     val text = getPrivacyPolicyAcceptText()
@@ -359,6 +367,13 @@ fun SignUpButtonSection(
                     end = offset
                 ).firstOrNull()?.let {
                     openPrivacyPolicy()
+                }
+                text.getStringAnnotations(
+                    tag = TERMS_OF_USE_TAG,
+                    start = offset,
+                    end = offset
+                ).firstOrNull()?.let {
+                    openTermsOfUse()
                 }
             }
         }
@@ -395,6 +410,7 @@ private fun SignUpScreenPreviewEmpty() {
             onGoToLogin = {},
             hideKeyboard = {},
             openPrivacyPolicy = {},
+            openTermsOfUse = {},
             onAction = {}
         )
     }
