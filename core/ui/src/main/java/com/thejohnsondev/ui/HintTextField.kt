@@ -12,6 +12,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -38,7 +40,10 @@ fun HintTextField(
     Box {
         BasicTextField(
             modifier = modifier
-                .focusRequester(focusRequester),
+                .focusRequester(focusRequester)
+                .semantics {
+                    contentDescription = hint
+                },
             value = value,
             onValueChange = {
                 onValueChanged(it)
