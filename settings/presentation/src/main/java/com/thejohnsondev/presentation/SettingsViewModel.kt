@@ -3,9 +3,11 @@ package com.thejohnsondev.presentation
 import androidx.lifecycle.viewModelScope
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.common.combine
+import com.thejohnsondev.common.isPasswordValid
 import com.thejohnsondev.domain.SettingsUseCases
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.model.PasswordValidationState
 import com.thejohnsondev.model.settings.DarkThemeConfig
 import com.thejohnsondev.model.settings.GeneralSettings
 import com.thejohnsondev.model.settings.PrivacySettings
@@ -14,6 +16,7 @@ import com.thejohnsondev.model.settings.ThemeBrand
 import com.thejohnsondev.ui.ui_model.SettingsSection
 import com.thejohnsondev.ui.ui_model.SettingsSubSection
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -32,6 +35,10 @@ class SettingsViewModel @Inject constructor(
     private val _openConfirmDeleteAccountDialog = MutableStateFlow(false)
     private val _openConfirmLogoutDialog = MutableStateFlow(false)
     private val _settingsConfig = MutableStateFlow<SettingsConfig?>(null)
+    private val _openChangePasswordDialog = MutableStateFlow(false)
+    private val _newPasswordValidationState = MutableStateFlow<PasswordValidationState?>(null)
+    private val _isConfirmNewPasswordMatches = MutableStateFlow<Boolean?>(null)
+    private val _updatePasswordLoadingState = MutableStateFlow<LoadingState>(LoadingState.Loaded)
 
     init {
         viewModelScope.launch {
@@ -46,6 +53,10 @@ class SettingsViewModel @Inject constructor(
         _openConfirmDeleteAccountDialog,
         _openConfirmLogoutDialog,
         _settingsConfig,
+        _updatePasswordLoadingState,
+        _openChangePasswordDialog,
+        _newPasswordValidationState,
+        _isConfirmNewPasswordMatches,
         ::State
     ).stateIn(viewModelScope, SharingStarted.Eagerly, State())
 
@@ -64,7 +75,57 @@ class SettingsViewModel @Inject constructor(
             is Action.UpdateGeneralSettings -> updateGeneralSettings(action.generalSettings)
             is Action.UpdatePrivacySettings -> updatePrivacySettings(action.privacySettings)
             is Action.UpdateExpandedSubSection -> updateExpandedSection(action.section)
+            is Action.CloseChangePasswordDialog -> handleCloseChangePasswordDialog()
+            is Action.OpenChangePasswordDialog -> handleOpenChangePasswordDialog()
+            is Action.ChangePassword -> changePassword(action.oldPassword, action.newPassword)
+            is Action.EnterConfirmPassword -> handleConfirmPassword(
+                action.confirmPassword,
+                action.newPassword
+            )
+
+            is Action.ValidateNewPassword -> validateNewPassword(action.newPassword, action.confirmPassword)
         }
+    }
+
+    private fun changePassword(
+        oldPassword: String,
+        newPassword: String,
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        _updatePasswordLoadingState.value = LoadingState.Loading
+        useCases.changePassword.invoke(
+            oldPassword, newPassword
+        ).first().fold(ifLeft = {
+            _updatePasswordLoadingState.value = LoadingState.Loaded
+            handleError(it)
+        }, ifRight = {
+            _updatePasswordLoadingState.value = LoadingState.Loaded
+            handlePasswordChangeSuccess()
+        })
+    }
+
+    private fun handlePasswordChangeSuccess() = launch {
+        sendEvent(PasswordChangeSuccess("Password changed successfully")) // todo move to strings and use string resource provider
+    }
+
+    private fun validateNewPassword(newPassword: String, confirmPassword: String?) {
+        _newPasswordValidationState.value = newPassword.isPasswordValid()
+        if (!confirmPassword.isNullOrEmpty()) {
+            handleConfirmPassword(confirmPassword, newPassword)
+        }
+    }
+
+    private fun handleConfirmPassword(confirmPassword: String, newPassword: String) {
+        _isConfirmNewPasswordMatches.value = newPassword == confirmPassword
+    }
+
+    private fun handleOpenChangePasswordDialog() {
+        _openChangePasswordDialog.value = true
+    }
+
+    private fun handleCloseChangePasswordDialog() {
+        _isConfirmNewPasswordMatches.value = null
+        _newPasswordValidationState.value = null
+        _openChangePasswordDialog.value = false
     }
 
     private fun updateUseCustomTheme(customTheme: ThemeBrand) = launch {
@@ -144,12 +205,24 @@ class SettingsViewModel @Inject constructor(
         object CloseConfirmDeleteAccountDialog : Action()
         object OpenConfirmLogoutDialog : Action()
         object CloseConfirmLogoutDialog : Action()
+        object OpenChangePasswordDialog : Action()
+        object CloseChangePasswordDialog : Action()
         class UpdateUseCustomTheme(val customTheme: ThemeBrand) : Action()
         class UpdateUseDynamicColor(val useDynamicColor: Boolean) : Action()
         class UpdateDarkThemeConfig(val darkThemeConfig: DarkThemeConfig) : Action()
         class UpdateGeneralSettings(val generalSettings: GeneralSettings) : Action()
         class UpdatePrivacySettings(val privacySettings: PrivacySettings) : Action()
         class UpdateExpandedSubSection(val section: SettingsSubSection) : Action()
+        data class ChangePassword(
+            val oldPassword: String,
+            val newPassword: String
+        ) : Action()
+
+        data class ValidateNewPassword(val newPassword: String, val confirmPassword: String?) : Action()
+        data class EnterConfirmPassword(
+            val confirmPassword: String,
+            val newPassword: String
+        ) : Action()
     }
 
     data class State(
@@ -158,7 +231,15 @@ class SettingsViewModel @Inject constructor(
         val userEmail: String? = null,
         val openConfirmDeleteAccountDialog: Boolean = false,
         val openConfirmLogoutDialog: Boolean = false,
-        val settingsConfig: SettingsConfig? = null
+        val settingsConfig: SettingsConfig? = null,
+        val updatePasswordLoadingState: LoadingState = LoadingState.Loaded,
+        val openChangePasswordDialog: Boolean = false,
+        val newPasswordValidationState: PasswordValidationState? = null,
+        val isConfirmPasswordMatches: Boolean? = null
     )
+
+    data class PasswordChangeSuccess(
+        val message: String = "Password changed successfully"
+    ) : OneTimeEvent()
 
 }

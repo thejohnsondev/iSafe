@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.thejohnsondev.common.R
@@ -46,6 +47,7 @@ import com.thejohnsondev.model.settings.GeneralSettings
 import com.thejohnsondev.model.settings.PrivacySettings
 import com.thejohnsondev.model.settings.SettingsConfig
 import com.thejohnsondev.model.settings.ThemeBrand
+import com.thejohnsondev.presentation.change_password.ChangePasswordDialog
 import com.thejohnsondev.ui.ConfirmAlertDialog
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.ScaffoldConfig
@@ -81,6 +83,11 @@ fun SettingsScreen(
                     goToSignUp()
                 }
 
+                is SettingsViewModel.PasswordChangeSuccess -> {
+                    context.toast(it.message)
+                    viewModel.perform(SettingsViewModel.Action.CloseChangePasswordDialog)
+                }
+
             }
         }
     }
@@ -96,8 +103,7 @@ fun SettingsScreen(
         state = state.value,
         onAction = { action ->
             viewModel.perform(action)
-        },
-        goToSignUp = goToSignUp
+        }
     )
 }
 
@@ -105,8 +111,7 @@ fun SettingsScreen(
 fun SettingsContent(
     context: Context,
     state: SettingsViewModel.State,
-    onAction: (SettingsViewModel.Action) -> Unit,
-    goToSignUp: () -> Unit
+    onAction: (SettingsViewModel.Action) -> Unit
 ) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -116,7 +121,7 @@ fun SettingsContent(
             verticalArrangement = Arrangement.Top,
         ) {
             SettingsList(context, state, onAction)
-            ConfirmDialogs(state, onAction, goToSignUp)
+            Dialogs(state, onAction)
         }
     }
 }
@@ -125,7 +130,7 @@ fun SettingsContent(
 fun SettingsList(
     context: Context,
     state: SettingsViewModel.State,
-    onAction: (SettingsViewModel.Action) -> Unit
+    onAction: (SettingsViewModel.Action) -> Unit,
 ) {
     Column {
         state.settingsSection.forEach { section ->
@@ -171,7 +176,7 @@ fun SettingsSubSections(
     subSection: SettingsSubSection,
     subSectionIndex: Int,
     subSectionsNumber: Int,
-    onAction: (SettingsViewModel.Action) -> Unit
+    onAction: (SettingsViewModel.Action) -> Unit,
 ) {
     val subsectionDescription =
         if (subSection.sectionTitleRes == R.string.manage_account) {
@@ -188,7 +193,9 @@ fun SettingsSubSections(
     ) {
         when (subSection) {
             SettingsSubSection.ManageAccountSub -> {
-                ManageAccountSubSection(onAction = onAction)
+                ManageAccountSubSection(
+                    onAction = onAction,
+                )
             }
 
             SettingsSubSection.GeneralSettingsSub -> {
@@ -208,7 +215,7 @@ fun SettingsSubSections(
 
 @Composable
 fun ManageAccountSubSection(
-    onAction: (SettingsViewModel.Action) -> Unit
+    onAction: (SettingsViewModel.Action) -> Unit,
 ) {
     RoundedButton(
         modifier = Modifier
@@ -216,7 +223,7 @@ fun ManageAccountSubSection(
             .padding(start = Size16, end = Size16, top = Size8, bottom = Size2),
         text = stringResource(id = R.string.change_password),
         onClick = {
-            // TODO: implement
+            onAction(SettingsViewModel.Action.OpenChangePasswordDialog)
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -478,10 +485,9 @@ fun PrivacySettingsSubSection(
 }
 
 @Composable
-fun ConfirmDialogs(
+fun Dialogs(
     state: SettingsViewModel.State,
     onAction: (SettingsViewModel.Action) -> Unit,
-    goToSignUp: () -> Unit
 ) {
     if (state.openConfirmDeleteAccountDialog) {
         ConfirmAlertDialog(
@@ -513,6 +519,15 @@ fun ConfirmDialogs(
             }
         )
     }
+    if (state.openChangePasswordDialog) {
+        ChangePasswordDialog(
+            onAction = onAction,
+            settingsScreenState = state,
+            onGoBackClick = {
+                onAction(SettingsViewModel.Action.CloseChangePasswordDialog)
+            }
+        )
+    }
 }
 
 @Composable
@@ -535,8 +550,7 @@ private fun SettingsScreenPreviewDark() {
                     )
                 )
             ),
-            onAction = {},
-            goToSignUp = {}
+            onAction = {}
         )
     }
 }
@@ -562,8 +576,7 @@ private fun SettingsScreenPreviewLightConfirmDeleteAccount() {
                     )
                 )
             ),
-            onAction = {},
-            goToSignUp = {}
+            onAction = {}
         )
     }
 }

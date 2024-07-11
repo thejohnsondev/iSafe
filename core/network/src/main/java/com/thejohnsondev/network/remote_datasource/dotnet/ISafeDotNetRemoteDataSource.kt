@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.thejohnsondev.common.awaitChannelFlow
 import com.thejohnsondev.common.sendOrNothing
 import com.thejohnsondev.model.ApiError
+import com.thejohnsondev.model.ChangePasswordBody
 import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.PasswordModel
@@ -69,6 +70,13 @@ class ISafeDotNetRemoteDataSource @Inject constructor(
 
     override suspend fun deleteAccount(): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
         sendOrNothing(api.deleteAccount())
+    }
+
+    override suspend fun changePassword(
+        oldPassword: String,
+        newPassword: String
+    ): Flow<Either<ApiError, Unit>> = awaitChannelFlow {
+        sendOrNothing(api.changePassword(ChangePasswordBody(oldPassword, newPassword)))
     }
 
     override fun getNotes(): Flow<Either<ApiError, List<NoteModel>>> = awaitChannelFlow {

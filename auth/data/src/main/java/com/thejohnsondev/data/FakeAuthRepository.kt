@@ -24,5 +24,8 @@ class FakeAuthRepository: AuthRepository {
     override fun isUserLoggedIn(): Boolean = true
 
     override suspend fun deleteAccount(): Flow<Either<ApiError, Unit>> = flowOf(Either.Right(Unit))
-
+    override suspend fun changePassword(
+        oldPassword: String,
+        newPassword: String
+    ): Flow<Either<ApiError, Unit>> = flowOf(Either.Right(Unit))
 }

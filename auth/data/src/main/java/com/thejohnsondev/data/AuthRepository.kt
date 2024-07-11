@@ -12,5 +12,6 @@ interface AuthRepository {
     suspend fun signOut()
     fun isUserLoggedIn(): Boolean
     suspend fun deleteAccount(): Flow<Either<ApiError, Unit>>
+    suspend fun changePassword(oldPassword: String, newPassword: String): Flow<Either<ApiError, Unit>>
 
 }

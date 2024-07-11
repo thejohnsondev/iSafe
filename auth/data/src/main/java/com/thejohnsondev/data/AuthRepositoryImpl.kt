@@ -40,4 +40,14 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun deleteAccount(): Flow<Either<ApiError, Unit>> {
         return remoteDataSource.deleteAccount()
     }
+
+    override suspend fun changePassword(
+        oldPassword: String,
+        newPassword: String
+    ): Flow<Either<ApiError, Unit>> {
+        return remoteDataSource.changePassword(
+            oldPassword.encrypt(BuildConfig.AUTH_SECRET_KEY.toByteArray()),
+            newPassword.encrypt(BuildConfig.AUTH_SECRET_KEY.toByteArray())
+        )
+    }
 }

@@ -19,6 +19,7 @@ interface RemoteDataSource {
     fun updatePasswordsList(newPasswordList: List<PasswordModel>): Flow<DatabaseResponse>
     fun deletePassword(passwordId: String): Flow<Either<ApiError, Unit>>
     suspend fun deleteAccount(): Flow<Either<ApiError, Unit>>
+    suspend fun changePassword(oldPassword: String, newPassword: String): Flow<Either<ApiError, Unit>>
 
     fun getNotes(): Flow<Either<ApiError, List<NoteModel>>>
     fun createNote(noteModel: NoteModel): Flow<Either<ApiError, NoteModel>>

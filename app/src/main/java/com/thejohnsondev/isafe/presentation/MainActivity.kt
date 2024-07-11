@@ -111,4 +111,4 @@ private fun shouldUseDarkTheme(
 @Composable
 private fun shouldUseDynamicColor(
     state: MainActivityViewModel.State,
-): Boolean = state.settingsConfig?.useDynamicColor ?: false
+): Boolean = state.settingsConfig?.useDynamicColor ?: true
