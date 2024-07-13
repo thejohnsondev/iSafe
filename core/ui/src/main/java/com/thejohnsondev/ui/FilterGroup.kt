@@ -4,24 +4,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
-import com.thejohnsondev.designsystem.Size32
-import com.thejohnsondev.designsystem.Size42
+import com.thejohnsondev.designsystem.Size24
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Text14
 
@@ -35,15 +35,17 @@ fun FilterGroup(
         mutableStateOf(defaultSelected)
     }
 
-    Row(
+    LazyRow(
         modifier = Modifier
             .padding(horizontal = Size8)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceAround
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        horizontalArrangement = Arrangement.Start
     ) {
-        filters.forEach {
+        items(filters) {
             Chip(title = it, selected = selectedFilter.value) {
                 selectedFilter.value = it
+                onFilterClick(it)
             }
         }
     }
@@ -66,25 +68,22 @@ fun Chip(
 
     Box(modifier = Modifier
         .padding(horizontal = Size8, vertical = Size8)
-        .height(Size42)
+        .wrapContentHeight()
         .clip(CircleShape)
         .background(background)
         .clickable {
             onSelected(title)
         }) {
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
             Text(
                 modifier = Modifier.padding(
-                    vertical = Size12,
-                    horizontal = if (isSelected) Size32 else Size16
-                ), text = title, color = contentColor, fontSize = Text14
+                    vertical = Size8, horizontal = if (isSelected) Size24 else Size16
+                ),
+                text = title,
+                color = contentColor,
+                fontSize = Text14,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
-        }
-
     }
 }
 

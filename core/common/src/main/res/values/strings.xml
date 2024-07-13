@@ -47,7 +47,7 @@
     <string name="note">Note</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
-    <string name="all">All\n</string>
+    <string name="all">All</string>
     <string name="bank_accounts">Bank Accounts</string>
     <string name="copy">Copy</string>
     <string name="visibility">Visibility</string>
