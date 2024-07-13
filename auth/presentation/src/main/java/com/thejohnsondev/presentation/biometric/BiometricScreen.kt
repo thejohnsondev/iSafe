@@ -33,7 +33,7 @@ fun BiometricScreen(
     onBiometricSuccess: () -> Unit,
 ) {
     val scanTitle = stringResource(id = R.string.scan_to_unlock)
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = true) {
         showBiometricPrompt(
             parentActivity = parentActivity,
             title = scanTitle,
