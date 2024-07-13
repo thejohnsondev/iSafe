@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
@@ -110,11 +111,8 @@ fun AddNoteScreen(
             state = state.value,
             titleFocusRequester = titleFocusRequester,
             descriptionFocusRequester = descriptionFocusRequester,
-            onEnterTitle = { title ->
-                viewModel.perform(AddNoteViewModel.Action.EnterTitle(title))
-            },
-            onEnterDescription = { description ->
-                viewModel.perform(AddNoteViewModel.Action.EnterDescription(description))
+            onAction = { action ->
+                viewModel.perform(action)
             }
         )
     }
@@ -122,14 +120,12 @@ fun AddNoteScreen(
 
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddNoteContent(
     state: AddNoteViewModel.State,
     titleFocusRequester: FocusRequester,
     descriptionFocusRequester: FocusRequester,
-    onEnterTitle: (String) -> Unit,
-    onEnterDescription: (String) -> Unit
+    onAction: (AddNoteViewModel.Action) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -153,7 +149,7 @@ fun AddNoteContent(
                     ),
                 value = state.titleState,
                 onValueChanged = { title ->
-                    onEnterTitle(title)
+                    onAction(AddNoteViewModel.Action.EnterTitle(title))
                 },
                 hint = stringResource(com.thejohnsondev.common.R.string.title),
                 focusRequester = titleFocusRequester,
@@ -172,7 +168,7 @@ fun AddNoteContent(
                     .imePadding(),
                 value = state.descriptionState,
                 onValueChanged = { description ->
-                    onEnterDescription(description)
+                    onAction(AddNoteViewModel.Action.EnterDescription(description))
                 },
                 hint = stringResource(com.thejohnsondev.common.R.string.note),
                 textColor = MaterialTheme.colorScheme.onSurface,
@@ -188,37 +184,22 @@ fun AddNoteContent(
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@PreviewLightDark
 @Composable
-private fun AddNoteScreenPreviewEmptyLight() {
+private fun AddNoteScreenPreviewEmpty() {
     ISafeTheme {
         AddNoteContent(
             state = AddNoteViewModel.State(),
             titleFocusRequester = FocusRequester(),
             descriptionFocusRequester = FocusRequester(),
-            onEnterTitle = {},
-            onEnterDescription = {}
+            onAction = {}
         )
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@PreviewLightDark
 @Composable
-private fun AddNoteScreenPreviewEmptyDark() {
-    ISafeTheme {
-        AddNoteContent(
-            state = AddNoteViewModel.State(),
-            titleFocusRequester = FocusRequester(),
-            descriptionFocusRequester = FocusRequester(),
-            onEnterTitle = {},
-            onEnterDescription = {}
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun AddNoteScreenPreviewWithDataLight() {
+private fun AddNoteScreenPreviewWithData() {
     ISafeTheme {
         AddNoteContent(
             state = AddNoteViewModel.State(
@@ -227,25 +208,7 @@ private fun AddNoteScreenPreviewWithDataLight() {
             ),
             titleFocusRequester = FocusRequester(),
             descriptionFocusRequester = FocusRequester(),
-            onEnterTitle = {},
-            onEnterDescription = {}
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun AddNoteScreenPreviewWithDataDark() {
-    ISafeTheme {
-        AddNoteContent(
-            state = AddNoteViewModel.State(
-                titleState = "Some title",
-                descriptionState = "Some long description lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum"
-            ),
-            titleFocusRequester = FocusRequester(),
-            descriptionFocusRequester = FocusRequester(),
-            onEnterTitle = {},
-            onEnterDescription = {}
+            onAction = {}
         )
     }
 }

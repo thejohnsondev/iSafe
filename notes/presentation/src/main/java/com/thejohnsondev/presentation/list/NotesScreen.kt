@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.R
 import com.thejohnsondev.common.toast
@@ -160,9 +161,9 @@ fun StatusBarColor() {
 }
 
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@PreviewLightDark
 @Composable
-fun NotesScreenPreviewWithNotesLight() {
+fun NotesScreenPreviewWithNotes() {
     ISafeTheme {
         NotesContent(
             screenState = NotesViewModel.State(
@@ -184,31 +185,7 @@ fun NotesScreenPreviewWithNotesLight() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun NotesScreenPreviewWithNotesDark() {
-    ISafeTheme {
-        NotesContent(
-            screenState = NotesViewModel.State(
-                loadingState = LoadingState.Loaded,
-                notesList = listOf(
-                    NoteModel(
-                        id = "1",
-                        title = "Note 1",
-                        description = "Description 1",
-                        lastEdit = "1711195873"
-                    )
-                )
-            ),
-            state = rememberLazyListState(),
-            onNoteClick = {
-
-            }
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@PreviewLightDark
 @Composable
 fun NotesScreenPreviewEmptyLight() {
     ISafeTheme {
@@ -225,42 +202,10 @@ fun NotesScreenPreviewEmptyLight() {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+
+@PreviewLightDark
 @Composable
-fun NotesScreenPreviewEmptyDark() {
-    ISafeTheme {
-        NotesContent(
-            screenState = NotesViewModel.State(
-                loadingState = LoadingState.Loaded,
-                notesList = listOf()
-            ),
-            state = rememberLazyListState(),
-            onNoteClick = {
-
-            }
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-fun NotesScreenPreviewLoadingLight() {
-    ISafeTheme {
-        NotesContent(
-            screenState = NotesViewModel.State(
-                loadingState = LoadingState.Loading
-            ),
-            state = rememberLazyListState(),
-            onNoteClick = {
-
-            }
-        )
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun NotesScreenPreviewLoadingDark() {
+fun NotesScreenPreviewLoading() {
     ISafeTheme {
         NotesContent(
             screenState = NotesViewModel.State(
