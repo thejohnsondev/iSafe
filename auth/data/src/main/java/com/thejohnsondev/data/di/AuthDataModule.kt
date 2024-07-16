@@ -1,5 +1,6 @@
 package com.thejohnsondev.data.di
 
+import com.thejohnsondev.common.key_utils.KeyUtils
 import com.thejohnsondev.data.AuthRepository
 import com.thejohnsondev.data.AuthRepositoryImpl
 import com.thejohnsondev.data.GenerateKeyRepository
@@ -24,19 +25,22 @@ object AuthDataModule {
     fun provideAuthRepository(
         @DotNetRemoteDataSource remoteDataSource: RemoteDataSource,
         localDataSource: LocalDataSource,
-        dataStore: DataStore
+        dataStore: DataStore,
+        keyUtils: KeyUtils
     ): AuthRepository =
         AuthRepositoryImpl(
             remoteDataSource,
             localDataSource,
             dataStore,
+            keyUtils
         )
 
     @Singleton
     @Provides
     fun provideGenerateKeyRepository(
-        coroutineScope: CoroutineScope
-    ): GenerateKeyRepository = GenerateKeyRepositoryImpl(coroutineScope)
+        coroutineScope: CoroutineScope,
+        keyUtils: KeyUtils
+    ): GenerateKeyRepository = GenerateKeyRepositoryImpl(coroutineScope, keyUtils)
 
 
 }

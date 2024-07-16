@@ -1,9 +1,9 @@
 package com.thejohnsondev.presentation
 
 import com.thejohnsondev.common.EMPTY
+import com.thejohnsondev.common.key_utils.KeyUtils
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.common.combine
-import com.thejohnsondev.common.encryptModel
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.domain.AddEditPasswordUseCases
 import com.thejohnsondev.model.AdditionalField
@@ -18,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditPasswordViewModel @Inject constructor(
     private val useCases: AddEditPasswordUseCases,
-    private val dataStore: DataStore
+    private val dataStore: DataStore,
+    private val keyUtils: KeyUtils
 ) : BaseViewModel() {
 
     private val _organization = MutableStateFlow(EMPTY)
@@ -145,7 +146,7 @@ class AddEditPasswordViewModel @Inject constructor(
             System.currentTimeMillis().toString(),
             _additionalFields.value.onEach { it.id = null }
         )
-        val encryptedPasswordModel = passwordModel.encryptModel(dataStore.getUserKey())
+        val encryptedPasswordModel = keyUtils.encryptPasswordModel(passwordModel, dataStore.getUserKey())
         if (_isEdit.value) {
             useCases.updatePassword(encryptedPasswordModel).first().fold(
                 ifLeft = { handleError(it) },

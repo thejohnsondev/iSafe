@@ -1,9 +1,9 @@
 package com.thejohnsondev.presentation
 
 
+import com.thejohnsondev.common.key_utils.KeyUtils
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.common.combine
-import com.thejohnsondev.common.decryptModel
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.BankAccountModel
 import com.thejohnsondev.model.DatabaseResponse
@@ -19,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class VaultViewModel @Inject constructor(
     private val useCases: VaultUseCases,
-    private val dataStore: DataStore
+    private val dataStore: DataStore,
+    private val keyUtils: KeyUtils
 ) : BaseViewModel() {
 
     private val _allPasswordsList = MutableStateFlow<List<PasswordModel>>(emptyList())
@@ -156,7 +157,7 @@ class VaultViewModel @Inject constructor(
                 ifLeft = ::handleError,
                 ifRight = {
                     val decryptedPasswordList = it.map {
-                        it.decryptModel(dataStore.getUserKey())
+                        keyUtils.decryptPasswordModel(it, dataStore.getUserKey())
                     }.sortedByDescending { it.lastEdit }
                     handlePasswordsList(decryptedPasswordList)
                     _passwordsListFetched.emit(decryptedPasswordList)

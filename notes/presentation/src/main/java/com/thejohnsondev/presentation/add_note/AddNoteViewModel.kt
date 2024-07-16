@@ -1,11 +1,10 @@
 package com.thejohnsondev.presentation.add_note
 
 import com.thejohnsondev.common.EMPTY
+import com.thejohnsondev.common.key_utils.KeyUtils
 import com.thejohnsondev.common.base.BaseViewModel
-import com.thejohnsondev.common.encryptModel
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.domain.AddNoteUseCases
-import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.OneTimeEvent
@@ -18,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddNoteViewModel @Inject constructor(
     private val useCases: AddNoteUseCases,
-    private val dataStore: DataStore
+    private val dataStore: DataStore,
+    private val keyUtils: KeyUtils
 ) : BaseViewModel() {
 
     private val _noteId = MutableStateFlow<String?>(null)
@@ -78,7 +78,7 @@ class AddNoteViewModel @Inject constructor(
             description = _descriptionState.value,
             lastEdit = System.currentTimeMillis().toString()
         )
-        val encryptedNote = note.encryptModel(dataStore.getUserKey())
+        val encryptedNote = keyUtils.encryptNoteModel(note, dataStore.getUserKey())
         if (_isEdit.value) {
             useCases.updateNote(encryptedNote).first().fold(
                 ifLeft = ::handleError,

@@ -1,44 +1,60 @@
 package com.thejohnsondev.presentation
 
-import com.thejohnsondev.data.FakeAuthRepository
+import arrow.core.Either
+import com.thejohnsondev.data.AuthRepository
 import com.thejohnsondev.data.FakeSettingsRepository
 import com.thejohnsondev.datastore.FakeDataStore
+import com.thejohnsondev.domain.ChangePasswordUseCase
 import com.thejohnsondev.domain.DeleteAccountUseCase
 import com.thejohnsondev.domain.GetSettingsConfigFlowUseCase
 import com.thejohnsondev.domain.GetUserEmailUseCase
 import com.thejohnsondev.domain.LogoutUseCase
 import com.thejohnsondev.domain.SettingsUseCases
 import com.thejohnsondev.domain.UpdateSettingsUseCase
+import com.thejohnsondev.model.HttpError
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.settings.DarkThemeConfig
 import com.thejohnsondev.model.settings.GeneralSettings
 import com.thejohnsondev.model.settings.PrivacySettings
 import com.thejohnsondev.model.settings.ThemeBrand
-import kotlinx.coroutines.delay
+import com.thejohnsondev.test.MainDispatcherRule
+import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
+import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoRule
 
 class SettingsViewModelTest {
 
     @get:Rule
+    var mockitoRule: MockitoRule = MockitoJUnit.rule()
+
+    @get:Rule
     val dispatcherRule = MainDispatcherRule()
 
-    private val useCases by lazy {
-        SettingsUseCases(
-            LogoutUseCase(FakeAuthRepository()),
-            DeleteAccountUseCase(FakeAuthRepository()),
-            GetUserEmailUseCase(FakeDataStore()),
-            GetSettingsConfigFlowUseCase(FakeSettingsRepository()),
-            UpdateSettingsUseCase(FakeSettingsRepository())
-        )
-    }
+    private val mockAuthRepository = Mockito.mock(AuthRepository::class.java)
+
+    private val useCases = SettingsUseCases(
+        LogoutUseCase(mockAuthRepository),
+        DeleteAccountUseCase(mockAuthRepository),
+        ChangePasswordUseCase(mockAuthRepository),
+        GetUserEmailUseCase(FakeDataStore()),
+        GetSettingsConfigFlowUseCase(FakeSettingsRepository()),
+        UpdateSettingsUseCase(FakeSettingsRepository())
+    )
+
     private lateinit var viewModel: SettingsViewModel
 
     @Before
     fun setup() {
+        MockitoAnnotations.openMocks(this)
         viewModel = SettingsViewModel(useCases)
     }
 
@@ -123,14 +139,57 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `delete account sends success navigation event`() {
+    fun `delete account sends success navigation event`() = runTest {
+        `when`(mockAuthRepository.deleteAccount()).thenReturn(flowOf(Either.Right(Unit)))
+
         viewModel.perform(SettingsViewModel.Action.DeleteAccount)
 
-        assertEquals(OneTimeEvent.SuccessNavigation::class, viewModel.getEventFlow().value::class)
+        assertTrue(viewModel.getEventFlow().value is OneTimeEvent.SuccessNavigation)
     }
 
     @Test
-    fun `logout sends success navigation event`() {
+    fun `delete account sends error message`() = runTest {
+        `when`(mockAuthRepository.deleteAccount()).thenReturn(
+            flowOf(
+                Either.Left(
+                    HttpError(
+                        500,
+                        "Error deleting account"
+                    )
+                )
+            )
+        )
+
+        viewModel.perform(SettingsViewModel.Action.DeleteAccount)
+
+        assertTrue(viewModel.getEventFlow().value is OneTimeEvent.InfoToast)
+    }
+
+    @Test
+    fun `change password returns success`() = runTest {
+        `when`(
+            mockAuthRepository.changePassword(
+                "oldPassword",
+                "newPassword"
+            )
+        ).thenReturn(
+            flowOf(
+                Either.Right(Unit)
+            )
+        )
+
+        viewModel.perform(
+            SettingsViewModel.Action.ChangePassword(
+                "oldPassword",
+                "newPassword"
+            )
+        )
+
+        assertTrue(viewModel.getEventFlow().value is OneTimeEvent.InfoToast)
+    }
+
+    @Test
+    fun `logout sends success navigation event`() = runTest {
         viewModel.perform(SettingsViewModel.Action.Logout)
 
         assertEquals(OneTimeEvent.SuccessNavigation::class, viewModel.getEventFlow().value::class)

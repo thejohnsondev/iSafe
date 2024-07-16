@@ -67,6 +67,7 @@ dependencies {
     testImplementation(project(":settings:data"))
     testImplementation(project(":auth:data"))
     testImplementation(project(":core:datastore"))
+    testImplementation(project(":core:test"))
 
     // Compose
     implementation(libs.androidx.activity.compose)

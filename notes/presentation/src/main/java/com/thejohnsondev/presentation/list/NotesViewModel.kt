@@ -1,22 +1,24 @@
 package com.thejohnsondev.presentation.list
 
+import androidx.lifecycle.viewModelScope
+import com.thejohnsondev.common.key_utils.KeyUtils
 import com.thejohnsondev.common.base.BaseViewModel
-import com.thejohnsondev.common.decryptModel
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.domain.NotesUseCases
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.NoteModel
-import com.thejohnsondev.model.UserNotesResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(
     private val useCases: NotesUseCases,
-    private val dataStore: DataStore
+    private val dataStore: DataStore,
+    private val keyUtils: KeyUtils
 ) : BaseViewModel() {
 
     private val _notesList = MutableStateFlow<List<NoteModel>>(emptyList())
@@ -25,7 +27,7 @@ class NotesViewModel @Inject constructor(
         _loadingState,
         _notesList,
         ::mergeSources
-    )
+    ).stateIn(viewModelScope, SharingStarted.Eagerly, State())
 
     fun perform(action: Action) {
         when (action) {
@@ -44,7 +46,7 @@ class NotesViewModel @Inject constructor(
 
     private fun handleNotesList(notesList: List<NoteModel>) = launch {
         val decryptedNotes = notesList.map {
-            it.decryptModel(dataStore.getUserKey())
+            keyUtils.decryptNoteModel(it, dataStore.getUserKey())
         }.sortedByDescending {
             it.lastEdit
         }
