@@ -52,6 +52,7 @@ import com.thejohnsondev.model.BankAccountModel
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordModel
+import com.thejohnsondev.ui.ConfirmAlertDialog
 import com.thejohnsondev.ui.EmptyListPlaceHolder
 import com.thejohnsondev.ui.FilterGroup
 import com.thejohnsondev.ui.ISafeLoading
@@ -190,7 +191,7 @@ fun VaultContent(
                 )
             }
         }
-
+        Dialogs(state, onAction)
     }
 }
 
@@ -262,7 +263,7 @@ fun ItemsList(
                         onCopyData(title)
                     },
                     onDeleteClick = { password ->
-                        onAction(VaultViewModel.Action.DeletePassword(password))
+                        onAction(VaultViewModel.Action.ShowHideConfirmDelete(Pair(true, password)))
                     },
                     onEditClick = { password ->
                         onEditPasswordClick(password)
@@ -280,6 +281,30 @@ fun ItemsList(
         item {
             Spacer(modifier = Modifier.padding(bottom = Size72))
         }
+    }
+}
+
+@Composable
+private fun Dialogs(
+    state: VaultViewModel.State,
+    onAction: (VaultViewModel.Action) -> Unit
+) {
+    if (state.deletePasswordPair.first) {
+        ConfirmAlertDialog(
+            title = stringResource(R.string.delete_password),
+            message = stringResource(R.string.delete_password_message),
+            confirmButtonText = stringResource(R.string.delete),
+            cancelButtonText = stringResource(R.string.cancel),
+            onConfirm = {
+                state.deletePasswordPair.second?.let {
+                    onAction(VaultViewModel.Action.ShowHideConfirmDelete(Pair(false, null)))
+                    onAction(VaultViewModel.Action.DeletePassword(it))
+                }
+            },
+            onCancel = {
+                onAction(VaultViewModel.Action.ShowHideConfirmDelete(Pair(false, null)))
+            }
+        )
     }
 }
 

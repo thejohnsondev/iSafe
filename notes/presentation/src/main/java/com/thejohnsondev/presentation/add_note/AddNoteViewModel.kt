@@ -1,8 +1,8 @@
 package com.thejohnsondev.presentation.add_note
 
 import com.thejohnsondev.common.EMPTY
-import com.thejohnsondev.common.key_utils.KeyUtils
 import com.thejohnsondev.common.base.BaseViewModel
+import com.thejohnsondev.common.key_utils.KeyUtils
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.domain.AddNoteUseCases
 import com.thejohnsondev.model.LoadingState
@@ -25,13 +25,15 @@ class AddNoteViewModel @Inject constructor(
     private val _titleState = MutableStateFlow("")
     private val _descriptionState = MutableStateFlow("")
     private val _isEdit = MutableStateFlow(false)
+    private val _showHideConfirmDelete = MutableStateFlow(false)
 
     val state = combine(
         _loadingState,
         _titleState,
         _descriptionState,
+        _showHideConfirmDelete,
         _isEdit,
-        ::mergeSources
+        ::State
     )
 
     fun perform(action: Action) {
@@ -41,7 +43,12 @@ class AddNoteViewModel @Inject constructor(
             is Action.SaveNote -> saveNote()
             is Action.SetNoteModelForEdit -> setNoteModelForEdit(action.noteModel)
             is Action.DeleteNote -> deleteNote()
+            is Action.ShowHideConfirmDelete -> showHideConfirmDelete(action.show)
         }
+    }
+
+    private fun showHideConfirmDelete(show: Boolean) = launch {
+        _showHideConfirmDelete.emit(show)
     }
 
     private fun deleteNote() = launchLoading {
@@ -115,6 +122,7 @@ class AddNoteViewModel @Inject constructor(
         class EnterTitle(val title: String) : Action()
         class EnterDescription(val description: String) : Action()
         class SetNoteModelForEdit(val noteModel: NoteModel) : Action()
+        class ShowHideConfirmDelete(val show: Boolean) : Action()
         object SaveNote : Action()
         object DeleteNote : Action()
     }
@@ -123,6 +131,7 @@ class AddNoteViewModel @Inject constructor(
         val loadingState: LoadingState = LoadingState.Loaded,
         val titleState: String = EMPTY,
         val descriptionState: String = EMPTY,
+        val showConfirmDelete: Boolean = false,
         val isEdit: Boolean = false
     )
 

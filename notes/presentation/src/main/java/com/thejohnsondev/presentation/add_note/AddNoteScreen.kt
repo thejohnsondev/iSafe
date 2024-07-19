@@ -39,6 +39,7 @@ import com.thejohnsondev.designsystem.Text22
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.OneTimeEvent
+import com.thejohnsondev.ui.ConfirmAlertDialog
 import com.thejohnsondev.ui.HintTextField
 import com.thejohnsondev.ui.ISafeLoading
 import com.thejohnsondev.ui.ScaffoldConfig
@@ -99,7 +100,7 @@ fun AddNoteScreen(
                 goBack()
             },
             onTopAppBarDeleteClick = {
-                viewModel.perform(AddNoteViewModel.Action.DeleteNote)
+                viewModel.perform(AddNoteViewModel.Action.ShowHideConfirmDelete(true))
             },
             snackBarHostState = snackbarHostState,
         )
@@ -181,9 +182,31 @@ fun AddNoteContent(
             )
 
         }
+        Dialogs(state = state, onAction = onAction)
     }
 }
 
+@Composable
+private fun Dialogs(
+    state: AddNoteViewModel.State,
+    onAction: (AddNoteViewModel.Action) -> Unit
+) {
+    if (state.showConfirmDelete) {
+        ConfirmAlertDialog(
+            title = stringResource(com.thejohnsondev.common.R.string.delete_note),
+            message = stringResource(com.thejohnsondev.common.R.string.delete_note_message),
+            confirmButtonText = stringResource(com.thejohnsondev.common.R.string.delete),
+            cancelButtonText = stringResource(com.thejohnsondev.common.R.string.cancel),
+            onConfirm = {
+                onAction(AddNoteViewModel.Action.ShowHideConfirmDelete(false))
+                onAction(AddNoteViewModel.Action.DeleteNote)
+            },
+            onCancel = {
+                onAction(AddNoteViewModel.Action.ShowHideConfirmDelete(false))
+            }
+        )
+    }
+}
 @PreviewLightDark
 @Composable
 private fun AddNoteScreenPreviewEmpty() {

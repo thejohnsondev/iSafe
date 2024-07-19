@@ -1,9 +1,9 @@
 package com.thejohnsondev.presentation
 
 
-import com.thejohnsondev.common.key_utils.KeyUtils
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.common.combine
+import com.thejohnsondev.common.key_utils.KeyUtils
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.BankAccountModel
 import com.thejohnsondev.model.DatabaseResponse
@@ -30,6 +30,8 @@ class VaultViewModel @Inject constructor(
     private val _bankAccountsList = MutableStateFlow<List<BankAccountModel>>(emptyList())
     private val _isSearching = MutableStateFlow(false)
     private val _isReordering = MutableStateFlow(false)
+    private val _showHideConfirmDelete =
+        MutableStateFlow<Pair<Boolean, PasswordModel?>>(Pair(false, null))
     private val _settingsConfig = useCases.getSettingsConfig.invoke()
 
     val state = combine(
@@ -39,6 +41,7 @@ class VaultViewModel @Inject constructor(
         _isSearching,
         _isReordering,
         _settingsConfig,
+        _showHideConfirmDelete,
         ::mergeSources
     )
 
@@ -51,7 +54,12 @@ class VaultViewModel @Inject constructor(
             is Action.ToggleReordering -> toggleReordering()
             is Action.Reorder -> reorder(action.from, action.to)
             is Action.SaveNewOrderedList -> saveNewOrderedList()
+            is Action.ShowHideConfirmDelete -> showHideConfirmDelete(action.deletePasswordPair)
         }
+    }
+
+    private fun showHideConfirmDelete(deletePasswordPair: Pair<Boolean, PasswordModel?>) = launch {
+        _showHideConfirmDelete.emit(deletePasswordPair)
     }
 
     private fun saveNewOrderedList() = launch {
@@ -186,14 +194,16 @@ class VaultViewModel @Inject constructor(
         bankAccountsList: List<BankAccountModel>,
         isSearching: Boolean,
         isReordering: Boolean,
-        settingsConfig: SettingsConfig
+        settingsConfig: SettingsConfig,
+        showConfirmDelete: Pair<Boolean, PasswordModel?>
     ): State = State(
         loadingState,
         passwordsList,
         bankAccountsList,
         isSearching,
         isReordering,
-        settingsConfig.generalSettings.isDeepSearchEnabled
+        settingsConfig.generalSettings.isDeepSearchEnabled,
+        showConfirmDelete
     )
 
     sealed class Action {
@@ -204,6 +214,7 @@ class VaultViewModel @Inject constructor(
         object StopSearching : Action()
         class Reorder(val from: Int, val to: Int): Action()
         object SaveNewOrderedList: Action()
+        class ShowHideConfirmDelete(val deletePasswordPair: Pair<Boolean, PasswordModel?>) : Action()
     }
 
     data class State(
@@ -212,7 +223,8 @@ class VaultViewModel @Inject constructor(
         val bankAccountsList: List<BankAccountModel> = emptyList(),
         val isSearching: Boolean = false,
         val isReordering: Boolean = false,
-        val isDeepSearchEnabled: Boolean = false
+        val isDeepSearchEnabled: Boolean = false,
+        val deletePasswordPair: Pair<Boolean, PasswordModel?> = Pair(false, null)
     )
 
 }
