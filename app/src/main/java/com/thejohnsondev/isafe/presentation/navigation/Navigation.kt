@@ -12,6 +12,7 @@ import com.thejohnsondev.presentation.nagivation.checkAuthStateRoute
 import com.thejohnsondev.presentation.nagivation.checkAuthStateScreen
 import com.thejohnsondev.presentation.nagivation.loginScreen
 import com.thejohnsondev.presentation.nagivation.navigateToLogin
+import com.thejohnsondev.presentation.nagivation.navigateToSignUp
 import com.thejohnsondev.presentation.nagivation.signUpScreen
 
 @Composable
@@ -33,7 +34,7 @@ fun Navigation(
                 navController.navigate(Screens.HomeScreen.name)
             },
             goBack = {
-                navController.popBackStack()
+                navController.navigateToSignUp()
             }
         )
         signUpScreen(

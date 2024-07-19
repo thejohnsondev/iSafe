@@ -162,14 +162,12 @@ class DataStoreImpl @Inject constructor(
 
     override suspend fun setPrivacySettings(privacySettings: PrivacySettings) {
         putBoolean(UNLOCK_WITH_BIOMETRICS, privacySettings.isUnlockWithBiometricEnabled)
-        Log.e("TAG", "-- put: ${privacySettings.isBlockScreenshotsEnabled} --")
         putBoolean(BLOCK_SCREENSHOTS, privacySettings.isBlockScreenshotsEnabled)
     }
 
     override fun getPrivacySettings(): PrivacySettings {
         val isUnlockWithBiometrics = getBoolean(UNLOCK_WITH_BIOMETRICS)
         val isBlockScreenshots = getBoolean(BLOCK_SCREENSHOTS)
-        Log.e("TAG", "-- get: $isBlockScreenshots --")
         return PrivacySettings(
             isUnlockWithBiometricEnabled = isUnlockWithBiometrics,
             isBlockScreenshotsEnabled = isBlockScreenshots

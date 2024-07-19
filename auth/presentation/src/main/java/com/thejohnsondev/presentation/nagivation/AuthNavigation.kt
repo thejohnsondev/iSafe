@@ -24,14 +24,19 @@ fun NavController.navigateToCheckAuthState() {
 }
 
 fun NavController.navigateToLogin() {
-    navigate(loginRoute)
+    navigate(
+        loginRoute,
+        NavOptions.Builder()
+            .setPopUpTo(loginRoute, true)
+            .build()
+    )
 }
 
 fun NavController.navigateToSignUp() {
     navigate(
         signUpRoute,
         NavOptions.Builder()
-            .setPopUpTo(signUpRoute, false)
+            .setPopUpTo(signUpRoute, true)
             .build()
     )
 }
