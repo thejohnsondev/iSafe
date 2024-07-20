@@ -56,7 +56,7 @@ fun HomeScaffold(
                             Text(
                                 text = it,
                                 style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.SemiBold,
                             )
                         }
                     },

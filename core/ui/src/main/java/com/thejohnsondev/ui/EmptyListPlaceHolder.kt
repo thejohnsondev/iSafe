@@ -42,7 +42,7 @@ fun EmptyListPlaceHolder(
             Text(
                 text = stringResource(com.thejohnsondev.common.R.string.nothing_found),
                 style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

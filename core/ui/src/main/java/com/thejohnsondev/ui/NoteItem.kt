@@ -50,7 +50,7 @@ fun NoteItem(
                 ),
                 text = note.title,
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2
@@ -76,7 +76,7 @@ fun NoteItem(
                         id = com.thejohnsondev.common.R.string.last_edit,
                         note.lastEdit.toLongOrNull()?.getTimeFormatted(NOTE_TIME_FORMAT).orEmpty()
                     ),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSecondary
                 )
             }

@@ -180,7 +180,7 @@ fun PasswordItem(
                                 .fillMaxWidth(Percent80),
                             text = item.organization,
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.SemiBold,
                             color = if (isReordering) draggingContentColor else contentColor,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1

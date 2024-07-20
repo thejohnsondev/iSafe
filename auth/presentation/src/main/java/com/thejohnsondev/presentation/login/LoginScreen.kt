@@ -224,7 +224,7 @@ fun FieldsSection(
                     .padding(Size16),
                 text = stringResource(com.thejohnsondev.common.R.string.log_in),
                 style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(Size8))
@@ -286,7 +286,7 @@ fun FieldsSection(
                             onGoBack()
                         },
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }

@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import com.thejohnsondev.common.R
+import com.thejohnsondev.designsystem.poppinsFontFamily
 
 @Composable
 fun getPrivacyPolicyAcceptText(): AnnotatedString {
@@ -18,7 +19,8 @@ fun getPrivacyPolicyAcceptText(): AnnotatedString {
             style = SpanStyle(
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Normal,
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                fontFamily = poppinsFontFamily
             ),
         ) {
             append(stringResource(R.string.accept_and_agree))
@@ -29,7 +31,8 @@ fun getPrivacyPolicyAcceptText(): AnnotatedString {
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                textDecoration = TextDecoration.Underline
+                textDecoration = TextDecoration.Underline,
+                fontFamily = poppinsFontFamily
             )
         ) {
             pushStringAnnotation(tag = TERMS_OF_USE_TAG, annotation = "click")
@@ -39,7 +42,8 @@ fun getPrivacyPolicyAcceptText(): AnnotatedString {
             style = SpanStyle(
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Normal,
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                fontFamily = poppinsFontFamily
             ),
         ) {
             append(" ")
@@ -51,7 +55,8 @@ fun getPrivacyPolicyAcceptText(): AnnotatedString {
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                textDecoration = TextDecoration.Underline
+                textDecoration = TextDecoration.Underline,
+                fontFamily = poppinsFontFamily
             )
         ) {
             pushStringAnnotation(tag = PRIVACY_POLICY_TAG, annotation = "click")

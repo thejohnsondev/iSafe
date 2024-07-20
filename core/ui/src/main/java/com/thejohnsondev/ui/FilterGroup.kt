@@ -80,8 +80,7 @@ fun Chip(
                 ),
                 text = title,
                 color = contentColor,
-                fontSize = Text14,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center
             )
     }

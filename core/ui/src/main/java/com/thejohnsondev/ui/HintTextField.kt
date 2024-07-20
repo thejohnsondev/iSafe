@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.TextUnit
 import com.thejohnsondev.designsystem.Text20
+import com.thejohnsondev.designsystem.poppinsFontFamily
 
 @Composable
 fun HintTextField(
@@ -50,6 +51,7 @@ fun HintTextField(
             },
             textStyle = TextStyle(
                 color = textColor,
+                fontFamily = poppinsFontFamily,
                 fontSize = fontSize
             ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
@@ -69,7 +71,8 @@ fun HintTextField(
                 modifier = modifier,
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = fontSize
+                    fontSize = fontSize,
+                    fontFamily = poppinsFontFamily
                 )
             )
         }
