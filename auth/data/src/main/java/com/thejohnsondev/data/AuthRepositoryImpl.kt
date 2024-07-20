@@ -25,7 +25,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun singIn(email: String, password: String): Flow<Either<ApiError, AuthResponse>> {
         val encryptedEmail = keyUtils.encrypt(email, BuildConfig.AUTH_SECRET_KEY.toByteArray())
-        val encryptedPassword = keyUtils.encrypt(email, BuildConfig.AUTH_SECRET_KEY.toByteArray())
+        val encryptedPassword = keyUtils.encrypt(password, BuildConfig.AUTH_SECRET_KEY.toByteArray())
         return remoteDataSource.singIn(encryptedEmail, encryptedPassword)
     }
 
