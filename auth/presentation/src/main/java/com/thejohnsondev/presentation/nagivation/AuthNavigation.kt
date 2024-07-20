@@ -25,20 +25,22 @@ fun NavController.navigateToCheckAuthState() {
 
 fun NavController.navigateToLogin() {
     navigate(
-        loginRoute,
-        NavOptions.Builder()
-            .setPopUpTo(loginRoute, true)
-            .build()
-    )
+        loginRoute
+    ) {
+        popUpTo(loginRoute) {
+            inclusive = true
+        }
+    }
 }
 
 fun NavController.navigateToSignUp() {
     navigate(
-        signUpRoute,
-        NavOptions.Builder()
-            .setPopUpTo(signUpRoute, true)
-            .build()
-    )
+        signUpRoute
+    ) {
+        popUpTo(signUpRoute) {
+            inclusive = true
+        }
+    }
 }
 
 fun NavGraphBuilder.checkAuthStateScreen(
