@@ -30,7 +30,7 @@ class KeyUtilsImpl : KeyUtils {
     }
 
     override fun encrypt(input: String, key: ByteArray): String {
-        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
         val secretKey = SecretKeySpec(key, "AES")
         cipher.init(Cipher.ENCRYPT_MODE, secretKey)
         val encrypted = cipher.doFinal(input.toByteArray())
@@ -38,7 +38,7 @@ class KeyUtilsImpl : KeyUtils {
     }
 
     override fun decrypt(input: String, key: ByteArray): String {
-        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
         val secretKey = SecretKeySpec(key, "AES")
         cipher.init(Cipher.DECRYPT_MODE, secretKey)
         val plainText = cipher.doFinal(java.util.Base64.getDecoder().decode(input))
