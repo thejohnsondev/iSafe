@@ -18,8 +18,8 @@ android {
         applicationId = "com.thejohnsondev.isafe"
         minSdk = 29
         targetSdk = 34
-        versionCode = 12
-        versionName = "0.0.12"
+        versionCode = 13
+        versionName = "0.0.13"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
