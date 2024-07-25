@@ -14,11 +14,11 @@ class FakeKeyUtils: KeyUtils {
         return ByteArray(0)
     }
 
-    override fun encrypt(input: String, key: ByteArray): String {
+    override fun encrypt(input: String, key: ByteArray, iv: ByteArray?): String {
         return input
     }
 
-    override fun decrypt(input: String, key: ByteArray): String {
+    override fun decrypt(input: String, key: ByteArray, iv: ByteArray?): String {
         return input
     }
 

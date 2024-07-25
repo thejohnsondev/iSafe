@@ -9,6 +9,7 @@ plugins {
 }
 
 val authSecretKey: String = gradleLocalProperties(rootDir).getProperty("auth_secret_key")
+val authSecretIV: String = gradleLocalProperties(rootDir).getProperty("auth_secret_iv")
 
 android {
     namespace = "com.thejohnsondev.data"
@@ -20,6 +21,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
         buildConfigField("String", "AUTH_SECRET_KEY", authSecretKey)
+        buildConfigField("String", "AUTH_SECRET_IV", authSecretIV)
     }
 
     buildTypes {

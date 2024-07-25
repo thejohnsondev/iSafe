@@ -8,8 +8,8 @@ import java.io.File
 interface KeyUtils {
     fun generateKeyFBKDF(file: File): ByteArray
     fun generateKeyPBKDF(input: String): ByteArray
-    fun encrypt(input: String, key: ByteArray): String
-    fun decrypt(input: String, key: ByteArray): String
+    fun encrypt(input: String, key: ByteArray, iv: ByteArray? = null): String
+    fun decrypt(input: String, key: ByteArray, iv: ByteArray? = null): String
     fun encryptAdditionalFieldModel(
         additionalField: AdditionalField,
         key: ByteArray

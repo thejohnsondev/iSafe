@@ -1,5 +1,6 @@
 package com.thejohnsondev.data
 
+import android.util.Base64
 import arrow.core.Either
 import com.thejohnsondev.common.key_utils.KeyUtils
 import com.thejohnsondev.database.local_datasource.LocalDataSource
@@ -18,14 +19,30 @@ class AuthRepositoryImpl @Inject constructor(
     private val keyUtils: KeyUtils
 ) : AuthRepository {
     override suspend fun signUp(email: String, password: String): Flow<Either<ApiError, AuthResponse>> {
-        val encryptedEmail = keyUtils.encrypt(email, BuildConfig.AUTH_SECRET_KEY.toByteArray())
-        val encryptedPassword = keyUtils.encrypt(password, BuildConfig.AUTH_SECRET_KEY.toByteArray())
+        val encryptedEmail = keyUtils.encrypt(
+            email,
+            Base64.decode(BuildConfig.AUTH_SECRET_KEY.toByteArray(), Base64.NO_PADDING),
+            Base64.decode(BuildConfig.AUTH_SECRET_IV.toByteArray(), Base64.NO_PADDING),
+        )
+        val encryptedPassword = keyUtils.encrypt(
+            password,
+            Base64.decode(BuildConfig.AUTH_SECRET_KEY.toByteArray(), Base64.NO_PADDING),
+            Base64.decode(BuildConfig.AUTH_SECRET_IV.toByteArray(), Base64.NO_PADDING),
+        )
         return remoteDataSource.signUp(encryptedEmail, encryptedPassword)
     }
 
     override suspend fun singIn(email: String, password: String): Flow<Either<ApiError, AuthResponse>> {
-        val encryptedEmail = keyUtils.encrypt(email, BuildConfig.AUTH_SECRET_KEY.toByteArray())
-        val encryptedPassword = keyUtils.encrypt(password, BuildConfig.AUTH_SECRET_KEY.toByteArray())
+        val encryptedEmail = keyUtils.encrypt(
+            email,
+            Base64.decode(BuildConfig.AUTH_SECRET_KEY.toByteArray(), Base64.NO_PADDING),
+            Base64.decode(BuildConfig.AUTH_SECRET_IV.toByteArray(), Base64.NO_PADDING)
+        )
+        val encryptedPassword = keyUtils.encrypt(
+            password,
+            Base64.decode(BuildConfig.AUTH_SECRET_KEY.toByteArray(), Base64.NO_PADDING),
+            Base64.decode(BuildConfig.AUTH_SECRET_IV.toByteArray(), Base64.NO_PADDING)
+        )
         return remoteDataSource.singIn(encryptedEmail, encryptedPassword)
     }
 
@@ -47,8 +64,16 @@ class AuthRepositoryImpl @Inject constructor(
         newPassword: String
     ): Flow<Either<ApiError, Unit>> {
         return remoteDataSource.changePassword(
-            keyUtils.encrypt(oldPassword, BuildConfig.AUTH_SECRET_KEY.toByteArray()),
-            keyUtils.encrypt(newPassword, BuildConfig.AUTH_SECRET_KEY.toByteArray())
+            keyUtils.encrypt(
+                oldPassword,
+                Base64.decode(BuildConfig.AUTH_SECRET_KEY.toByteArray(), Base64.NO_PADDING),
+                Base64.decode(BuildConfig.AUTH_SECRET_IV.toByteArray(), Base64.NO_PADDING)
+            ),
+            keyUtils.encrypt(
+                newPassword,
+                Base64.decode(BuildConfig.AUTH_SECRET_KEY.toByteArray(), Base64.NO_PADDING),
+                Base64.decode(BuildConfig.AUTH_SECRET_IV.toByteArray(), Base64.NO_PADDING)
+            )
         )
     }
 }
