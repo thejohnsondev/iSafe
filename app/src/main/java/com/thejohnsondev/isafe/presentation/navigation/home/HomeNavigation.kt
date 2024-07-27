@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +33,10 @@ import com.thejohnsondev.ui.ScaffoldConfig
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeNavigation(rootNavController: NavController) {
+fun HomeNavigation(
+    windowSize: WindowWidthSizeClass,
+    rootNavController: NavController
+) {
     val navController = rememberNavController()
     val bottomBarState = rememberSaveable {
         (mutableStateOf(true))
@@ -50,6 +54,7 @@ fun HomeNavigation(rootNavController: NavController) {
         color = MaterialTheme.colorScheme.background
     ) {
         HomeScaffold(
+            windowSize = windowSize,
             scaffoldState = scaffoldState,
             navController = navController,
             bottomBarState = bottomBarState,

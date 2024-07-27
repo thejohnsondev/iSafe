@@ -58,7 +58,10 @@ fun Navigation(
         composable(
             route = Screens.HomeScreen.name
         ) {
-            HomeNavigation(rootNavController = navController)
+            HomeNavigation(
+                windowSize = windowSize.widthSizeClass,
+                rootNavController = navController
+            )
         }
     }
 }
