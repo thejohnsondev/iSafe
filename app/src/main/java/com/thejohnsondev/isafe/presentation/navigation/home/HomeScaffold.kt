@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -23,6 +24,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.PermanentDrawerSheet
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -45,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.thejohnsondev.common.R
 import com.thejohnsondev.designsystem.DrawerWidth
+import com.thejohnsondev.designsystem.RailWidth
 import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size32
@@ -80,6 +84,9 @@ fun HomeScaffold(
                     modifier = Modifier
                         .conditional(windowSize == WindowWidthSizeClass.Expanded) {
                             Modifier.padding(start = DrawerWidth)
+                        }
+                        .conditional(windowSize == WindowWidthSizeClass.Medium) {
+                            Modifier.padding(start = RailWidth)
                         },
                     title = {
                         scaffoldState.value.topAppBarTitle?.let {
@@ -257,8 +264,34 @@ fun HomeScaffold(
                 }
             }
             WindowWidthSizeClass.Medium -> {
-                // todo show nav rail
-                content(it)
+                NavigationRail(
+                    modifier = Modifier
+                        .width(RailWidth),
+                    containerColor = MaterialTheme.colorScheme.surfaceDim
+                ) {
+                    navigationItems.forEach {
+                        NavigationRailItem(
+                            icon = {
+                                Icon(
+                                    painter = painterResource(id = it.imgResId),
+                                    contentDescription = stringResource(it.titleRes)
+                                )
+                            },
+                            label = { Text(stringResource(it.titleRes)) },
+                            selected = selectedItemIndex.value == navigationItems.indexOf(it),
+                            onClick = {
+                                selectedItemIndex.value = navigationItems.indexOf(it)
+                                navController.navigate(it.route)
+                            }
+                        )
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .padding(start = RailWidth)
+                ) {
+                    content(it)
+                }
             }
             else -> {
                 content(it)

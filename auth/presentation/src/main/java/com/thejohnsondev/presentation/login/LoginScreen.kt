@@ -2,6 +2,7 @@ package com.thejohnsondev.presentation.login
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -35,6 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -76,6 +78,7 @@ import com.thejohnsondev.ui.ISafeLogo
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.TextField
 import com.thejohnsondev.ui.conditional
+import com.thejohnsondev.ui.utils.keyboardAsState
 
 @Composable
 fun LoginScreen(
@@ -113,6 +116,7 @@ fun LoginContent(
     val snackbarHostState = remember {
         SnackbarHostState()
     }
+    val isKeyboardOpened by keyboardAsState()
 
     LaunchedEffect(true) {
         viewModel.getEventFlow().collect {
@@ -168,7 +172,12 @@ fun LoginContent(
                             },
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        LogoSection()
+                        AnimatedVisibility(
+                            visible = !isKeyboardOpened) {
+                            Column {
+                                LogoSection()
+                            }
+                        }
                         FieldsSection(
                             context = context,
                             viewModel = viewModel,
