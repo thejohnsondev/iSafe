@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,6 +29,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -59,6 +61,8 @@ import com.thejohnsondev.designsystem.EqualRounded
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
 import com.thejohnsondev.designsystem.Size4
+import com.thejohnsondev.designsystem.Size580
+import com.thejohnsondev.designsystem.Size600
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Size86
 import com.thejohnsondev.designsystem.TopRounded
@@ -71,14 +75,17 @@ import com.thejohnsondev.ui.GlowPulsingBackground
 import com.thejohnsondev.ui.ISafeLogo
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.TextField
+import com.thejohnsondev.ui.conditional
 
 @Composable
 fun LoginScreen(
+    windowSize: WindowWidthSizeClass,
     viewModel: LoginViewModel,
     goToHome: () -> Unit,
     goBack: () -> Unit
 ) {
     LoginContent(
+        windowSize = windowSize,
         viewModel = viewModel,
         goToHome = goToHome,
         onGoBack = goBack
@@ -88,6 +95,7 @@ fun LoginScreen(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginContent(
+    windowSize: WindowWidthSizeClass,
     viewModel: LoginViewModel,
     goToHome: () -> Unit,
     onGoBack: () -> Unit
@@ -152,7 +160,12 @@ fun LoginContent(
                     Column(
                         modifier = Modifier
                             .padding(paddingValues)
-                            .scrollable(rememberScrollState(), Orientation.Vertical),
+                            .scrollable(rememberScrollState(), Orientation.Vertical)
+                            .conditional(windowSize != WindowWidthSizeClass.Compact) {
+                                Modifier
+                                    .width(Size600)
+                                    .align(Alignment.Center)
+                            },
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         LogoSection()
@@ -179,6 +192,7 @@ fun LoginContent(
                     ) {
                         LoginButtonSection(
                             screenState = screenState,
+                            windowSize = windowSize,
                             viewModel = viewModel,
                             keyboardController = keyboardController,
                             emailState = emailState,
@@ -297,13 +311,17 @@ fun FieldsSection(
 @Composable
 fun LoginButtonSection(
     screenState: State<LoginViewModel.State>,
+    windowSize: WindowWidthSizeClass,
     viewModel: LoginViewModel,
     keyboardController: SoftwareKeyboardController?,
     emailState: MutableState<String>,
     passwordState: MutableState<String>
 ) {
     Column(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            .conditional(windowSize != WindowWidthSizeClass.Compact) {
+                Modifier.width(Size580)
+            },
         verticalArrangement = Arrangement.Bottom) {
         RoundedButton(
             text = stringResource(id = com.thejohnsondev.common.R.string.log_in),

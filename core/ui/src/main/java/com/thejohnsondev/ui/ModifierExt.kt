@@ -22,6 +22,14 @@ import com.thejohnsondev.designsystem.Percent90
 
 enum class ButtonState { Pressed, Idle }
 
+fun Modifier.conditional(condition : Boolean, modifier : Modifier.() -> Modifier) : Modifier {
+    return if (condition) {
+        then(modifier(Modifier))
+    } else {
+        this
+    }
+}
+
 fun Modifier.bounceClick(minScale: Float = Percent90) = composed {
     var buttonState by remember { mutableStateOf(ButtonState.Idle) }
     val scale by animateFloatAsState(

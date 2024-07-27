@@ -1,5 +1,6 @@
 package com.thejohnsondev.presentation.nagivation
 
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -58,6 +59,7 @@ fun NavGraphBuilder.checkAuthStateScreen(
 }
 
 fun NavGraphBuilder.loginScreen(
+    windowSize: WindowWidthSizeClass,
     goToHome: () -> Unit,
     goBack: () -> Unit
 ) {
@@ -66,6 +68,7 @@ fun NavGraphBuilder.loginScreen(
     ) {
         val viewModel = hiltViewModel<LoginViewModel>()
         LoginScreen(
+            windowSize = windowSize,
             viewModel = viewModel,
             goToHome = goToHome,
             goBack = goBack
@@ -74,6 +77,7 @@ fun NavGraphBuilder.loginScreen(
 }
 
 fun NavGraphBuilder.signUpScreen(
+    windowSize: WindowWidthSizeClass,
     goToHome: () -> Unit,
     goToLogin: () -> Unit
 ) {
@@ -82,6 +86,7 @@ fun NavGraphBuilder.signUpScreen(
     ) {
         val viewModel = hiltViewModel<SignUpViewModel>()
         SignUpScreen(
+            windowSize = windowSize,
             viewModel = viewModel,
             goToHome = goToHome,
             goToLogin = goToLogin

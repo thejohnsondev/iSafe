@@ -1,5 +1,6 @@
 package com.thejohnsondev.isafe.presentation.navigation
 
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.NavHost
@@ -17,7 +18,8 @@ import com.thejohnsondev.presentation.nagivation.signUpScreen
 
 @Composable
 fun Navigation(
-    parentActivity: FragmentActivity
+    parentActivity: FragmentActivity,
+    windowSize: WindowSizeClass
 ) {
     val navController = rememberNavController()
     NavHost(
@@ -30,6 +32,7 @@ fun Navigation(
             }
         )
         loginScreen(
+            windowSize = windowSize.widthSizeClass,
             goToHome = {
                 navController.navigate(Screens.HomeScreen.name)
             },
@@ -38,6 +41,7 @@ fun Navigation(
             }
         )
         signUpScreen(
+            windowSize = windowSize.widthSizeClass,
             goToHome = {
                 navController.navigate(Screens.HomeScreen.name)
             },

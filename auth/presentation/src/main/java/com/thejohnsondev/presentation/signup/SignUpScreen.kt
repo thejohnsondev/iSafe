@@ -1,7 +1,7 @@
 package com.thejohnsondev.presentation.signup
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -30,6 +31,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -51,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.getEmailErrorMessage
@@ -61,6 +64,8 @@ import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size2
 import com.thejohnsondev.designsystem.Size24
 import com.thejohnsondev.designsystem.Size4
+import com.thejohnsondev.designsystem.Size580
+import com.thejohnsondev.designsystem.Size600
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Size86
 import com.thejohnsondev.designsystem.isLight
@@ -74,11 +79,13 @@ import com.thejohnsondev.ui.PRIVACY_POLICY_TAG
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.TERMS_OF_USE_TAG
 import com.thejohnsondev.ui.TextField
+import com.thejohnsondev.ui.conditional
 import com.thejohnsondev.ui.getPrivacyPolicyAcceptText
 import com.thejohnsondev.ui.utils.keyboardAsState
 
 @Composable
 fun SignUpScreen(
+    windowSize: WindowWidthSizeClass,
     viewModel: SignUpViewModel,
     goToHome: () -> Unit,
     goToLogin: () -> Unit
@@ -119,14 +126,15 @@ fun SignUpScreen(
         }
     }
     SignUpContent(
-        screenState.value,
-        isKeyboardOpened,
-        emailState,
-        passwordState,
-        emailFocusRequest,
-        passwordFocusRequest,
-        snackbarHostState,
-        goToLogin,
+        state = screenState.value,
+        windowSize = windowSize,
+        isKeyboardOpened = isKeyboardOpened,
+        emailState = emailState,
+        passwordState = passwordState,
+        emailFocusRequest = emailFocusRequest,
+        passwordFocusRequest = passwordFocusRequest,
+        snackbarHostState = snackbarHostState,
+        onGoToLogin = goToLogin,
         hideKeyboard = {
             keyboardController?.hide()
         },
@@ -144,6 +152,7 @@ fun SignUpScreen(
 @Composable
 fun SignUpContent(
     state: SignUpViewModel.State,
+    windowSize: WindowWidthSizeClass,
     isKeyboardOpened: Boolean,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
@@ -184,7 +193,12 @@ fun SignUpContent(
                     Column(
                         modifier = Modifier
                             .padding(paddingValues)
-                            .scrollable(rememberScrollState(), Orientation.Vertical),
+                            .scrollable(rememberScrollState(), Orientation.Vertical)
+                            .conditional(windowSize != WindowWidthSizeClass.Compact) {
+                                Modifier
+                                    .width(Size600)
+                                    .align(Alignment.Center)
+                            },
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         AnimatedVisibility(
@@ -216,6 +230,7 @@ fun SignUpContent(
                     ) {
                         SignUpButtonSection(
                             screenState = state,
+                            windowSize = windowSize,
                             emailState = emailState,
                             passwordState = passwordState,
                             hideKeyboard = hideKeyboard,
@@ -339,6 +354,7 @@ fun FieldsSection(
 @Composable
 fun SignUpButtonSection(
     screenState: SignUpViewModel.State,
+    windowSize: WindowWidthSizeClass,
     emailState: MutableState<String>,
     passwordState: MutableState<String>,
     hideKeyboard: () -> Unit,
@@ -348,7 +364,10 @@ fun SignUpButtonSection(
 ) {
     val text = getPrivacyPolicyAcceptText()
     Column(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            .conditional(windowSize != WindowWidthSizeClass.Compact) {
+                Modifier.width(Size580)
+            },
         verticalArrangement = Arrangement.Bottom
     ) {
         Row(
@@ -411,7 +430,52 @@ private fun SignUpScreenPreviewEmpty() {
             hideKeyboard = {},
             openPrivacyPolicy = {},
             openTermsOfUse = {},
-            onAction = {}
+            onAction = {},
+            windowSize = WindowWidthSizeClass.Compact
+        )
+    }
+}
+
+@Preview(widthDp = 840, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun SignUpScreenPreviewMediumEmpty() {
+    ISafeTheme {
+        SignUpContent(
+            state = SignUpViewModel.State(),
+            isKeyboardOpened = false,
+            emailState = rememberSaveable { mutableStateOf(EMPTY) },
+            passwordState = rememberSaveable { mutableStateOf(EMPTY) },
+            emailFocusRequest = remember { FocusRequester() },
+            passwordFocusRequest = remember { FocusRequester() },
+            snackbarHostState = remember { SnackbarHostState() },
+            onGoToLogin = {},
+            hideKeyboard = {},
+            openPrivacyPolicy = {},
+            openTermsOfUse = {},
+            onAction = {},
+            windowSize = WindowWidthSizeClass.Medium
+        )
+    }
+}
+
+@Preview(widthDp = 1530, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun SignUpScreenPreviewLargeEmpty() {
+    ISafeTheme {
+        SignUpContent(
+            state = SignUpViewModel.State(),
+            isKeyboardOpened = false,
+            emailState = rememberSaveable { mutableStateOf(EMPTY) },
+            passwordState = rememberSaveable { mutableStateOf(EMPTY) },
+            emailFocusRequest = remember { FocusRequester() },
+            passwordFocusRequest = remember { FocusRequester() },
+            snackbarHostState = remember { SnackbarHostState() },
+            onGoToLogin = {},
+            hideKeyboard = {},
+            openPrivacyPolicy = {},
+            openTermsOfUse = {},
+            onAction = {},
+            windowSize = WindowWidthSizeClass.Expanded
         )
     }
 }

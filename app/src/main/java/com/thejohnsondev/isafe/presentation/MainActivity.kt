@@ -3,7 +3,6 @@ package com.thejohnsondev.isafe.presentation
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -12,12 +11,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
@@ -78,25 +80,29 @@ class MainActivity : FragmentActivity() {
             window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
     }
-}
 
-@Composable
-fun ISafeApp(
-    parentActivity: FragmentActivity
-) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+    @Composable
+    fun ISafeApp(
+        parentActivity: FragmentActivity
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
-            Navigation(
-                parentActivity = parentActivity
-            )
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val windowSize = calculateWindowSizeClass(this@MainActivity)
+                Navigation(
+                    parentActivity = parentActivity,
+                    windowSize = windowSize
+                )
+            }
         }
     }
+
 }
 
 @Composable
