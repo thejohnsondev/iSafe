@@ -194,7 +194,11 @@ fun HomeScaffold(
                                 selected = selectedItemIndex.value == index,
                                 onClick = {
                                     selectedItemIndex.value = index
-                                    navController.navigate(screen.route)
+                                    navController.navigate(screen.route) {
+                                        popUpTo(screen.route) {
+                                            inclusive = true
+                                        }
+                                    }
                                 },
                             )
                         }
