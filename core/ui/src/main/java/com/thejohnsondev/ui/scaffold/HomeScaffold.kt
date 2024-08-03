@@ -243,7 +243,11 @@ fun HomeScaffold(
                                     label = { Text(text = stringResource(screen.titleRes)) },
                                     selected = scaffoldState.value.bottomBarItemIndex == index,
                                     onClick = {
-                                        navController.navigate(screen.route)
+                                        navController.navigate(screen.route) {
+                                            popUpTo(screen.route) {
+                                                inclusive = true
+                                            }
+                                        }
                                     },
                                     icon = {
                                         Icon(
@@ -270,18 +274,22 @@ fun HomeScaffold(
                         .width(RailWidth),
                     containerColor = MaterialTheme.colorScheme.surfaceDim
                 ) {
-                    navigationItems.forEach {
+                    navigationItems.forEachIndexed { index, screen ->
                         NavigationRailItem(
                             icon = {
                                 Icon(
-                                    painter = painterResource(id = it.imgResId),
-                                    contentDescription = stringResource(it.titleRes)
+                                    painter = painterResource(id = screen.imgResId),
+                                    contentDescription = stringResource(screen.titleRes)
                                 )
                             },
-                            label = { Text(stringResource(it.titleRes)) },
-                            selected = scaffoldState.value.bottomBarItemIndex == navigationItems.indexOf(it),
+                            label = { Text(stringResource(screen.titleRes)) },
+                            selected = scaffoldState.value.bottomBarItemIndex == index,
                             onClick = {
-                                navController.navigate(it.route)
+                                navController.navigate(screen.route) {
+                                    popUpTo(screen.route) {
+                                        inclusive = true
+                                    }
+                                }
                             }
                         )
                     }
