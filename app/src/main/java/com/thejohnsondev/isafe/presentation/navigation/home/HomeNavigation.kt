@@ -10,7 +10,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -29,6 +28,7 @@ import com.thejohnsondev.presentation.navigation.settingsScreen
 import com.thejohnsondev.presentation.navigation.vaultRoute
 import com.thejohnsondev.presentation.navigation.vaultScreen
 import com.thejohnsondev.ui.ScaffoldConfig
+import com.thejohnsondev.ui.scaffold.HomeScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -44,9 +44,6 @@ fun HomeNavigation(
     val scaffoldState = remember {
         mutableStateOf(ScaffoldConfig())
     }
-    val selectedItemIndex = rememberSaveable {
-        mutableIntStateOf(0)
-    }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Surface(modifier = Modifier
@@ -59,7 +56,6 @@ fun HomeNavigation(
             navController = navController,
             bottomBarState = bottomBarState,
             scrollBehavior = scrollBehavior,
-            selectedItemIndex = selectedItemIndex
         ) { paddingValues ->
             NavHost(
                 navController = navController,

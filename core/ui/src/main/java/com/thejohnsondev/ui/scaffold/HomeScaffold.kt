@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.navigation.home
+package com.thejohnsondev.ui.scaffold
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
@@ -68,11 +68,10 @@ fun HomeScaffold(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>,
     scrollBehavior: TopAppBarScrollBehavior,
-    selectedItemIndex: MutableState<Int>,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val navigationItems = listOf(
-        BottomNavItem.Passwords,
+        BottomNavItem.Vault,
         BottomNavItem.Notes,
         BottomNavItem.Settings
     )
@@ -191,9 +190,8 @@ fun HomeScaffold(
                                     )
                                 },
                                 label = { Text(stringResource(screen.titleRes)) },
-                                selected = selectedItemIndex.value == index,
+                                selected = scaffoldState.value.bottomBarItemIndex == index,
                                 onClick = {
-                                    selectedItemIndex.value = index
                                     navController.navigate(screen.route) {
                                         popUpTo(screen.route) {
                                             inclusive = true
@@ -243,9 +241,8 @@ fun HomeScaffold(
                             navigationItems.forEachIndexed { index, screen ->
                                 NavigationDrawerItem(
                                     label = { Text(text = stringResource(screen.titleRes)) },
-                                    selected = selectedItemIndex.value == index,
+                                    selected = scaffoldState.value.bottomBarItemIndex == index,
                                     onClick = {
-                                        selectedItemIndex.value = index
                                         navController.navigate(screen.route)
                                     },
                                     icon = {
@@ -282,9 +279,8 @@ fun HomeScaffold(
                                 )
                             },
                             label = { Text(stringResource(it.titleRes)) },
-                            selected = selectedItemIndex.value == navigationItems.indexOf(it),
+                            selected = scaffoldState.value.bottomBarItemIndex == navigationItems.indexOf(it),
                             onClick = {
-                                selectedItemIndex.value = navigationItems.indexOf(it)
                                 navController.navigate(it.route)
                             }
                         )

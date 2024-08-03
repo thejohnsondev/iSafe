@@ -22,4 +22,5 @@ data class ScaffoldConfig(
     val snackBarPaddingHorizontal: Dp? = null,
     val snackBarPaddingVertical: Dp? = null,
     val snackBarHostState: SnackbarHostState? = null,
+    val bottomBarItemIndex: Int = 0
 )

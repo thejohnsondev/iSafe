@@ -54,6 +54,7 @@ import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.SelectableOptionItem
 import com.thejohnsondev.ui.SettingsItem
 import com.thejohnsondev.ui.ToggleOptionItem
+import com.thejohnsondev.ui.scaffold.BottomNavItem
 import com.thejohnsondev.ui.ui_model.ButtonShape
 import com.thejohnsondev.ui.ui_model.SettingsSection
 import com.thejohnsondev.ui.ui_model.SettingsSubSection
@@ -96,6 +97,7 @@ fun SettingsScreen(
             isTopAppBarVisible = true,
             isBottomNavBarVisible = true,
             topAppBarTitle = stringResource(R.string.settings),
+            bottomBarItemIndex = BottomNavItem.Settings.index
         )
     )
     SettingsContent(

@@ -44,6 +44,7 @@ import com.thejohnsondev.ui.EmptyListPlaceHolder
 import com.thejohnsondev.ui.ISafeLoading
 import com.thejohnsondev.ui.NoteItem
 import com.thejohnsondev.ui.ScaffoldConfig
+import com.thejohnsondev.ui.scaffold.BottomNavItem
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -93,6 +94,7 @@ fun NotesScreen(
             },
             isFabExpanded = expandedFab,
             snackBarHostState = snackbarHostState,
+            bottomBarItemIndex = BottomNavItem.Notes.index
         )
     )
     NotesContent(

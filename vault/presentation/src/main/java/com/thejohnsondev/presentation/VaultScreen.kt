@@ -60,6 +60,7 @@ import com.thejohnsondev.ui.PasswordItem
 import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.SearchBar
 import com.thejohnsondev.ui.bounceClick
+import com.thejohnsondev.ui.scaffold.BottomNavItem
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
@@ -115,7 +116,8 @@ fun VaultScreen(
                 onAddNewPasswordClick()
             },
             isFabExpanded = expandedFab,
-            snackBarHostState = snackBarHostState
+            snackBarHostState = snackBarHostState,
+            bottomBarItemIndex = BottomNavItem.Vault.index
         )
     )
     VaultContent(
