@@ -89,6 +89,23 @@ fun VaultScreen(
     }
 
     LaunchedEffect(true) {
+        setScaffoldConfig(
+            ScaffoldConfig(
+                isTopAppBarVisible = true,
+                isBottomNavBarVisible = true,
+                topAppBarTitle = context.getString(R.string.vault),
+                topAppBarIcon = Icons.Default.Security,
+                isFabVisible = true,
+                fabTitle = context.getString(R.string.add),
+                fabIcon = Icons.Default.Add,
+                onFabClick = {
+                    onAddNewPasswordClick()
+                },
+                isFabExpanded = expandedFab,
+                snackBarHostState = snackBarHostState,
+                bottomBarItemIndex = BottomNavItem.Vault.index
+            )
+        )
         viewModel.perform(VaultViewModel.Action.FetchVault)
         viewModel.getEventFlow().collect {
             when (it) {
@@ -103,23 +120,6 @@ fun VaultScreen(
             }
         }
     }
-    setScaffoldConfig(
-        ScaffoldConfig(
-            isTopAppBarVisible = true,
-            isBottomNavBarVisible = true,
-            topAppBarTitle = stringResource(R.string.your_vault),
-            topAppBarIcon = Icons.Default.Security,
-            isFabVisible = true,
-            fabTitle = stringResource(R.string.add),
-            fabIcon = Icons.Default.Add,
-            onFabClick = {
-                onAddNewPasswordClick()
-            },
-            isFabExpanded = expandedFab,
-            snackBarHostState = snackBarHostState,
-            bottomBarItemIndex = BottomNavItem.Vault.index
-        )
-    )
     VaultContent(
         state = state.value,
         lazyListState = listState,

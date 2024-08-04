@@ -71,6 +71,14 @@ fun SettingsScreen(
     }
     val state = viewModel.viewState.collectAsState(SettingsViewModel.State())
     LaunchedEffect(true) {
+        setScaffoldConfig(
+            ScaffoldConfig(
+                isTopAppBarVisible = true,
+                isBottomNavBarVisible = true,
+                topAppBarTitle = context.getString(R.string.settings),
+                bottomBarItemIndex = BottomNavItem.Settings.index
+            )
+        )
         viewModel.perform(SettingsViewModel.Action.FetchData)
         viewModel.getEventFlow().collect {
             when (it) {
@@ -92,14 +100,6 @@ fun SettingsScreen(
             }
         }
     }
-    setScaffoldConfig(
-        ScaffoldConfig(
-            isTopAppBarVisible = true,
-            isBottomNavBarVisible = true,
-            topAppBarTitle = stringResource(R.string.settings),
-            bottomBarItemIndex = BottomNavItem.Settings.index
-        )
-    )
     SettingsContent(
         context = context,
         state = state.value,

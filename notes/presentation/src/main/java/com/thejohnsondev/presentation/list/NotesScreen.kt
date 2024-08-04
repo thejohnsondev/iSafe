@@ -1,13 +1,10 @@
 package com.thejohnsondev.presentation.list
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -28,14 +25,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.R
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.ISafeTheme
-import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size32
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.NoteModel
@@ -67,6 +61,22 @@ fun NotesScreen(
     }
     StatusBarColor()
     LaunchedEffect(true) {
+        setScaffoldConfig(
+            ScaffoldConfig(
+                isTopAppBarVisible = true,
+                isBottomNavBarVisible = true,
+                topAppBarTitle = context.getString(R.string.your_notes),
+                isFabVisible = true,
+                fabTitle = context.getString(R.string.add_note),
+                fabIcon = Icons.Default.Add,
+                onFabClick = {
+                    goToAddNote()
+                },
+                isFabExpanded = expandedFab,
+                snackBarHostState = snackbarHostState,
+                bottomBarItemIndex = BottomNavItem.Notes.index
+            )
+        )
         viewModel.perform(NotesViewModel.Action.FetchNotes)
         viewModel.getEventFlow().collect {
             when (it) {
@@ -81,22 +91,6 @@ fun NotesScreen(
             }
         }
     }
-    setScaffoldConfig(
-        ScaffoldConfig(
-            isTopAppBarVisible = true,
-            isBottomNavBarVisible = true,
-            topAppBarTitle = stringResource(R.string.your_notes),
-            isFabVisible = true,
-            fabTitle = stringResource(R.string.add_note),
-            fabIcon = Icons.Default.Add,
-            onFabClick = {
-                goToAddNote()
-            },
-            isFabExpanded = expandedFab,
-            snackBarHostState = snackbarHostState,
-            bottomBarItemIndex = BottomNavItem.Notes.index
-        )
-    )
     NotesContent(
         screenState = state.value,
         state = listState,
