@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.stringResource
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.designsystem.Size48
 
@@ -39,7 +40,7 @@ fun ISafeLoading(
                 .size(Size48)
                 .scale(scale)
                 .align(Alignment.Center),
-            imageVector = Icons.Default.Security, contentDescription = null
+            imageVector = Icons.Default.Security, contentDescription = stringResource(com.thejohnsondev.common.R.string.app_logo)
         )
     }
 }

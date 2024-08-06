@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -35,7 +36,7 @@ fun LoadedImage(
     Surface(modifier = modifier, shape = shape, color = backgroundColor) {
         AsyncImage(
             model = model.build(),
-            contentDescription = "Image",
+            contentDescription = stringResource(com.thejohnsondev.common.R.string.image),
             contentScale = contentScale
         )
     }

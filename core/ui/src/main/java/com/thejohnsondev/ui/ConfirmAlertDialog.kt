@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.ui.ui_model.ButtonShape
@@ -25,7 +26,7 @@ fun ConfirmAlertDialog(
 ) {
     AlertDialog(
         icon = {
-            Icon(imageVector = icon, contentDescription = "")
+            Icon(imageVector = icon, contentDescription = stringResource(com.thejohnsondev.common.R.string.alert_icon))
         },
         title = {
             Text(text = title)

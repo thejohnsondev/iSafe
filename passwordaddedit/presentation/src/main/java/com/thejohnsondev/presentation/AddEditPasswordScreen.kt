@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -91,6 +92,23 @@ fun AddEditPasswordScreen(
     }
 
     LaunchedEffect(true) {
+        setScaffoldConfig(
+            ScaffoldConfig(
+                isBottomNavBarVisible = false,
+                isTopAppBarVisible = true,
+                topAppBarIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                isTopAppBarSaveButtonVisible = true,
+                onTopAppBarSaveClick = {
+                    viewModel.perform(AddEditPasswordViewModel.Action.SavePassword)
+                },
+                onTopAppBarIconClick = {
+                    onGoBackClick()
+                },
+                snackBarHostState = snackBarHostState,
+                snackBarPaddingHorizontal = Size8,
+                snackBarPaddingVertical = Size8,
+            )
+        )
         organizationFocusRequester.requestFocus()
         if (passwordModel != null) {
             viewModel.perform(AddEditPasswordViewModel.Action.SetPasswordModelForEdit(passwordModel))
@@ -113,23 +131,6 @@ fun AddEditPasswordScreen(
             }
         }
     }
-    setScaffoldConfig(
-        ScaffoldConfig(
-            isBottomNavBarVisible = false,
-            isTopAppBarVisible = true,
-            topAppBarIcon = Icons.Default.ArrowBack,
-            isTopAppBarSaveButtonVisible = true,
-            onTopAppBarSaveClick = {
-                viewModel.perform(AddEditPasswordViewModel.Action.SavePassword)
-            },
-            onTopAppBarIconClick = {
-                onGoBackClick()
-            },
-            snackBarHostState = snackBarHostState,
-            snackBarPaddingHorizontal = Size8,
-            snackBarPaddingVertical = Size8,
-        )
-    )
     when (state.value.loadingState) {
         LoadingState.Loading -> ISafeLoading()
         LoadingState.Loaded -> {

@@ -79,7 +79,7 @@ fun SearchBar(
                         onQueryClear()
                         focusManager.clearFocus()
                     }) {
-                    Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                    Icon(imageVector = Icons.Default.Clear, contentDescription = stringResource(com.thejohnsondev.common.R.string.search))
                 }
             }
 

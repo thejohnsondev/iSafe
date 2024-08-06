@@ -16,3 +16,4 @@ local.properties
 .idea
 .kotlin/
 app/release/
+keystore.jks

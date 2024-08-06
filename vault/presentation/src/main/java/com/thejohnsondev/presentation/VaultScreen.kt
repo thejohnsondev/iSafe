@@ -493,7 +493,7 @@ fun PasswordsTitleItem(
             ) {
                 Icon(
                     imageVector = if (isReordering) Icons.Default.Cancel else Icons.Default.Reorder,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.reorder),
                 )
             }
         }

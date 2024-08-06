@@ -283,7 +283,7 @@ fun ExpandedContent(
                 Icon(
                     modifier = Modifier.padding(end = Size8),
                     imageVector = eyeImage,
-                    contentDescription = stringResource(com.thejohnsondev.common.R.string.visibility)
+                    contentDescription = stringResource(R.string.visibility)
                 )
             }
         }
@@ -404,7 +404,7 @@ fun AdditionalFieldItem(
             Icon(
                 modifier = Modifier.padding(end = Size8),
                 imageVector = eyeImage,
-                contentDescription = stringResource(com.thejohnsondev.common.R.string.visibility)
+                contentDescription = stringResource(R.string.visibility)
             )
         }
     }

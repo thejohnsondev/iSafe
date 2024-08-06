@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
@@ -64,6 +65,26 @@ fun AddNoteScreen(
         FocusRequester()
     }
     LaunchedEffect(true) {
+        setScaffoldConfig(
+            ScaffoldConfig(
+                isBottomNavBarVisible = false,
+                isTopAppBarVisible = true,
+                topAppBarIcon = Icons.AutoMirrored.Filled.ArrowBack,
+                isTopAppBarSaveButtonVisible = true,
+                isTopAppBarDeleteButtonVisible = state.value.isEdit,
+                onTopAppBarSaveClick = {
+                    viewModel.perform(AddNoteViewModel.Action.SaveNote)
+                },
+                onTopAppBarIconClick = {
+                    keyboardController?.hide()
+                    goBack()
+                },
+                onTopAppBarDeleteClick = {
+                    viewModel.perform(AddNoteViewModel.Action.ShowHideConfirmDelete(true))
+                },
+                snackBarHostState = snackbarHostState,
+            )
+        )
         noteModel?.let {
             viewModel.perform(AddNoteViewModel.Action.SetNoteModelForEdit(it))
         } ?: run {
@@ -85,26 +106,6 @@ fun AddNoteScreen(
             }
         }
     }
-    setScaffoldConfig(
-        ScaffoldConfig(
-            isBottomNavBarVisible = false,
-            isTopAppBarVisible = true,
-            topAppBarIcon = Icons.Default.ArrowBack,
-            isTopAppBarSaveButtonVisible = true,
-            isTopAppBarDeleteButtonVisible = state.value.isEdit,
-            onTopAppBarSaveClick = {
-                viewModel.perform(AddNoteViewModel.Action.SaveNote)
-            },
-            onTopAppBarIconClick = {
-                keyboardController?.hide()
-                goBack()
-            },
-            onTopAppBarDeleteClick = {
-                viewModel.perform(AddNoteViewModel.Action.ShowHideConfirmDelete(true))
-            },
-            snackBarHostState = snackbarHostState,
-        )
-    )
 
     when (state.value.loadingState) {
         is LoadingState.Loading -> ISafeLoading()

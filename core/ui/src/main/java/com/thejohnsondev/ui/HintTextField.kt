@@ -43,7 +43,7 @@ fun HintTextField(
             modifier = modifier
                 .focusRequester(focusRequester)
                 .semantics {
-                    contentDescription = hint
+                    contentDescription = value
                 },
             value = value,
             onValueChange = {

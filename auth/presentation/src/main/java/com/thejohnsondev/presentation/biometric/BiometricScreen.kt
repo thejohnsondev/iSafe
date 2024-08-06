@@ -98,7 +98,7 @@ fun BiometricScreenContent(
                 Icon(
                     modifier = Modifier.size(Size128),
                     imageVector = Icons.Default.Fingerprint,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.fingerprint),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }

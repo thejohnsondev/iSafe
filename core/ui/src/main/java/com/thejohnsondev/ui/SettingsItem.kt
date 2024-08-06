@@ -137,7 +137,7 @@ fun SettingsItem(
                         modifier = Modifier
                             .padding(iconPadding),
                         imageVector = icon,
-                        contentDescription = null,
+                        contentDescription = title,
                         tint = iconColor
                     )
                 }

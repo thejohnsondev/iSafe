@@ -108,7 +108,7 @@ fun HomeScaffold(
                                         scaffoldState.value.onTopAppBarIconClick()
                                     },
                                 imageVector = it,
-                                contentDescription = ""
+                                contentDescription = stringResource(R.string.navigation_icon)
                             )
                         }
                     },
@@ -154,7 +154,9 @@ fun HomeScaffold(
                         scaffoldState.value.fabIcon?.let {
                             Icon(
                                 imageVector = it,
-                                contentDescription = null
+                                contentDescription = scaffoldState.value.fabTitle ?: stringResource(
+                                    R.string.floating_action_icon
+                                )
                             )
                         }
                     },
@@ -231,7 +233,8 @@ fun HomeScaffold(
                             drawerShape = RoundedCornerShape(topEnd = Size32, bottomEnd = Size32),
                         ) {
                             Column(
-                                modifier = Modifier.padding(Size8)
+                                modifier = Modifier
+                                    .padding(Size8)
                                     .align(Alignment.CenterHorizontally)
                             ) {
                                 ISafeLogo(

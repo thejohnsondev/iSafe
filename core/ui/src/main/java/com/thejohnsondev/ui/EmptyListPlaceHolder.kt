@@ -36,7 +36,7 @@ fun EmptyListPlaceHolder(
                     .size(Size128)
                     .padding(Size16),
                 imageVector = Icons.Default.FindInPage,
-                contentDescription = null,
+                contentDescription = stringResource(com.thejohnsondev.common.R.string.empty_list),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(

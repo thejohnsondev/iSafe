@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -31,8 +30,6 @@ import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
 import com.thejohnsondev.designsystem.Size4
 import com.thejohnsondev.designsystem.Size48
-import com.thejohnsondev.designsystem.Size64
-import com.thejohnsondev.designsystem.Size72
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.ui.ui_model.ButtonShape
 
@@ -86,7 +83,7 @@ fun RoundedButton(
                             .padding(end = Size4)
                             .size(Size16),
                         imageVector = safeImageVector,
-                        contentDescription = "",
+                        contentDescription = stringResource(com.thejohnsondev.common.R.string.app_logo),
                         tint = if (enabled) colors.contentColor else colors.contentColor.copy(
                             alpha = Percent70
                         )

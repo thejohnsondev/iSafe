@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_name">iSafe</string>
+
     <string name="password_error_bad_length">Password must contain at least 8 characters.</string>
     <string name="password_error_no_numbers">Password must contain at least one number.</string>
     <string name="password_error_no_capital">Password must contain at least one uppercase letter.</string>
@@ -98,5 +100,20 @@
 
     <string name="delete_password">Delete password</string>
     <string name="delete_password_message">Are you sure you want to delete this password?</string>
+
+    <string name="navigation_icon">Navigation Icon</string>
+    <string name="floating_action_icon">Floating action icon</string>
+    <string name="alert_icon">Alert Icon</string>
+    <string name="empty_list">Empty list</string>
+    <string name="app_logo">App logo</string>
+    <string name="image">Image</string>
+
+    <string name="please_enter_your_old_password_and_a_new_password">Please enter your old password and a new password.</string>
+    <string name="confirm">Confirm</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password_don_t_match">Passwords don\'t match</string>
+    <string name="fingerprint">Fingerprint</string>
 
 </resources>

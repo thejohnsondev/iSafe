@@ -99,12 +99,12 @@ fun ChangePasswordDialog(
                     verticalArrangement = Arrangement.Top,
                 ) {
                     Text(
-                        text = stringResource(R.string.change_password),
+                        text = stringResource(com.thejohnsondev.common.R.string.change_password),
                         style = MaterialTheme.typography.titleLarge
                     )
                     Text(
                         modifier = Modifier.padding(top = Size16),
-                        text = stringResource(R.string.please_enter_your_old_password_and_a_new_password),
+                        text = stringResource(com.thejohnsondev.common.R.string.please_enter_your_old_password_and_a_new_password),
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center
                     )
@@ -116,7 +116,7 @@ fun ChangePasswordDialog(
                         onTextChanged = {
                             oldPassword.value = it
                         },
-                        label = stringResource(R.string.old_password),
+                        label = stringResource(com.thejohnsondev.common.R.string.old_password),
                         onKeyboardAction = KeyboardActions {
                             newPasswordFocusRequest.requestFocus()
                         },
@@ -132,7 +132,7 @@ fun ChangePasswordDialog(
                             onAction(SettingsViewModel.Action.ValidateNewPassword(it, confirmPassword.value))
                             newPassword.value = it
                         },
-                        label = stringResource(R.string.new_password),
+                        label = stringResource(com.thejohnsondev.common.R.string.new_password),
                         onKeyboardAction = KeyboardActions {
                             confirmPasswordFocusRequest.requestFocus()
                         },
@@ -157,7 +157,7 @@ fun ChangePasswordDialog(
                             )
                             confirmPassword.value = it
                         },
-                        label = stringResource(R.string.confirm_password),
+                        label = stringResource(com.thejohnsondev.common.R.string.confirm_password),
                         onKeyboardAction = KeyboardActions {
                             if (isConfirmButtonActive) {
                                 onAction(
@@ -172,7 +172,7 @@ fun ChangePasswordDialog(
                         keyboardType = KeyboardType.Password,
                         isError = settingsScreenState.isConfirmPasswordMatches?.not() ?: false,
                         errorText = if (settingsScreenState.isConfirmPasswordMatches?.not() == true) stringResource(
-                            R.string.password_don_t_match
+                            com.thejohnsondev.common.R.string.password_don_t_match
                         ) else null
                     )
                 }
@@ -180,7 +180,7 @@ fun ChangePasswordDialog(
                     modifier = Modifier
                         .padding(Size16)
                         .align(Alignment.BottomCenter),
-                    text = stringResource(R.string.confirm),
+                    text = stringResource(com.thejohnsondev.common.R.string.confirm),
                     onClick = {
                         onAction(
                             SettingsViewModel.Action.ChangePassword(

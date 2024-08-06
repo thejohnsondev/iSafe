@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
@@ -56,7 +57,7 @@ fun AccountSettingsItem(
                     modifier = Modifier
                         .padding(Size16)
                         .size(Size24),
-                    imageVector = Icons.Filled.Person, contentDescription = "Account"
+                    imageVector = Icons.Filled.Person, contentDescription = stringResource(com.thejohnsondev.common.R.string.account)
                 )
             }
             Column(

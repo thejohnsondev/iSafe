@@ -56,7 +56,7 @@ fun SelectableOptionItem(
                 color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSecondaryContainer
             )
             if (isSelected) {
-                Icon(imageVector = Icons.Default.Done, contentDescription = null)
+                Icon(imageVector = Icons.Default.Done, contentDescription = optionTitle)
             }
         }
     }
