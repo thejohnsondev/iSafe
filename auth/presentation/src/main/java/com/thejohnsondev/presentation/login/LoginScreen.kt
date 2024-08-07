@@ -15,13 +15,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -54,12 +52,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.getEmailErrorMessage
 import com.thejohnsondev.common.getPasswordErrorMessage
 import com.thejohnsondev.common.toast
-import com.thejohnsondev.designsystem.EqualRounded
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
 import com.thejohnsondev.designsystem.Size4
@@ -67,7 +63,6 @@ import com.thejohnsondev.designsystem.Size580
 import com.thejohnsondev.designsystem.Size600
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Size86
-import com.thejohnsondev.designsystem.TopRounded
 import com.thejohnsondev.designsystem.isLight
 import com.thejohnsondev.model.EmailValidationState
 import com.thejohnsondev.model.LoadingState
@@ -154,60 +149,57 @@ fun LoginContent(
                 Color.Black
             }
         ) {
-            Column(
-                modifier = Modifier.imePadding()
-            ) {
+            Box {
                 Box {
-                    Box {
-                        GlowPulsingBackground()
-                    }
-                    Column(
-                        modifier = Modifier
-                            .padding(paddingValues)
-                            .scrollable(rememberScrollState(), Orientation.Vertical)
-                            .conditional(windowSize != WindowWidthSizeClass.Compact) {
-                                Modifier
-                                    .width(Size600)
-                                    .align(Alignment.Center)
-                            },
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    GlowPulsingBackground()
+                }
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .scrollable(rememberScrollState(), Orientation.Vertical)
+                        .conditional(windowSize != WindowWidthSizeClass.Compact) {
+                            Modifier
+                                .width(Size600)
+                                .align(Alignment.Center)
+                        },
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AnimatedVisibility(
+                        visible = !isKeyboardOpened
                     ) {
-                        AnimatedVisibility(
-                            visible = !isKeyboardOpened) {
-                            Column {
-                                LogoSection()
-                            }
+                        Column {
+                            LogoSection()
                         }
-                        FieldsSection(
-                            context = context,
-                            viewModel = viewModel,
-                            screenState = screenState,
-                            emailState = emailState,
-                            passwordState = passwordState,
-                            passwordFocusRequest = passwordFocusRequest,
-                            keyboardController = keyboardController,
-                            onGoBack = onGoBack
-                        )
                     }
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(
-                                bottom = paddingValues.calculateBottomPadding(),
-                                start = Size8,
-                                end = Size8
-                            )
-                            .clip(RoundedCornerShape(Size24))
-                    ) {
-                        LoginButtonSection(
-                            screenState = screenState,
-                            windowSize = windowSize,
-                            viewModel = viewModel,
-                            keyboardController = keyboardController,
-                            emailState = emailState,
-                            passwordState = passwordState
+                    FieldsSection(
+                        context = context,
+                        viewModel = viewModel,
+                        screenState = screenState,
+                        emailState = emailState,
+                        passwordState = passwordState,
+                        passwordFocusRequest = passwordFocusRequest,
+                        keyboardController = keyboardController,
+                        onGoBack = onGoBack
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(
+                            bottom = paddingValues.calculateBottomPadding(),
+                            start = Size8,
+                            end = Size8
                         )
-                    }
+                        .clip(RoundedCornerShape(Size24))
+                ) {
+                    LoginButtonSection(
+                        screenState = screenState,
+                        windowSize = windowSize,
+                        viewModel = viewModel,
+                        keyboardController = keyboardController,
+                        emailState = emailState,
+                        passwordState = passwordState
+                    )
                 }
             }
         }
@@ -327,7 +319,8 @@ fun LoginButtonSection(
     passwordState: MutableState<String>
 ) {
     Column(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
             .conditional(windowSize != WindowWidthSizeClass.Compact) {
                 Modifier.width(Size580)
             },

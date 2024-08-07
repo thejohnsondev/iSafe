@@ -11,20 +11,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.designsystem.Size48
 
 @Composable
 fun ISafeLoading(
-    modifier: Modifier = Modifier.fillMaxSize()
+    modifier: Modifier = Modifier,
+    iconTintColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
         val infiniteTransition = rememberInfiniteTransition(label = EMPTY)
 
         val scale by infiniteTransition.animateFloat(
@@ -40,7 +43,9 @@ fun ISafeLoading(
                 .size(Size48)
                 .scale(scale)
                 .align(Alignment.Center),
-            imageVector = Icons.Default.Security, contentDescription = stringResource(com.thejohnsondev.common.R.string.app_logo)
+            imageVector = Icons.Default.Security,
+            contentDescription = stringResource(com.thejohnsondev.common.R.string.app_logo),
+            tint = iconTintColor
         )
     }
 }

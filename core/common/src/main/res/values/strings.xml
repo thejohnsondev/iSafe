@@ -116,4 +116,8 @@
     <string name="password_don_t_match">Passwords don\'t match</string>
     <string name="fingerprint">Fingerprint</string>
 
+    <string name="organization_empty">Organization is empty</string>
+    <string name="title_empty">Title is empty</string>
+    <string name="password_empty">Password is empty</string>
+
 </resources>

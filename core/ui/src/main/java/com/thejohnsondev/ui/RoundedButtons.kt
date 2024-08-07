@@ -74,7 +74,10 @@ fun RoundedButton(
         ) {
             if (loading) {
                 ISafeLoading(
-                    modifier = Modifier.size(Size24)
+                    modifier = Modifier.size(Size24),
+                    iconTintColor = if (enabled) colors.contentColor else colors.contentColor.copy(
+                        alpha = Percent70
+                    )
                 )
             } else {
                 imageVector?.let { safeImageVector ->

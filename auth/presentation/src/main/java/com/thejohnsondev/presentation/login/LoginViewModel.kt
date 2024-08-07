@@ -1,6 +1,5 @@
 package com.thejohnsondev.presentation.login
 
-import android.util.Log
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.domain.AuthUseCases
 import com.thejohnsondev.model.EmailValidationState
@@ -8,8 +7,6 @@ import com.thejohnsondev.model.KeyGenerateResult
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
-import com.thejohnsondev.model.UserDataResponse
-import com.thejohnsondev.model.UserModel
 import com.thejohnsondev.model.auth.AuthResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

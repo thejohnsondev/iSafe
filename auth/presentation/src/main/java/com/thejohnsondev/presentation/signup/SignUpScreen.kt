@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -183,62 +182,59 @@ fun SignUpContent(
                 Color.Black
             }
         ) {
-            Column(
-                modifier = Modifier.imePadding(),
-            ) {
+            Box {
                 Box {
-                    Box {
-                        GlowPulsingBackground()
-                    }
-                    Column(
-                        modifier = Modifier
-                            .padding(paddingValues)
-                            .scrollable(rememberScrollState(), Orientation.Vertical)
-                            .conditional(windowSize != WindowWidthSizeClass.Compact) {
-                                Modifier
-                                    .width(Size600)
-                                    .align(Alignment.Center)
-                            },
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    GlowPulsingBackground()
+                }
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .scrollable(rememberScrollState(), Orientation.Vertical)
+                        .conditional(windowSize != WindowWidthSizeClass.Compact) {
+                            Modifier
+                                .width(Size600)
+                                .align(Alignment.Center)
+                        },
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AnimatedVisibility(
+                        visible = !isKeyboardOpened
                     ) {
-                        AnimatedVisibility(
-                            visible = !isKeyboardOpened) {
-                            Column {
-                                LogoSection()
-                            }
+                        Column {
+                            LogoSection()
                         }
-                        FieldsSection(
-                            screenState = state,
-                            emailState = emailState,
-                            passwordState = passwordState,
-                            emailFocusRequest = emailFocusRequest,
-                            passwordFocusRequest = passwordFocusRequest,
-                            onGoToLogin = onGoToLogin,
-                            hideKeyboard = hideKeyboard,
-                            onAction = onAction
-                        )
                     }
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(
-                                bottom = paddingValues.calculateBottomPadding(),
-                                start = Size8,
-                                end = Size8
-                            )
-                            .clip(RoundedCornerShape(Size24))
-                    ) {
-                        SignUpButtonSection(
-                            screenState = state,
-                            windowSize = windowSize,
-                            emailState = emailState,
-                            passwordState = passwordState,
-                            hideKeyboard = hideKeyboard,
-                            onAction = onAction,
-                            openPrivacyPolicy = openPrivacyPolicy,
-                            openTermsOfUse = openTermsOfUse
+                    FieldsSection(
+                        screenState = state,
+                        emailState = emailState,
+                        passwordState = passwordState,
+                        emailFocusRequest = emailFocusRequest,
+                        passwordFocusRequest = passwordFocusRequest,
+                        onGoToLogin = onGoToLogin,
+                        hideKeyboard = hideKeyboard,
+                        onAction = onAction
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(
+                            bottom = paddingValues.calculateBottomPadding(),
+                            start = Size8,
+                            end = Size8
                         )
-                    }
+                        .clip(RoundedCornerShape(Size24))
+                ) {
+                    SignUpButtonSection(
+                        screenState = state,
+                        windowSize = windowSize,
+                        emailState = emailState,
+                        passwordState = passwordState,
+                        hideKeyboard = hideKeyboard,
+                        onAction = onAction,
+                        openPrivacyPolicy = openPrivacyPolicy,
+                        openTermsOfUse = openTermsOfUse
+                    )
                 }
             }
         }
@@ -364,7 +360,8 @@ fun SignUpButtonSection(
 ) {
     val text = getPrivacyPolicyAcceptText()
     Column(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
             .conditional(windowSize != WindowWidthSizeClass.Compact) {
                 Modifier.width(Size580)
             },
