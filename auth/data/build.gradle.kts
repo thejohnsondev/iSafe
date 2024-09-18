@@ -8,8 +8,8 @@ plugins {
     kotlin("kapt")
 }
 
-val authSecretKey: String = gradleLocalProperties(rootDir).getProperty("auth_secret_key")
-val authSecretIV: String = gradleLocalProperties(rootDir).getProperty("auth_secret_iv")
+val authSecretKey: String = gradleLocalProperties(rootDir).getProperty("auth_secret_key") ?: ""
+val authSecretIV: String = gradleLocalProperties(rootDir).getProperty("auth_secret_iv") ?: ""
 
 android {
     namespace = "com.thejohnsondev.data"
