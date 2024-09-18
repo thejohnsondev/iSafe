@@ -1,5 +1,6 @@
 [versions]
 
+google-services = "4.4.2"
 ktx = "1.13.1"
 app-compat = "1.7.0"
 kotlin-bom = "1.8.0"
@@ -41,6 +42,7 @@ biometric = "1.2.0-alpha05"
 androidx-ktx = { module = "androidx.core:core-ktx", version.ref = "ktx" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "app-compat" }
 androidx-material3-screen-size = { module = "androidx.compose.material3:material3-window-size-class" }
+google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
 org-jetbrains-kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin-bom" }
 com-google-material = { module = "com.google.android.material:material", version.ref = "material-2" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
