@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.util.Properties
 
 plugins {
     id("com.android.library")
@@ -8,8 +9,12 @@ plugins {
     kotlin("kapt")
 }
 
-val authSecretKey: String = gradleLocalProperties(rootDir).getProperty("auth_secret_key")
-val authSecretIV: String = gradleLocalProperties(rootDir).getProperty("auth_secret_iv")
+val testProperties = Properties().apply {
+    file("$rootDir/test.properties").inputStream().use { load(it) }
+}
+
+val authSecretKey: String? = gradleLocalProperties(rootDir).getProperty("auth_secret_key") ?: testProperties.getProperty("auth_secret_key")
+val authSecretIV: String? = gradleLocalProperties(rootDir).getProperty("auth_secret_iv") ?: testProperties.getProperty("auth_secret_iv")
 
 android {
     namespace = "com.thejohnsondev.data"
@@ -20,8 +25,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-        buildConfigField("String", "AUTH_SECRET_KEY", authSecretKey)
-        buildConfigField("String", "AUTH_SECRET_IV", authSecretIV)
+        buildConfigField("String", "AUTH_SECRET_KEY", authSecretKey ?: "test_key")
+        buildConfigField("String", "AUTH_SECRET_IV", authSecretIV ?: "test_iv")
     }
 
     buildTypes {
@@ -34,11 +39,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
     buildFeatures {
         buildConfig = true

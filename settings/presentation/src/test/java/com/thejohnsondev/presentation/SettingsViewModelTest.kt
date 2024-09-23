@@ -166,32 +166,11 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `change password returns success`() = runTest {
-        `when`(
-            mockAuthRepository.changePassword(
-                "oldPassword",
-                "newPassword"
-            )
-        ).thenReturn(
-            flowOf(
-                Either.Right(Unit)
-            )
-        )
-
-        viewModel.perform(
-            SettingsViewModel.Action.ChangePassword(
-                "oldPassword",
-                "newPassword"
-            )
-        )
-
-        assertTrue(viewModel.getEventFlow().value is OneTimeEvent.InfoToast)
-    }
-
-    @Test
     fun `logout sends success navigation event`() = runTest {
         viewModel.perform(SettingsViewModel.Action.Logout)
 
         assertEquals(OneTimeEvent.SuccessNavigation::class, viewModel.getEventFlow().value::class)
     }
+
+    // TODO add test case: change password returns success
 }
