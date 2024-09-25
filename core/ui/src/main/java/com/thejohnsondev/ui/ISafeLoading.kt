@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.designsystem.Size48
+import com.thejohnsondev.designsystem.getAppLogo
 
 @Composable
 fun ISafeLoading(
@@ -43,7 +44,7 @@ fun ISafeLoading(
                 .size(Size48)
                 .scale(scale)
                 .align(Alignment.Center),
-            imageVector = Icons.Default.Security,
+            imageVector = getAppLogo(),
             contentDescription = stringResource(com.thejohnsondev.common.R.string.app_logo),
             tint = iconTintColor
         )
