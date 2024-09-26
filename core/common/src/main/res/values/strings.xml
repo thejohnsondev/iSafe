@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">iSafe</string>
+    <string name="app_name">PassGuard</string>
+    <string name="pass">Pass</string>
+    <string name="guard">Guard</string>
 
     <string name="password_error_bad_length">Password must contain at least 8 characters.</string>
     <string name="password_error_no_numbers">Password must contain at least one number.</string>

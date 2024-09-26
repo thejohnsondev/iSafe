@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation
+package com.thejohnsondev.passguard.presentation
 
 import android.os.Bundle
 import android.util.Log
@@ -19,7 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
@@ -27,7 +26,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.thejohnsondev.designsystem.ISafeTheme
-import com.thejohnsondev.isafe.presentation.navigation.Navigation
+import com.thejohnsondev.passguard.presentation.navigation.Navigation
 import com.thejohnsondev.model.settings.DarkThemeConfig
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

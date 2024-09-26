@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe
+package com.thejohnsondev.passguard
 
 import org.junit.Test
 

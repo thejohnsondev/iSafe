@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:792261893262:android:402d1cec261d84047dfddf",
         "android_client_info": {
-          "package_name": "com.thejohnsondev.isafe"
+          "package_name": "com.thejohnsondev.passguard"
         }
       },
       "oauth_client": [
@@ -39,7 +39,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:792261893262:android:5082a6a3f6e3b56b7dfddf",
         "android_client_info": {
-          "package_name": "com.thejohnsondev.isafe.dev"
+          "package_name": "com.thejohnsondev.passguard.dev"
         }
       },
       "oauth_client": [

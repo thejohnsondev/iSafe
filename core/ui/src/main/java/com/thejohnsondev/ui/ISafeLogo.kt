@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import com.thejohnsondev.designsystem.Percent40
 import com.thejohnsondev.designsystem.Size2
+import com.thejohnsondev.designsystem.ubuntuFontFamily
 
 @Preview(showBackground = true)
 @Composable
@@ -27,24 +28,26 @@ fun ISafeLogo(
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally
 ) {
     Column(
-        horizontalAlignment = horizontalAlignment
+        horizontalAlignment = horizontalAlignment,
+        modifier = modifier
     ) {
-        Text(modifier = modifier, text = buildAnnotatedString {
+        Text(text = buildAnnotatedString {
             withStyle(
                 style = SpanStyle(
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = fontSize
                 ),
             ) {
-                append(stringResource(com.thejohnsondev.common.R.string.i))
+                append(stringResource(com.thejohnsondev.common.R.string.pass))
             }
             withStyle(
                 style = SpanStyle(
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = fontSize
+                    fontSize = fontSize,
+                    fontFamily = ubuntuFontFamily
                 )
             ) {
-                append(stringResource(com.thejohnsondev.common.R.string.safe))
+                append(stringResource(com.thejohnsondev.common.R.string.guard))
             }
         })
         Box(
