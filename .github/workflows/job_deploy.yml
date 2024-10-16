@@ -21,13 +21,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Update auth secrets key
+      - name: Update auth secrets
         env:
           AUTH_SECRET_KEY: ${{ secrets.AUTH_SECRET_KEY }}
-        run: echo AUTH_SECRET_KEY="$AUTH_SECRET_KEY" > ./local.properties
-
-      - name: Update auth secrets iv
-        env:
           AUTH_SECRET_IV: ${{ secrets.AUTH_SECRET_IV }}
         run:
           echo AUTH_SECRET_KEY="$AUTH_SECRET_KEY" > ./local.properties
