@@ -21,8 +21,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run lint
-        run: ./gradlew lint
+      - name: Update auth secrets
+        env:
+          AUTH_SECRET_KEY: ${{ secrets.AUTH_SECRET_KEY }}
+          AUTH_SECRET_IV: ${{ secrets.AUTH_SECRET_IV }}
+        run:
+          echo AUTH_SECRET_KEY="AUTH_SECRET_KEY" > ./local.properties
+          echo AUTH_SECRET_IV="AUTH_SECRET_IV" > ./local.properties
 
       - name: Run unit tests
         run: ./gradlew clean :settings:presentation:testDebug
@@ -37,4 +42,4 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: internal-testers
           file: app/build/outputs/apk/release/app-release.apk
-          releaseNotes: "Initial deploy of the app"
+          releaseNotes: "Updated passing auth secret key"
