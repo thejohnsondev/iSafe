@@ -23,11 +23,9 @@ jobs:
 
       - name: Update auth secrets
         env:
-          AUTH_SECRET_KEY: ${{ secrets.AUTH_SECRET_KEY }}
-          AUTH_SECRET_IV: ${{ secrets.AUTH_SECRET_IV }}
+          APP_SECRETS: ${{ secrets.APP_SECRETS }}
         run:
-          echo AUTH_SECRET_KEY="$AUTH_SECRET_KEY" > ./local.properties
-          echo AUTH_SECRET_IV="$AUTH_SECRET_IV" >> ./local.properties
+          echo $APP_SECRETS > ./local.properties
 
       - name: Run unit tests
         run: ./gradlew clean :settings:presentation:testDebug
