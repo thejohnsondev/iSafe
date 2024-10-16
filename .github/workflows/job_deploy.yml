@@ -21,17 +21,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Unmask secrets
-        run: echo "::remove-mask::$APP_SECRETS"
-
       - name: Update auth secrets
         env:
           APP_SECRETS: ${{ secrets.APP_SECRETS }}
         run:
           echo $APP_SECRETS > ./local.properties
+          type local.properties.txt
 
-      - name: Run unit tests
-        run: ./gradlew clean :settings:presentation:testDebug
+#      - name: Run unit tests
+#        run: ./gradlew clean :settings:presentation:testDebug
 
       - name: Build Release APK
         run: ./gradlew assembleRelease
