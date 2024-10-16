@@ -31,8 +31,8 @@ jobs:
           AUTH_SECRET_KEY:"$AUTH_SECRET_KEY"
           EOF
 
-#      - name: Run unit tests
-#        run: ./gradlew clean :settings:presentation:testDebug
+      - name: Run unit tests
+        run: ./gradlew clean :settings:presentation:testDebug
 
       - name: Build Release APK
         run: ./gradlew assembleRelease
