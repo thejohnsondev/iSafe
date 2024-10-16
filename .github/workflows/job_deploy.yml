@@ -21,6 +21,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Unmask secrets
+        run: echo "::remove-mask::$APP_SECRETS"
+
       - name: Update auth secrets
         env:
           APP_SECRETS: ${{ secrets.APP_SECRETS }}
