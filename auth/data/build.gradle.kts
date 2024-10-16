@@ -1,5 +1,4 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import java.util.Properties
 
 plugins {
     id("com.android.library")
@@ -9,12 +8,8 @@ plugins {
     kotlin("kapt")
 }
 
-val testProperties = Properties().apply {
-    file("$rootDir/test.properties").inputStream().use { load(it) }
-}
-
-val authSecretKey: String? = gradleLocalProperties(rootDir).getProperty("AUTH_SECRET_KEY") ?: testProperties.getProperty("AUTH_SECRET_KEY")
-val authSecretIV: String? = gradleLocalProperties(rootDir).getProperty("AUTH_SECRET_IV") ?: testProperties.getProperty("AUTH_SECRET_IV")
+val authSecretKey: String? = gradleLocalProperties(rootDir).getProperty("AUTH_SECRET_KEY")
+val authSecretIV: String? = gradleLocalProperties(rootDir).getProperty("AUTH_SECRET_IV")
 
 android {
     namespace = "com.thejohnsondev.data"

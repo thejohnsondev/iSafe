@@ -29,7 +29,9 @@ jobs:
       - name: Update auth secrets iv
         env:
           AUTH_SECRET_IV: ${{ secrets.AUTH_SECRET_IV }}
-        run: echo AUTH_SECRET_IV="$AUTH_SECRET_IV" > ./local.properties
+        run:
+          echo AUTH_SECRET_KEY="$AUTH_SECRET_KEY" > ./local.properties
+          echo AUTH_SECRET_IV="$AUTH_SECRET_IV" >> ./local.properties
 
       - name: Run unit tests
         run: ./gradlew clean :settings:presentation:testDebug
