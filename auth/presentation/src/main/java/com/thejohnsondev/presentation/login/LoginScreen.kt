@@ -208,8 +208,7 @@ fun LoginContent(
 
 @Composable
 fun LogoSection() {
-    ISafeLogo(modifier = Modifier)
-    Spacer(modifier = Modifier.height(Size24))
+    ISafeLogo(modifier = Modifier.padding(vertical = Size24), MaterialTheme.typography.displaySmall.fontSize)
 }
 
 @OptIn(ExperimentalComposeUiApi::class)

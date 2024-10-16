@@ -11,11 +11,11 @@ plugins {
 }
 
 android {
-    namespace = "com.thejohnsondev.isafe"
+    namespace = "com.thejohnsondev.passguard"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.thejohnsondev.isafe"
+        applicationId = "com.thejohnsondev.passguard"
         minSdk = 29
         targetSdk = 34
         versionCode = 18

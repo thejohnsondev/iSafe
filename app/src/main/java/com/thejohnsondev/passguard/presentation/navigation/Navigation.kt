@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.navigation
+package com.thejohnsondev.passguard.presentation.navigation
 
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.thejohnsondev.common.navigation.Screens
-import com.thejohnsondev.isafe.presentation.navigation.home.HomeNavigation
+import com.thejohnsondev.passguard.presentation.navigation.home.HomeNavigation
 import com.thejohnsondev.presentation.nagivation.biometricScreen
 import com.thejohnsondev.presentation.nagivation.checkAuthStateRoute
 import com.thejohnsondev.presentation.nagivation.checkAuthStateScreen

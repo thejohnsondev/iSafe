@@ -48,6 +48,7 @@ import com.thejohnsondev.designsystem.ISafeTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size32
 import com.thejohnsondev.designsystem.Size72
+import com.thejohnsondev.designsystem.getAppLogo
 import com.thejohnsondev.model.BankAccountModel
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
@@ -87,6 +88,8 @@ fun VaultScreen(
             listState.firstVisibleItemIndex == 0
         }
     }
+    val appLogo = getAppLogo()
+
 
     LaunchedEffect(true) {
         setScaffoldConfig(
@@ -94,7 +97,7 @@ fun VaultScreen(
                 isTopAppBarVisible = true,
                 isBottomNavBarVisible = true,
                 topAppBarTitle = context.getString(R.string.vault),
-                topAppBarIcon = Icons.Default.Security,
+                topAppBarIcon = appLogo,
                 isFabVisible = true,
                 fabTitle = context.getString(R.string.add),
                 fabIcon = Icons.Default.Add,

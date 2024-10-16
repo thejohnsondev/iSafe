@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation
+package com.thejohnsondev.passguard.presentation
 
 import com.thejohnsondev.common.base.BaseViewModel
 import com.thejohnsondev.domain.GetSettingsConfigFlowUseCase

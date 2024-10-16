@@ -1,4 +1,4 @@
-package com.thejohnsondev.isafe.presentation.navigation.home
+package com.thejohnsondev.passguard.presentation.navigation.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize

@@ -81,7 +81,6 @@ inline fun <reified T> String?.fromJson(): T {
     return Gson().fromJson(jsonReader, T::class.java)
 }
 
-@Suppress("DEPRECATION")
 fun Uri.asFile(context: Context): File? {
     context.contentResolver
         .query(this, arrayOf(MediaStore.Images.Media.DATA), null, null, null)
@@ -99,7 +98,6 @@ fun Uri.asFile(context: Context): File? {
     return null
 }
 
-@Suppress("DEPRECATION")
 private fun returnCursorData(uri: Uri?, context: Context): String? {
     if (DocumentsContract.isDocumentUri(context, uri)) {
         val wholeID = DocumentsContract.getDocumentId(uri)
