@@ -426,8 +426,8 @@ fun SearchBarItem(
 fun FiltersItem(
     isSearching: Boolean
 ) {
-    // TODO: uncomment after adding multiple data types
-    AnimatedVisibility(visible = !isSearching) {
+    // TODO: made invisible for now
+    AnimatedVisibility(visible = false) {
         Filters(
             onAllClick = {
 
