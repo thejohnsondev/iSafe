@@ -18,7 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import com.thejohnsondev.designsystem.Percent40
 import com.thejohnsondev.designsystem.Size2
-import com.thejohnsondev.designsystem.ubuntuFontFamily
+import com.thejohnsondev.designsystem.getGlobalFontFamily
+
 
 @Preview(showBackground = true)
 @Composable
@@ -44,7 +45,7 @@ fun AppLogo(
                 style = SpanStyle(
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = fontSize,
-                    fontFamily = ubuntuFontFamily
+                    fontFamily = getGlobalFontFamily()
                 )
             ) {
                 append(stringResource(com.thejohnsondev.common.R.string.guard))

@@ -110,10 +110,10 @@ private fun shouldUseDarkTheme(
 ): Boolean = when (state.settingsConfig?.darkThemeConfig) {
     DarkThemeConfig.LIGHT -> false
     DarkThemeConfig.DARK -> true
-    else -> isSystemInDarkTheme()
+    else -> false
 }
 
 @Composable
 private fun shouldUseDynamicColor(
     state: MainActivityViewModel.State,
-): Boolean = state.settingsConfig?.useDynamicColor ?: true
+): Boolean = state.settingsConfig?.useDynamicColor ?: false

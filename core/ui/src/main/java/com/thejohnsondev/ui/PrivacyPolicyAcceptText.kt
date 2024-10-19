@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import com.thejohnsondev.common.R
-import com.thejohnsondev.designsystem.ubuntuFontFamily
+import com.thejohnsondev.designsystem.getGlobalFontFamily
 
 @Composable
 fun getPrivacyPolicyAcceptText(): AnnotatedString {
@@ -20,7 +20,7 @@ fun getPrivacyPolicyAcceptText(): AnnotatedString {
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Normal,
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                fontFamily = ubuntuFontFamily
+                fontFamily = getGlobalFontFamily()
             ),
         ) {
             append(stringResource(R.string.accept_and_agree))
@@ -32,7 +32,7 @@ fun getPrivacyPolicyAcceptText(): AnnotatedString {
                 fontWeight = FontWeight.Bold,
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                 textDecoration = TextDecoration.Underline,
-                fontFamily = ubuntuFontFamily
+                fontFamily = getGlobalFontFamily()
             )
         ) {
             pushStringAnnotation(tag = TERMS_OF_USE_TAG, annotation = "click")
@@ -43,7 +43,7 @@ fun getPrivacyPolicyAcceptText(): AnnotatedString {
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Normal,
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                fontFamily = ubuntuFontFamily
+                fontFamily = getGlobalFontFamily()
             ),
         ) {
             append(" ")
@@ -56,7 +56,7 @@ fun getPrivacyPolicyAcceptText(): AnnotatedString {
                 fontWeight = FontWeight.Bold,
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                 textDecoration = TextDecoration.Underline,
-                fontFamily = ubuntuFontFamily
+                fontFamily = getGlobalFontFamily()
             )
         ) {
             pushStringAnnotation(tag = PRIVACY_POLICY_TAG, annotation = "click")

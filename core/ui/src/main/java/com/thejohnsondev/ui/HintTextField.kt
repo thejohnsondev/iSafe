@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.TextUnit
 import com.thejohnsondev.designsystem.Text20
-import com.thejohnsondev.designsystem.ubuntuFontFamily
+import com.thejohnsondev.designsystem.getGlobalFontFamily
 
 @Composable
 fun HintTextField(
@@ -51,7 +51,7 @@ fun HintTextField(
             },
             textStyle = TextStyle(
                 color = textColor,
-                fontFamily = ubuntuFontFamily,
+                fontFamily = getGlobalFontFamily(),
                 fontSize = fontSize
             ),
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
@@ -72,7 +72,7 @@ fun HintTextField(
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = fontSize,
-                    fontFamily = ubuntuFontFamily
+                    fontFamily = getGlobalFontFamily()
                 )
             )
         }
