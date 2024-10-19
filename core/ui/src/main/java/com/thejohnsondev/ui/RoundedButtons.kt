@@ -24,7 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Percent70
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
@@ -73,7 +73,7 @@ fun RoundedButton(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (loading) {
-                ISafeLoading(
+                Loader(
                     modifier = Modifier.size(Size24),
                     iconTintColor = if (enabled) colors.contentColor else colors.contentColor.copy(
                         alpha = Percent70
@@ -108,7 +108,7 @@ fun RoundedButton(
 @Preview
 @Composable
 private fun RoundedButtonPreview() {
-    ISafeTheme {
+    AppTheme {
         RoundedButton(
             modifier = Modifier
                 .height(Size48),
@@ -123,7 +123,7 @@ private fun RoundedButtonPreview() {
 @Preview
 @Composable
 private fun RectangleButtonPreview() {
-    ISafeTheme {
+    AppTheme {
         RoundedButton(
             text = "Button",
             loading = false,
@@ -136,7 +136,7 @@ private fun RectangleButtonPreview() {
 @Preview
 @Composable
 private fun TopRoundedButtonPreview() {
-    ISafeTheme {
+    AppTheme {
         RoundedButton(
             text = "Button",
             loading = false,
@@ -149,7 +149,7 @@ private fun TopRoundedButtonPreview() {
 @Preview
 @Composable
 private fun BottomRoundedButtonPreview() {
-    ISafeTheme {
+    AppTheme {
         RoundedButton(
             text = "Button",
             loading = false,
@@ -162,7 +162,7 @@ private fun BottomRoundedButtonPreview() {
 @Preview
 @Composable
 private fun StartRoundedButtonPreview() {
-    ISafeTheme {
+    AppTheme {
         RoundedButton(
             text = "Button",
             loading = false,
@@ -175,7 +175,7 @@ private fun StartRoundedButtonPreview() {
 @Preview
 @Composable
 private fun EndRoundedButtonPreview() {
-    ISafeTheme {
+    AppTheme {
         RoundedButton(
             text = "Button",
             loading = false,
@@ -188,7 +188,7 @@ private fun EndRoundedButtonPreview() {
 @Preview
 @Composable
 private fun VerticalButtonsGroupPreview() {
-    ISafeTheme {
+    AppTheme {
         Column {
             RoundedButton(
                 modifier = Modifier
@@ -221,7 +221,7 @@ private fun VerticalButtonsGroupPreview() {
 @Preview
 @Composable
 private fun HorizontalButtonsGroupPreview() {
-    ISafeTheme {
+    AppTheme {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically

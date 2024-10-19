@@ -8,14 +8,13 @@ import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.DatabaseResponse
 import com.thejohnsondev.model.PasswordModel
-import com.thejohnsondev.network.di.DotNetRemoteDataSource
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class PasswordsRepositoryImpl @Inject constructor(
-    @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource,
+    private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val dataStore: DataStore
 ) : PasswordsRepository {

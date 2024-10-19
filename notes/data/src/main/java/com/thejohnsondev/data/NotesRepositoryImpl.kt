@@ -7,13 +7,12 @@ import com.thejohnsondev.database.local_datasource.LocalDataSource
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.NoteModel
-import com.thejohnsondev.network.di.DotNetRemoteDataSource
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 class NotesRepositoryImpl(
-    @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource,
+    private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val dataStore: DataStore
 ) : NotesRepository {

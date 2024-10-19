@@ -14,8 +14,8 @@ import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class ISafeDotNetRemoteDataSource @Inject constructor(
-    private val api: ISafeDotNetApi
+class DotNetRemoteDataSource @Inject constructor(
+    private val api: DotNetApi
 ) : RemoteDataSource {
 
     override fun getUserPasswords(): Flow<Either<ApiError, List<PasswordModel>>> =

@@ -69,7 +69,7 @@ import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
 import com.thejohnsondev.ui.GlowPulsingBackground
-import com.thejohnsondev.ui.ISafeLogo
+import com.thejohnsondev.ui.AppLogo
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.TextField
 import com.thejohnsondev.ui.conditional
@@ -208,7 +208,7 @@ fun LoginContent(
 
 @Composable
 fun LogoSection() {
-    ISafeLogo(modifier = Modifier.padding(vertical = Size24), MaterialTheme.typography.displaySmall.fontSize)
+    AppLogo(modifier = Modifier.padding(vertical = Size24), MaterialTheme.typography.displaySmall.fontSize)
 }
 
 @OptIn(ExperimentalComposeUiApi::class)

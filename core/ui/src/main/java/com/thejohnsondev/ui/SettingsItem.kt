@@ -38,8 +38,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.thejohnsondev.common.EXPAND_ANIM_DURATION
-import com.thejohnsondev.designsystem.EqualRounded
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size36
 import com.thejohnsondev.designsystem.Size4
@@ -175,7 +174,7 @@ fun SettingsItem(
 @Composable
 @PreviewLightDark
 fun SettingsItemPreview() {
-    ISafeTheme {
+    AppTheme {
         SettingsItem(
             title = "Style and appearance",
             description = "Customize the look and feel of the app",
@@ -187,7 +186,7 @@ fun SettingsItemPreview() {
 @Composable
 @PreviewLightDark
 fun SettingsMultipleItemsPreview() {
-    ISafeTheme {
+    AppTheme {
         Column {
             SettingsItem(
                 title = "Style and appearance",

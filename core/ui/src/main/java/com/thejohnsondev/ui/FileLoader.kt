@@ -20,7 +20,7 @@ import com.thejohnsondev.designsystem.Size150
 import com.thejohnsondev.designsystem.Size16
 
 @Composable
-fun ISafeFileLoader(
+fun FileLoader(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     isError: Boolean = false,
@@ -64,5 +64,5 @@ fun ISafeFileLoader(
 @Preview
 @Composable
 fun FileLoaderPreview() {
-    ISafeFileLoader()
+    FileLoader()
 }

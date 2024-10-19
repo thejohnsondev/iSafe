@@ -22,7 +22,7 @@ import com.thejohnsondev.designsystem.ubuntuFontFamily
 
 @Preview(showBackground = true)
 @Composable
-fun ISafeLogo(
+fun AppLogo(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = MaterialTheme.typography.displayLarge.fontSize,
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally

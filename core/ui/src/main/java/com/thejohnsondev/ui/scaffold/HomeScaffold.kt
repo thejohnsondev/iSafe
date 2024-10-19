@@ -55,7 +55,7 @@ import com.thejohnsondev.designsystem.Size32
 import com.thejohnsondev.designsystem.Size48
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Size86
-import com.thejohnsondev.ui.ISafeLogo
+import com.thejohnsondev.ui.AppLogo
 import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.bounceClick
 import com.thejohnsondev.ui.conditional
@@ -237,7 +237,7 @@ fun HomeScaffold(
                                     .padding(Size8)
                                     .align(Alignment.CenterHorizontally)
                             ) {
-                                ISafeLogo(
+                                AppLogo(
                                     fontSize = MaterialTheme.typography.displaySmall.fontSize,
                                 )
                             }

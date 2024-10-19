@@ -13,7 +13,7 @@ import com.thejohnsondev.database.local_datasource.room.entity.PasswordEntity
     entities = [PasswordEntity::class, NoteEntity::class, AdditionalFieldEntity::class],
     version = 1
 )
-abstract class ISafeDataBase: RoomDatabase() {
+abstract class LocalDataBase: RoomDatabase() {
 
     abstract fun getPasswordsDao(): PasswordsDao
     abstract fun getAdditionalFieldsDao(): PasswordAdditionalFieldDao

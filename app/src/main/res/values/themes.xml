@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.ISafe" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.App" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -10,7 +10,7 @@
     <style name="SplashScreenTheme" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@android:color/black</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/bg_splash</item>
-        <item name="postSplashScreenTheme">@style/Theme.ISafe</item>
+        <item name="postSplashScreenTheme">@style/Theme.App</item>
     </style>
 
     <style name="SplashTheme" parent="android:Theme.Material.Light.NoActionBar">

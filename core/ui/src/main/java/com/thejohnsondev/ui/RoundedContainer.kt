@@ -10,11 +10,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size4
 
@@ -47,7 +46,7 @@ fun RoundedContainer(
 @Preview
 @Composable
 private fun RoundedContainerTopPreview() {
-    ISafeTheme {
+    AppTheme {
         RoundedContainer(
             modifier = Modifier
                 .fillMaxWidth()
@@ -63,7 +62,7 @@ private fun RoundedContainerTopPreview() {
 @Preview
 @Composable
 private fun RoundedContainerBottomPreview() {
-    ISafeTheme {
+    AppTheme {
         RoundedContainer(
             modifier = Modifier
                 .fillMaxWidth()

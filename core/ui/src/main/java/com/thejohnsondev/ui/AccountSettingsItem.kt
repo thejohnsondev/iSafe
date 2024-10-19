@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
 import com.thejohnsondev.designsystem.Size32
@@ -78,7 +78,7 @@ fun AccountSettingsItem(
 @Preview
 @Composable
 private fun AccountSettingsPreview() {
-    ISafeTheme {
+    AppTheme {
         AccountSettingsItem(
             modifier = Modifier
                 .fillMaxWidth()

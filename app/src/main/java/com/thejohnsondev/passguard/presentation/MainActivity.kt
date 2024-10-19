@@ -25,7 +25,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.passguard.presentation.navigation.Navigation
 import com.thejohnsondev.model.settings.DarkThemeConfig
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,12 +58,12 @@ class MainActivity : FragmentActivity() {
         }
 
         setContent {
-            ISafeTheme(
+            AppTheme(
                 darkTheme = shouldUseDarkTheme(state),
                 dynamicColor = shouldUseDynamicColor(state),
                 customTheme = state.settingsConfig?.customTheme
             ) {
-                ISafeApp(this@MainActivity)
+                Root(this@MainActivity)
             }
         }
     }
@@ -82,7 +82,7 @@ class MainActivity : FragmentActivity() {
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @Composable
-    fun ISafeApp(
+    fun Root(
         parentActivity: FragmentActivity
     ) {
         Surface(

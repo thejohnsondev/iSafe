@@ -13,7 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "iSafe"
+rootProject.name = "PassGuard"
 
 include(":app")
 

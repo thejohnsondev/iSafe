@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.FragmentActivity
 import com.thejohnsondev.common.R
 import com.thejohnsondev.common.showBiometricPrompt
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Size128
 import com.thejohnsondev.designsystem.Size16
 
@@ -110,7 +110,7 @@ fun BiometricScreenContent(
 @Preview
 @Composable
 private fun BiometricScreenContentPreview() {
-    ISafeTheme {
+    AppTheme {
         BiometricScreenContent({})
     }
 }

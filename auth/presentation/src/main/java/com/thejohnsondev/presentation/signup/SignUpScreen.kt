@@ -58,7 +58,7 @@ import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.getEmailErrorMessage
 import com.thejohnsondev.common.getPasswordErrorMessage
 import com.thejohnsondev.common.toast
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size2
 import com.thejohnsondev.designsystem.Size24
@@ -73,7 +73,7 @@ import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordValidationState
 import com.thejohnsondev.ui.GlowPulsingBackground
-import com.thejohnsondev.ui.ISafeLogo
+import com.thejohnsondev.ui.AppLogo
 import com.thejohnsondev.ui.PRIVACY_POLICY_TAG
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.TERMS_OF_USE_TAG
@@ -243,7 +243,7 @@ fun SignUpContent(
 
 @Composable
 fun LogoSection() {
-    ISafeLogo(modifier = Modifier.padding(vertical = Size24), MaterialTheme.typography.displaySmall.fontSize)
+    AppLogo(modifier = Modifier.padding(vertical = Size24), MaterialTheme.typography.displaySmall.fontSize)
 }
 
 @Composable
@@ -413,7 +413,7 @@ fun SignUpButtonSection(
 @PreviewLightDark
 @Composable
 private fun SignUpScreenPreviewEmpty() {
-    ISafeTheme {
+    AppTheme {
         SignUpContent(
             state = SignUpViewModel.State(),
             isKeyboardOpened = false,
@@ -435,7 +435,7 @@ private fun SignUpScreenPreviewEmpty() {
 @Preview(widthDp = 840, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun SignUpScreenPreviewMediumEmpty() {
-    ISafeTheme {
+    AppTheme {
         SignUpContent(
             state = SignUpViewModel.State(),
             isKeyboardOpened = false,
@@ -457,7 +457,7 @@ private fun SignUpScreenPreviewMediumEmpty() {
 @Preview(widthDp = 1530, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun SignUpScreenPreviewLargeEmpty() {
-    ISafeTheme {
+    AppTheme {
         SignUpContent(
             state = SignUpViewModel.State(),
             isKeyboardOpened = false,

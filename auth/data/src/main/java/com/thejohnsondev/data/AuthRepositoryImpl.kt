@@ -7,13 +7,12 @@ import com.thejohnsondev.database.local_datasource.LocalDataSource
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.model.ApiError
 import com.thejohnsondev.model.auth.AuthResponse
-import com.thejohnsondev.network.di.DotNetRemoteDataSource
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    @DotNetRemoteDataSource private val remoteDataSource: RemoteDataSource,
+    private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val dataStore: DataStore,
     private val keyUtils: KeyUtils

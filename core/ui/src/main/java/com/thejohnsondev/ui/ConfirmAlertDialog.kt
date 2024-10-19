@@ -11,8 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import com.thejohnsondev.designsystem.ISafeTheme
-import com.thejohnsondev.ui.ui_model.ButtonShape
+import com.thejohnsondev.designsystem.AppTheme
 
 @Composable
 fun ConfirmAlertDialog(
@@ -67,7 +66,7 @@ fun ConfirmAlertDialog(
 @PreviewLightDark
 @Composable
 private fun ConfirmAlertPreview() {
-    ISafeTheme {
+    AppTheme {
         ConfirmAlertDialog(
             icon = Icons.Default.Warning,
             title = "Delete Account",

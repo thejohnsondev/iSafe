@@ -4,9 +4,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.thejohnsondev.datastore.DataStore
 import com.thejohnsondev.network.remote_datasource.RemoteDataSource
-import com.thejohnsondev.network.remote_datasource.dotnet.ISafeDotNetApi
-import com.thejohnsondev.network.remote_datasource.dotnet.ISafeDotNetRemoteDataSource
-import com.thejohnsondev.network.remote_datasource.dotnet.ISafeDotNetRetrofitService
+import com.thejohnsondev.network.remote_datasource.dotnet.DotNetApi
+import com.thejohnsondev.network.remote_datasource.dotnet.DotNetRemoteDataSource
+import com.thejohnsondev.network.remote_datasource.dotnet.DotNetRetrofitService
 import com.thejohnsondev.network.remote_datasource.dotnet.interceptors.AuthTokenInterceptor
 import dagger.Module
 import dagger.Provides
@@ -30,10 +30,10 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideISafeDotNetApi(
+    fun provideDotNetApi(
         dataStore: DataStore,
         authTokenInterceptor: AuthTokenInterceptor
-    ): ISafeDotNetApi = ISafeDotNetRetrofitService(
+    ): DotNetApi = DotNetRetrofitService(
         dataStore,
         authTokenInterceptor
     ).invoke()
@@ -43,17 +43,12 @@ object NetworkModule {
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
 
-    @DotNetRemoteDataSource
     @Singleton
     @Provides
     fun provideDotNetRemoteDataSource(
-        iSafeDotNetApi: ISafeDotNetApi,
-    ): RemoteDataSource = ISafeDotNetRemoteDataSource(
-        iSafeDotNetApi
+        dotNetApi: DotNetApi,
+    ): RemoteDataSource = DotNetRemoteDataSource(
+        dotNetApi
     )
 
 }
-
-@Retention(AnnotationRetention.BINARY)
-@Qualifier
-annotation class DotNetRemoteDataSource

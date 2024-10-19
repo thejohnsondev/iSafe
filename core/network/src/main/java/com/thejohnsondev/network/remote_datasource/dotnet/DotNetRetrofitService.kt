@@ -8,12 +8,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
-class ISafeDotNetRetrofitService @Inject constructor(
+class DotNetRetrofitService @Inject constructor(
     private val dataStore: DataStore,
     private val authTokenInterceptor: AuthTokenInterceptor
 ) {
 
-    operator fun invoke(): ISafeDotNetApi {
+    operator fun invoke(): DotNetApi {
         val baseUrl =
             dataStore.getBaseUrl()
         val okHttpClient = OkHttpClient.Builder()
@@ -26,7 +26,7 @@ class ISafeDotNetRetrofitService @Inject constructor(
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(EitherCallAdapterFactory())
             .build()
-            .create(ISafeDotNetApi::class.java)
+            .create(DotNetApi::class.java)
     }
 
 }

@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Reorder
-import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,7 +43,7 @@ import com.thejohnsondev.common.R
 import com.thejohnsondev.common.copyData
 import com.thejohnsondev.common.copySensitiveData
 import com.thejohnsondev.common.toast
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size32
 import com.thejohnsondev.designsystem.Size72
@@ -56,7 +55,7 @@ import com.thejohnsondev.model.PasswordModel
 import com.thejohnsondev.ui.ConfirmAlertDialog
 import com.thejohnsondev.ui.EmptyListPlaceHolder
 import com.thejohnsondev.ui.FilterGroup
-import com.thejohnsondev.ui.ISafeLoading
+import com.thejohnsondev.ui.Loader
 import com.thejohnsondev.ui.PasswordItem
 import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.SearchBar
@@ -160,7 +159,7 @@ fun VaultContent(
         color = MaterialTheme.colorScheme.background
     ) {
         if (state.loadingState is LoadingState.Loading) {
-            ISafeLoading()
+            Loader()
             return@Surface
         }
         Column(
@@ -517,7 +516,7 @@ fun BankAccountsTitleItem() {
 @Composable
 @PreviewLightDark
 fun VaultScreenPreviewWithPasswords() {
-    ISafeTheme {
+    AppTheme {
         VaultContent(
             state = VaultViewModel.State(
                 passwordsList = listOf(
@@ -561,7 +560,7 @@ fun VaultScreenPreviewWithPasswords() {
 @Composable
 @PreviewLightDark
 fun VaultScreenPreviewEmpty() {
-    ISafeTheme {
+    AppTheme {
         VaultContent(
             state = VaultViewModel.State(),
             lazyListState = rememberLazyListState(),
@@ -578,7 +577,7 @@ fun VaultScreenPreviewEmpty() {
 @Composable
 @PreviewLightDark
 fun VaultScreenPreviewLoading() {
-    ISafeTheme {
+    AppTheme {
         VaultContent(
             state = VaultViewModel.State(
                 loadingState = LoadingState.Loading
@@ -596,7 +595,7 @@ fun VaultScreenPreviewLoading() {
 @Composable
 @PreviewLightDark
 fun VaultScreenPreviewSearching() {
-    ISafeTheme {
+    AppTheme {
         VaultContent(
             state = VaultViewModel.State(
                 isSearching = true,
@@ -640,7 +639,7 @@ fun VaultScreenPreviewSearching() {
 @Composable
 @PreviewLightDark
 fun VaultScreenPreviewReordering() {
-    ISafeTheme {
+    AppTheme {
         VaultContent(
             state = VaultViewModel.State(
                 isReordering = true,

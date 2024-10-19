@@ -7,7 +7,7 @@ import com.thejohnsondev.database.local_datasource.room.RoomLocalDataSourceImpl
 import com.thejohnsondev.database.local_datasource.room.dao.NotesDao
 import com.thejohnsondev.database.local_datasource.room.dao.PasswordAdditionalFieldDao
 import com.thejohnsondev.database.local_datasource.room.dao.PasswordsDao
-import com.thejohnsondev.database.local_datasource.room.db.ISafeDataBase
+import com.thejohnsondev.database.local_datasource.room.db.LocalDataBase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,11 +20,11 @@ object DataBaseModule {
 
     @Singleton
     @Provides
-    fun provideDataBase(applicationContext: Context): ISafeDataBase {
+    fun provideDataBase(applicationContext: Context): LocalDataBase {
         return Room.databaseBuilder(
             applicationContext,
-            ISafeDataBase::class.java,
-            ISafeDataBase.NAME_BD
+            LocalDataBase::class.java,
+            LocalDataBase.NAME_BD
         ).fallbackToDestructiveMigration().build()
     }
 
@@ -43,14 +43,14 @@ object DataBaseModule {
 
     @Singleton
     @Provides
-    fun providePasswordsDao(dataBase: ISafeDataBase) = dataBase.getPasswordsDao()
+    fun providePasswordsDao(dataBase: LocalDataBase) = dataBase.getPasswordsDao()
 
     @Singleton
     @Provides
-    fun provideAdditionalFieldsDao(dataBase: ISafeDataBase) = dataBase.getAdditionalFieldsDao()
+    fun provideAdditionalFieldsDao(dataBase: LocalDataBase) = dataBase.getAdditionalFieldsDao()
 
     @Singleton
     @Provides
-    fun provideNotesDao(dataBase: ISafeDataBase) = dataBase.getNotesDao()
+    fun provideNotesDao(dataBase: LocalDataBase) = dataBase.getNotesDao()
 
 }

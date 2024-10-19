@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavOptions
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.navigation.Screens
-import com.thejohnsondev.ui.ISafeLoading
+import com.thejohnsondev.ui.Loader
 
 @Composable
 fun CheckAuthStateScreen(
@@ -18,7 +18,7 @@ fun CheckAuthStateScreen(
 ) {
     StatusBarColor()
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        ISafeLoading()
+        Loader()
     }
     val firstScreenRoute = viewModel.firstScreenRoute.collectAsState()
     firstScreenRoute.value ?: return

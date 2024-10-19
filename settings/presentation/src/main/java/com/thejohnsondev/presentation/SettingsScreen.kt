@@ -26,13 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.thejohnsondev.common.R
 import com.thejohnsondev.common.isBiometricAvailable
 import com.thejohnsondev.common.toast
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size2
 import com.thejohnsondev.designsystem.Size4
@@ -535,7 +534,7 @@ fun Dialogs(
 @Composable
 @PreviewLightDark
 private fun SettingsScreenPreviewDark() {
-    ISafeTheme {
+    AppTheme {
         SettingsContent(
             context = LocalContext.current,
             state = SettingsViewModel.State(
@@ -560,7 +559,7 @@ private fun SettingsScreenPreviewDark() {
 @PreviewLightDark
 @Composable
 private fun SettingsScreenPreviewLightConfirmDeleteAccount() {
-    ISafeTheme {
+    AppTheme {
         SettingsContent(
             context = LocalContext.current,
             state = SettingsViewModel.State(

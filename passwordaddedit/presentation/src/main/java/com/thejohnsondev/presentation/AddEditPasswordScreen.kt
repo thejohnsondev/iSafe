@@ -15,7 +15,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ButtonDefaults
@@ -46,7 +45,7 @@ import com.thejohnsondev.common.EMPTY
 import com.thejohnsondev.common.R
 import com.thejohnsondev.common.toast
 import com.thejohnsondev.designsystem.EqualRounded
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Size12
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size24
@@ -60,7 +59,7 @@ import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.model.PasswordModel
 import com.thejohnsondev.ui.AdditionalField
 import com.thejohnsondev.ui.HintTextField
-import com.thejohnsondev.ui.ISafeLoading
+import com.thejohnsondev.ui.Loader
 import com.thejohnsondev.ui.LoadedImage
 import com.thejohnsondev.ui.RoundedButton
 import com.thejohnsondev.ui.RoundedContainer
@@ -132,7 +131,7 @@ fun AddEditPasswordScreen(
         }
     }
     when (state.value.loadingState) {
-        LoadingState.Loading -> ISafeLoading()
+        LoadingState.Loading -> Loader()
         LoadingState.Loaded -> {
             AddEditPasswordContent(
                 state = state.value,
@@ -342,7 +341,7 @@ fun AddEditPasswordContent(
 @PreviewLightDark
 @Composable
 fun AddEditPasswordPreviewEmpty() {
-    ISafeTheme {
+    AppTheme {
         AddEditPasswordContent(
             state = AddEditPasswordViewModel.State(),
             titleFocusRequester = FocusRequester(),
@@ -356,7 +355,7 @@ fun AddEditPasswordPreviewEmpty() {
 @PreviewLightDark
 @Composable
 fun AddEditPasswordPreviewWithData() {
-    ISafeTheme {
+    AppTheme {
         AddEditPasswordContent(
             state = AddEditPasswordViewModel.State(
                 organization = "Google",
@@ -374,7 +373,7 @@ fun AddEditPasswordPreviewWithData() {
 @PreviewLightDark
 @Composable
 fun AddEditPasswordPreviewWithAdditionalFields() {
-    ISafeTheme {
+    AppTheme {
         AddEditPasswordContent(
             state = AddEditPasswordViewModel.State(
                 organization = "Google",

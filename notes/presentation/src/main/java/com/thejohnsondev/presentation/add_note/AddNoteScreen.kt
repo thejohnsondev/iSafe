@@ -1,6 +1,5 @@
 package com.thejohnsondev.presentation.add_note
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -22,17 +20,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.thejohnsondev.common.toast
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Size16
 import com.thejohnsondev.designsystem.Size8
 import com.thejohnsondev.designsystem.Text18
@@ -42,7 +38,7 @@ import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.ui.ConfirmAlertDialog
 import com.thejohnsondev.ui.HintTextField
-import com.thejohnsondev.ui.ISafeLoading
+import com.thejohnsondev.ui.Loader
 import com.thejohnsondev.ui.ScaffoldConfig
 
 @Composable
@@ -108,7 +104,7 @@ fun AddNoteScreen(
     }
 
     when (state.value.loadingState) {
-        is LoadingState.Loading -> ISafeLoading()
+        is LoadingState.Loading -> Loader()
         is LoadingState.Loaded -> AddNoteContent(
             state = state.value,
             titleFocusRequester = titleFocusRequester,
@@ -211,7 +207,7 @@ private fun Dialogs(
 @PreviewLightDark
 @Composable
 private fun AddNoteScreenPreviewEmpty() {
-    ISafeTheme {
+    AppTheme {
         AddNoteContent(
             state = AddNoteViewModel.State(),
             titleFocusRequester = FocusRequester(),
@@ -224,7 +220,7 @@ private fun AddNoteScreenPreviewEmpty() {
 @PreviewLightDark
 @Composable
 private fun AddNoteScreenPreviewWithData() {
-    ISafeTheme {
+    AppTheme {
         AddNoteContent(
             state = AddNoteViewModel.State(
                 titleState = "Some title",

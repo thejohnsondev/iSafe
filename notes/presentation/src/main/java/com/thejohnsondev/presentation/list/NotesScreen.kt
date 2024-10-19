@@ -29,13 +29,13 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.thejohnsondev.common.R
 import com.thejohnsondev.common.toast
-import com.thejohnsondev.designsystem.ISafeTheme
+import com.thejohnsondev.designsystem.AppTheme
 import com.thejohnsondev.designsystem.Size32
 import com.thejohnsondev.model.LoadingState
 import com.thejohnsondev.model.NoteModel
 import com.thejohnsondev.model.OneTimeEvent
 import com.thejohnsondev.ui.EmptyListPlaceHolder
-import com.thejohnsondev.ui.ISafeLoading
+import com.thejohnsondev.ui.Loader
 import com.thejohnsondev.ui.NoteItem
 import com.thejohnsondev.ui.ScaffoldConfig
 import com.thejohnsondev.ui.scaffold.BottomNavItem
@@ -112,7 +112,7 @@ fun NotesContent(
         color = MaterialTheme.colorScheme.background
     ) {
         if (screenState.loadingState is LoadingState.Loading) {
-            ISafeLoading()
+            Loader()
             return@Surface
         }
         Column(
@@ -160,7 +160,7 @@ fun StatusBarColor() {
 @PreviewLightDark
 @Composable
 fun NotesScreenPreviewWithNotes() {
-    ISafeTheme {
+    AppTheme {
         NotesContent(
             screenState = NotesViewModel.State(
                 loadingState = LoadingState.Loaded,
@@ -184,7 +184,7 @@ fun NotesScreenPreviewWithNotes() {
 @PreviewLightDark
 @Composable
 fun NotesScreenPreviewEmptyLight() {
-    ISafeTheme {
+    AppTheme {
         NotesContent(
             screenState = NotesViewModel.State(
                 loadingState = LoadingState.Loaded,
@@ -202,7 +202,7 @@ fun NotesScreenPreviewEmptyLight() {
 @PreviewLightDark
 @Composable
 fun NotesScreenPreviewLoading() {
-    ISafeTheme {
+    AppTheme {
         NotesContent(
             screenState = NotesViewModel.State(
                 loadingState = LoadingState.Loading
